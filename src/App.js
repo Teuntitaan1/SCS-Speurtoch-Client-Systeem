@@ -6,33 +6,77 @@ import './App.css';
 // 2.SelectionScreen
 // 3.AnswerScreen
 // 4.FinishScreen
+// 5. Anything else defaults to the error page
 
 class App extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
+      // the state the program currently sits in, look at the top of the file for all allowed states
       ProgramState : "SelectionScreen",
+      // all variables used for the quiz itself
       QuestionList : [],
       ActiveQuestion : null,
+      
+      AmountOfQuestions : 0,
+      QuestionsCompleted : 0, 
+      // statistics for after the quiz
       Statistics : {"CorrectFirstTime" : 0, "TimeSpent" : 0},
     }
+    // event listeners
+    this.ValidateCode = this.ValidateCode.bind(this);
   }
 
   // All statistics code
 
+  PostStatistics() {
+    
+    fetch("http://localhost:8000", {
+      method: 'POST', // Sends data to the server
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    	body: JSON.stringify(this.state.Statistics),
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+
   // all quiz code 
+
+  ValidateCode(event) {
+    
+    // prevents the form from reloading the page
+    event.preventDefault();
+    // compares the value from the code input to the correct code
+    if (event.target[0].value === this.state.QuestionList[event.target.id]["Code"]) {
+      
+      console.log("Correct Secret code");
+      // sets the active question and switches screen
+      this.setState({ActiveQuestion: event.target.id});
+      this.SwitchProgramState("AnswerScreen");
+    }
+    else {
+      console.log("Incorrect Secret code");
+    }
+  }
 
   ValidateAnswer(Option) {
 
-
     // validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
     if (Option === this.state.QuestionList[this.state.ActiveQuestion]["CorrectAnswer"]) {
+      
       console.log("Correct Answer");
+
       var NewQuestionList = this.state.QuestionList;
       NewQuestionList[this.state.ActiveQuestion]["Completed"] = true;
       this.setState({QuestionList : NewQuestionList});
-      this.SwitchState("SelectionScreen");
+      this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
+
+      this.SwitchProgramState("SelectionScreen");
+      
     }
     else {
       console.log("Incorrect Answer");
@@ -40,9 +84,9 @@ class App extends React.Component {
   }
 
   // all program state code
-  SwitchState(State, Index) {
+  SwitchProgramState(State) {
+    // switches the this.state.ProgramState with the State variable, thus changing the state the program is in and triggering a rerender
     this.setState({ProgramState : State});
-    this.setState({ActiveQuestion: Index});
   }
 
   // runs when the program is ready to run
@@ -53,6 +97,7 @@ class App extends React.Component {
         .then(
           (result) => {
             this.setState({QuestionList : result});
+            this.setState({AmountOfQuestions : this.state.QuestionList.length});
           },
           // Handles errors
           (error) => {
@@ -62,8 +107,19 @@ class App extends React.Component {
     }
 
 
+
+
+
   // all render code
   render() {
+
+    // when this returns true it means the server is down and the quiz will not work
+    if (this.state.QuestionList.length === 0) {
+      return (
+        <h1>Aan het laden...</h1>
+      );
+    }
+
 
     switch (this.state.ProgramState) {
       
@@ -91,12 +147,24 @@ class App extends React.Component {
               <div key={Index}>
                 <h3>{Question["Title"]}</h3>
 
-                {Question["Completed"] ? null : <button onClick={() => this.SwitchState("AnswerScreen", Index)}>Naar vraag</button>}
+                {Question["Completed"] ? null :
                 
-                {Question["Completed"] ? <img src={require('./Images/checkmark.png')} alt='Vraag compleet!'/>: null}
+                  <form key={Index} id={Index} onSubmit={this.ValidateCode}>
+                  
+                  <input type={'text'}></input>
+                  <input type={'submit'} value={"Controleren"}></input>
 
+                </form>
+                
+                }
+              
+                {Question["Completed"] ? <img src={require('./Images/checkmark.png')} alt='Vraag compleet!'/>: null}
+                
               </div>
             )}
+
+            <p>{this.state.QuestionsCompleted}/{this.state.AmountOfQuestions} goed beantwoord!</p>
+            <button onClick={() => this.SwitchProgramState("FinishScreen")}>{"Klaar(Testing)"}</button>
           </>
         );  
 
@@ -113,7 +181,7 @@ class App extends React.Component {
             <button onClick={() => this.ValidateAnswer("Option3")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option3"]}</button>
             <button onClick={() => this.ValidateAnswer("Option4")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option4"]}</button>
 
-            <button onClick={() => this.SwitchState("SelectionScreen")}>Terug</button>
+            <button onClick={() => this.SwitchProgramState("SelectionScreen")}>Terug</button>
 
           </>
         );
@@ -123,6 +191,7 @@ class App extends React.Component {
         return(
           <>
             <h1>Hier komt het eindscherm!</h1>
+            <button onClick={() => this.PostStatistics()}>Stuur statistieken op!</button>
           </>
           );
     
