@@ -14,6 +14,7 @@ class App extends React.Component {
     this.state = {
       ProgramState : "SelectionScreen",
       QuestionList : [],
+      ActiveQuestion : null,
       Statistics : {"CorrectFirstTime" : 0, "TimeSpent" : 0},
     }
   }
@@ -22,6 +23,27 @@ class App extends React.Component {
 
   // all quiz code 
 
+  ValidateAnswer(Option) {
+
+
+    // validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
+    if (Option === this.state.QuestionList[this.state.ActiveQuestion]["CorrectAnswer"]) {
+      console.log("Correct Answer");
+      var NewQuestionList = this.state.QuestionList;
+      NewQuestionList[this.state.ActiveQuestion]["Completed"] = true;
+      this.setState({QuestionList : NewQuestionList});
+      this.SwitchState("SelectionScreen");
+    }
+    else {
+      console.log("Incorrect Answer");
+    }
+  }
+
+  // all program state code
+  SwitchState(State, Index) {
+    this.setState({ProgramState : State});
+    this.setState({ActiveQuestion: Index});
+  }
 
   // runs when the program is ready to run
   componentDidMount() {
@@ -55,20 +77,44 @@ class App extends React.Component {
         );
 
       case "SelectionScreen":
+        
 
+          
+      /////////
+      // upon completing the question, the checkmark renders, else it does not.
+      // the button will render when the question is not yet completed, so the question can be answered.
+      // The image has to be required.
         return (
           <>
             {this.state.QuestionList.map((Question, Index) => 
-              <QuestionComponent Question={Question} ID={"Question"+Index}/>
+              
+              <div key={Index}>
+                <h3>{Question["Title"]}</h3>
+
+                {Question["Completed"] ? null : <button onClick={() => this.SwitchState("AnswerScreen", Index)}>Naar vraag</button>}
+                
+                {Question["Completed"] ? <img src={require('./Images/checkmark.png')} alt='Vraag compleet!'/>: null}
+
+              </div>
             )}
           </>
         );  
 
       case "AnswerScreen":
-
+        
         return(
           <>
-            <h1>Hier komt het vraagscherm!</h1>
+          
+            <h1>{this.state.QuestionList[this.state.ActiveQuestion]["Title"]}</h1>
+            <h2>{this.state.QuestionList[this.state.ActiveQuestion]["Description"]}</h2>
+
+            <button onClick={() => this.ValidateAnswer("Option1")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option1"]}</button>
+            <button onClick={() => this.ValidateAnswer("Option2")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option2"]}</button>
+            <button onClick={() => this.ValidateAnswer("Option3")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option3"]}</button>
+            <button onClick={() => this.ValidateAnswer("Option4")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option4"]}</button>
+
+            <button onClick={() => this.SwitchState("SelectionScreen")}>Terug</button>
+
           </>
         );
 
@@ -91,13 +137,4 @@ class App extends React.Component {
   }
 }
 
-class QuestionComponent extends React.Component {
-  render() {
-    return(
-      <div id={this.props.ID}>
-        <h3>{this.props.Question["Title"]}</h3>
-      </div>
-    );
-  }
-}
 export default App;
