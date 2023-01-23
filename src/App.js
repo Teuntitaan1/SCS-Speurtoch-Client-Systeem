@@ -91,20 +91,13 @@ class App extends React.Component {
 
   // runs when the program is ready to run
   componentDidMount() {
-    // asynchronous api/server call requesting all questions
-    fetch("http://localhost:8000")
-      .then(response => response.json())
-        .then(
-          (result) => {
-            this.setState({QuestionList : result});
-            this.setState({AmountOfQuestions : this.state.QuestionList.length});
-          },
-          // Handles errors
-          (error) => {
-            console.log(error);
-          }
-          )
-    }
+    
+    // reads the file Questions.json and uses it in the quiz
+    var Questions = require("./Questions.json");
+    this.setState({QuestionList : Questions});
+    this.setState({AmountOfQuestions : Questions.length});
+
+  }
 
 
 
