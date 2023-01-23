@@ -93,7 +93,7 @@ class App extends React.Component {
   componentDidMount() {
     
     // reads the file Questions.json and uses it in the quiz
-    var Questions = require("./Questions.json");
+    var Questions = require("./Local_Files/Quiz_Content/Questions.json");
     this.setState({QuestionList : Questions});
     this.setState({AmountOfQuestions : Questions.length});
 
@@ -137,7 +137,7 @@ class App extends React.Component {
           <>
             {this.state.QuestionList.map((Question, Index) => 
               
-              <div key={Index}>
+              <div key={Index} className='Question'>
                 <h3>{Question["Title"]}</h3>
 
                 {Question["Completed"] ? null :
@@ -151,7 +151,7 @@ class App extends React.Component {
                 
                 }
               
-                {Question["Completed"] ? <img src={require('./Images/checkmark.png')} alt='Vraag compleet!'/>: null}
+                {Question["Completed"] ? <img src={require('./Local_Files/Images/checkmark.png')} alt='Vraag compleet!' className='QuestionCheckmark'/>: null}
                 
               </div>
             )}
