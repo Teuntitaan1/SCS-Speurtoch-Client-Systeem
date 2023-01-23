@@ -14,7 +14,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       // the state the program currently sits in, look at the top of the file for all allowed states
-      ProgramState : "SelectionScreen",
+      ProgramState : "StartScreen",
       // all variables used for the quiz itself
       QuestionList : [],
       ActiveQuestion : null,
@@ -26,22 +26,6 @@ class App extends React.Component {
     }
     // event listeners
     this.ValidateCode = this.ValidateCode.bind(this);
-  }
-
-  // All statistics code
-
-  PostStatistics() {
-    
-    fetch("http://localhost:8000", {
-      method: 'POST', // Sends data to the server
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    	body: JSON.stringify(this.state.Statistics),
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
   }
 
   // all quiz code 
@@ -97,22 +81,31 @@ class App extends React.Component {
     this.setState({QuestionList : Questions});
     this.setState({AmountOfQuestions : Questions.length});
 
+    // triggers the code for the statistics
+
   }
 
+  // runs when the program is ready to stop
+  componentWillUnmount() {
+  }
 
+  // All statistics code
 
-
-
+  PostStatistics() {
+    
+    fetch("http://localhost:8000", {
+      method: 'POST', // Sends data to the server
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    	body: JSON.stringify(this.state.Statistics),
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
   // all render code
   render() {
-
-    // when this returns true it means the server is down and the quiz will not work
-    if (this.state.QuestionList.length === 0) {
-      return (
-        <h1>Aan het laden...</h1>
-      );
-    }
-
 
     switch (this.state.ProgramState) {
       
@@ -121,14 +114,13 @@ class App extends React.Component {
 
         return(
           <>
-            <h1>Hier komt het startscherm!</h1>
+            <h1>{"Welkom bij de Archeon speurtocht over bijen en zijn diverse soorten! (placeholder tekst)"}</h1>
+            <button onClick={() => this.SwitchProgramState("SelectionScreen")}>Start</button>
           </>
         );
 
       case "SelectionScreen":
         
-
-          
       /////////
       // upon completing the question, the checkmark renders, else it does not.
       // the button will render when the question is not yet completed, so the question can be answered.
@@ -157,7 +149,7 @@ class App extends React.Component {
             )}
 
             <p>{this.state.QuestionsCompleted}/{this.state.AmountOfQuestions} goed beantwoord!</p>
-            <button onClick={() => this.SwitchProgramState("FinishScreen")}>{"Klaar(Testing)"}</button>
+            <button onClick={() => this.SwitchProgramState("FinishScreen")}>{"Klaar(Gaat naar FinishScreen( is dus voor testen ))"}</button>
           </>
         );  
 
@@ -174,6 +166,7 @@ class App extends React.Component {
             <button onClick={() => this.ValidateAnswer("Option3")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option3"]}</button>
             <button onClick={() => this.ValidateAnswer("Option4")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option4"]}</button>
 
+            <br></br>
             <button onClick={() => this.SwitchProgramState("SelectionScreen")}>Terug</button>
 
           </>
