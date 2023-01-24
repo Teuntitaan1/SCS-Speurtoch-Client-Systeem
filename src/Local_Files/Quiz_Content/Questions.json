@@ -1,24 +1,24 @@
 [
     
-    {"Title" : "Vraag 1", "Description" : "Werkt", "Code" : "bij", "Completed" : false,
+    {"Title" : "Vraag 1", "Description" : "Werkt", "Completed" : false, "Scanned" : false,
       "Option1" : "Willekeurig", "Option2" : "Antwoord", "Option3" : "Op een", "Option4" : "Knop", "CorrectAnswer" : "Option1"},
 
-    {"Title" : "Vraag 2", "Description" : "Dit", "Code" : "honing", "Completed" : false,
+    {"Title" : "Vraag 2", "Description" : "Dit", "Completed" : false, "Scanned" : false,
      "Option1" : "Maar", "Option2" : "Dan", "Option3" : "Nu", "Option4" : "Goed", "CorrectAnswer" : "Option2"},
 
-    {"Title" : "Vraag 3", "Description" : "Nu", "Code" : "bloem", "Completed" : false,
+    {"Title" : "Vraag 3", "Description" : "Nu", "Completed" : false, "Scanned" : false,
      "Option1" : "Werkend", "Option2" : "(Hopelijk)", "Option3" : "Btw", "Option4" : "Dit", "CorrectAnswer" : "Option3"},
 
-     {"Title" : "Vraag 4", "Description" : "Eindelijk", "Code" : "nectar", "Completed" : false,
+     {"Title" : "Vraag 4", "Description" : "Eindelijk", "Completed" : false, "Scanned" : false,
      "Option1" : "Is", "Option2" : "Best", "Option3" : "Wel", "Option4" : "Leuk", "CorrectAnswer" : "Option2"},
 
-    {"Title" : "Vraag 5" , "Description" : "Eens", "Code" : "planten", "Completed" : false,
+    {"Title" : "Vraag 5" , "Description" : "Eens", "Completed" : false, "Scanned" : false,
      "Option1" : "Om", "Option2" : "Te", "Option3" : "Doen!", "Option4" : "Tot", "CorrectAnswer" : "Option1"},
 
-    {"Title" : "Vraag 6", "Description" : "Goed", "Code" : "bestuiven", "Completed" : false,
+    {"Title" : "Vraag 6", "Description" : "Goed", "Completed" : false, "Scanned" : false,
      "Option1" : "Morgen", "Option2" : "In", "Option3" : "De", "Option4" : "Les", "CorrectAnswer" : "Option4"},
 
-    {"Title" : "Vraag 7", "Description" : "En normaal?", "Code" : "imker", "Completed" : false,
+    {"Title" : "Vraag 7", "Description" : "En normaal?", "Completed" : false, "Scanned" : false,
      "Option1" : "Dan", "Option2" : "Gaan", "Option3" : "We goed", "Option4" : "Werken", "CorrectAnswer" : "Option1"}
 
 

@@ -9,6 +9,11 @@ import QrReader from 'react-qr-scanner';
 // 4.FinishScreen
 // 5. Anything else defaults to the error page
 
+// TODO
+// Hints
+// Saving State of Quiz
+// Look and feel of the program should be improved
+// feedback when trying to scan a question you have already scanned
 
 //QRCode Formatting should be as followed
 // index of the question should be the containment of the qr code
@@ -71,18 +76,16 @@ class App extends React.Component {
                 />
                 :  null
             }
-            <ul>
             {this.state.QuestionList.map((Question, index) => 
-              <li key={index}>
+              <p key={index}>
                 {Question["Title"]}
                 {Question["Completed"] ? 
                 <img src={require("./Local_Files/Images/checkmark.png")} alt='Checkmark' className='QuestionCheckmark'/> 
                 : null}
-              </li>
+              </p>
               )
                 
             }
-            </ul>
             <p>{this.state.QuestionsCompleted}/{this.state.AmountOfQuestions} goed beantwoord!</p>
           </>
         );  
@@ -155,14 +158,29 @@ class App extends React.Component {
 
   HandleScan(data){
     
+    // else triggers on data change
     if (data === null) {
      // do nothing 
     }
     else {
+      // checks if the qrcode is valid following our guidelines
       if (data["text"].length <= 2){
-        this.setState({ActiveQuestion: data["text"]});
-        this.SwitchProgramState("AnswerScreen");
-        this.setState({Scanning : false});
+        // checks if the qrcode already has been scanned
+        if (this.state.QuestionList[data["text"]]["Scanned"] === false) {
+          
+          // sets the active question and turns of the scanner
+          this.setState({ActiveQuestion: data["text"]});
+          this.SwitchProgramState("AnswerScreen");
+          this.setState({Scanning : false});
+          
+          // makes sure you cant scan the same question twice
+          var NewList = this.state.QuestionList;
+          NewList[data["text"]]["Scanned"] = true;
+          this.setState({QuestionList : NewList});
+
+        }
+        
+       
       }
     }
 
