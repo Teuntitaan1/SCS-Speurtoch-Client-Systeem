@@ -54,7 +54,7 @@ class App extends React.Component {
         return(
           <>
             <h1>{"Welkom bij de Archeon speurtocht over bijen en zijn diverse soorten! (placeholder tekst)"}</h1>
-            <button onClick={() => this.SwitchProgramState("SelectionScreen")}>Start</button>
+            <button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Start</button>
           </>
         );
 
@@ -103,7 +103,7 @@ class App extends React.Component {
             <button onClick={() => this.ValidateAnswer("Option4")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option4"]}</button>
 
             <br></br>
-            <button onClick={() => this.SwitchProgramState("SelectionScreen")}>Terug</button>
+            <button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Terug</button>
           </>
         );
 
@@ -126,12 +126,6 @@ class App extends React.Component {
     } 
   }
   
-  // all program state code
-  SwitchProgramState(State) {
-    // switches the this.state.ProgramState with the State variable, thus changing the state the program is in and triggering a rerender
-    this.setState({ProgramState : State});
-  }
-
   ValidateAnswer(Option) {
 
     // validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
@@ -144,8 +138,9 @@ class App extends React.Component {
       this.setState({QuestionList : NewQuestionList});
       this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
 
-      this.SwitchProgramState("SelectionScreen");
-      
+      // if all questions have been completed, the quiz finishes, else it moves back to the SelectionScreen
+      this.state.QuestionsCompleted === this.state.AmountOfQuestions ?
+       this.setState({ProgramState : "FinishScreen"}) : this.setState({ProgramState : "SelectionScreen"});       
     }
     else {
       console.log("Incorrect Answer");
@@ -156,6 +151,7 @@ class App extends React.Component {
 
   // all QrCode Code 
 
+  // handles the scanning of the qr codes
   HandleScan(data){
     
     // else triggers on data change
@@ -170,7 +166,7 @@ class App extends React.Component {
           
           // sets the active question and turns of the scanner
           this.setState({ActiveQuestion: data["text"]});
-          this.SwitchProgramState("AnswerScreen");
+          this.setState({ProgramState :"AnswerScreen"});
           this.setState({Scanning : false});
           
           // makes sure you cant scan the same question twice
@@ -186,6 +182,7 @@ class App extends React.Component {
 
     
   }
+  // handles the error part of scanning qr codes
   HandleError(err){
     
     console.error(err);
