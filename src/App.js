@@ -13,7 +13,7 @@ import QrReader from 'react-qr-scanner';
 // Hints
 // Saving State of Quiz
 // Look and feel of the program should be improved
-// feedback when trying to scan a question you have already scanned
+// Adding support for multiple configurations of question pairs
 
 //QRCode Formatting should be as followed
 // index of the question should be the containment of the qr code
@@ -22,8 +22,10 @@ class App extends React.Component {
   
 	constructor(props) {
 		super(props);
+
 		this.state = {
-		// the state the program currently sits in, look at the top of the file for all allowed states
+		
+			// the state the program currently sits in, look at the top of the file for all allowed states
 		ProgramState : "StartScreen",
 		// all variables used for the quiz itself
 		QuestionList : [],
@@ -39,6 +41,7 @@ class App extends React.Component {
 		// if the warning is a blank string, nothing will render. else it will
 		// render the warning/error associated with the qr-code
 		Warning : ""
+
 		}
 		// event listeners
 
@@ -103,12 +106,11 @@ class App extends React.Component {
 				<h1>{this.state.QuestionList[this.state.ActiveQuestion]["Title"]}</h1>
 				<h2>{this.state.QuestionList[this.state.ActiveQuestion]["Description"]}</h2>
 
-				<button onClick={() => this.ValidateAnswer("Option1")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option1"]}</button>
-				<button onClick={() => this.ValidateAnswer("Option2")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option2"]}</button>
-				<button onClick={() => this.ValidateAnswer("Option3")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option3"]}</button>
-				<button onClick={() => this.ValidateAnswer("Option4")}>{this.state.QuestionList[this.state.ActiveQuestion]["Option4"]}</button>
-
-				<br></br>
+				{
+				/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
+				this.state.QuestionList[this.state.ActiveQuestion]["Options"].map((Option, index) =>
+					<button key={index} onClick={() => this.ValidateAnswer(Option)}>{Option}</button>)
+				}
 				<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Terug</button>
 			</>
 			);
@@ -137,16 +139,19 @@ class App extends React.Component {
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
 		if (Option === this.state.QuestionList[this.state.ActiveQuestion]["CorrectAnswer"]) {
 		
-			console.log("Correct Answer");
-
 			var NewQuestionList = this.state.QuestionList;
 			NewQuestionList[this.state.ActiveQuestion]["Completed"] = true;
 			this.setState({QuestionList : NewQuestionList});
 			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
 
 			// if all questions have been completed, the quiz finishes, else it moves back to the SelectionScreen
-			this.state.QuestionsCompleted === this.state.AmountOfQuestions ?
-			this.setState({ProgramState : "FinishScreen"}) : this.setState({ProgramState : "SelectionScreen"});       
+			if(!this.state.QuestionsCompleted === this.state.AmountOfQuestions) {
+				this.setState({ProgramState : "SelectionScreen"});
+			}
+			else {
+				this.setState({ProgramState : "FinishScreen"});	
+			}
+			  
 		}
 		else {
 			console.log("Incorrect Answer");
@@ -171,23 +176,18 @@ class App extends React.Component {
 			return null; 
 		}
 		
-		if (this.state.QuestionList[data["text"]]["Scanned"] === false) {
+		if (this.state.QuestionList[data["text"]]["Completed"] === false) {
 			
 			// sets the active question and turns of the scanner
 			this.setState({ActiveQuestion: data["text"]});
 			this.setState({ProgramState :"AnswerScreen"});
 			this.setState({Scanning : false});
 			
-			// makes sure you cant scan the same question twice
-			var NewList = this.state.QuestionList;
-			NewList[data["text"]]["Scanned"] = true;
-			this.setState({QuestionList : NewList});
-			
 			// resets the warning
 			this.setState({Warning : ""});
 		}
 		else {
-			this.setState({Warning :"Je hebt deze QR-code al gescand!"});
+			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 		}
     }
 
