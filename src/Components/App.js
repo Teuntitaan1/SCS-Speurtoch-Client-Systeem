@@ -17,6 +17,8 @@ import CompletedQuestion from './CompletedQuestion';
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
 // there is no feedback for questions that are answered wrong
+// the statistics server doesnt work
+// the quiz doesnt reset when it should
 
 //QRCode Formatting should be as followed
 // index of the question should be the containment of the qr code
