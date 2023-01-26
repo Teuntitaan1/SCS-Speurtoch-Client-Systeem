@@ -3,12 +3,16 @@
     {"Title" : "Vraag 1", "Description" : "Werkt", "Completed" : false, 
       "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
 
-        "CorrectAnswer" : "Willekeurig"
+        "CorrectAnswer" : "Willekeurig",
+
+      "ExtraInfo" : "Bijen zijn erg cool!"
     },
     {"Title" : "Vraag 2", "Description" : "Dit?", "Completed" : false, 
     "Options" : ["Willekeurig"],
 
-      "CorrectAnswer" : "Willekeurig"
+      "CorrectAnswer" : "Willekeurig",
+
+    "ExtraInfo" : "Bijen zijn erg cool!"
   }
    
 ]
