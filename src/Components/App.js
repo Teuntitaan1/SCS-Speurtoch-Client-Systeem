@@ -2,6 +2,7 @@ import React from 'react';
 import '../StyleSheets/App.css';
 import QrReader from 'react-qr-scanner';
 import CompletedQuestion from './CompletedQuestion';
+import LeaderboardEntry from './LeaderboardEntry';
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -46,7 +47,7 @@ class App extends React.Component {
 
 			// all variables user by the leaderboard functionality
 			Statistics : {"CorrectFirstTime" : 0, "TimeSpent" : 0},
-			Leaderboard : {}
+			Leaderboard : []
 
 		}
 		// event listeners
@@ -93,7 +94,7 @@ class App extends React.Component {
 
 					<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 					<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
-					<button onClick={() => this.HandleLeaderboard()}>Klaar?</button>
+					<button onClick={() => this.ValidateQuiz()}>Klaar?</button>
 				</div> 
 		); 
 		
@@ -130,6 +131,14 @@ class App extends React.Component {
 			return(
 				<div className='FinishScreenDiv'>
 					<h1>Hier komt het eindscherm!</h1>
+					{
+						this.state.Leaderboard.length !== 0 ? 
+						this.state.Leaderboard.map((Entry, index) =>
+						<LeaderboardEntry key={index} Entry={Entry}/>)
+						:
+						
+						<p color='red'>Helaas, wij konden geen resultaten inladen</p>
+					}
 					<button onClick={() => this.FinishQuiz()}>Goed gedaan!</button>
 				</div>
 			);
@@ -166,9 +175,11 @@ class App extends React.Component {
   	ValidateQuiz() {
 		
 		console.log(`${this.state.QuestionsCompleted}/${this.state.QuestionList.length} Answered`);
-		if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted > 0) {
-			this.setState({ProgramState : "FinishScreen"});
+		if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
+			
 		}
+		this.setState({ProgramState : "FinishScreen"});
+		this.HandleLeaderboard();
 	}
 
   	// handles the scanning of the qr codes
@@ -208,12 +219,12 @@ class App extends React.Component {
 
 	HandleLeaderboard() {
 
-		this.setState({ProgramState : "FinishScreen"});
 		// sends the statistics array to the server
 		fetch("http://localhost:8000", {
 			method: 'POST',
 			headers: {
-			"Content-Type": "text/plain",
+			"Content-Type": "text/plain; charset=UTF-8",
+			
 			},
 			body: JSON.stringify(this.state.Statistics),
 			})
@@ -227,25 +238,7 @@ class App extends React.Component {
 	}
 
 	FinishQuiz() {
-		var Questions = require("../Local_Files/Quiz_Content/Questions.json")
-		// resets the quiz and starts over
-		this.setState({
-			// the state the program currently sits in, look at the top of the file for all allowed states
-			ProgramState : "StartScreen",
-			// all variables used for the quiz itself
-			QuestionList : Questions,
-			ActiveQuestion : null,
-
-			QuestionsCompleted : 0, 
-			// statistics for after the quiz
-			Statistics : {"CorrectFirstTime" : 0, "TimeSpent" : 0},
-
-			// qr code variables
-			Scanning : false,
-			// if the warning is a blank string, nothing will render. else it will
-			// render the warning/error associated with the qr-code
-			Warning : ""
-		});
+		window.location.reload();
 	}
 	// runs when the program is ready to run
 	componentDidMount() {
