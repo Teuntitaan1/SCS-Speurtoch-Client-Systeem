@@ -46,14 +46,13 @@ class App extends React.Component {
 			Warning : "",
 
 			// all variables user by the leaderboard functionality
-			Statistics : {"TimeSpent" : 0},
+			TimeSpent : 0,
 			Leaderboard : []
 
 		}
 		// event listeners
 
 		this.HandleScan = this.HandleScan.bind(this);
-		this.HandleError = this.HandleError.bind(this);
 	}
 
 	// all render code
@@ -84,7 +83,6 @@ class App extends React.Component {
 						<QrReader
 						delay={100}
 						style={{height: 240, width: 320,}}
-						onError={this.HandleError}
 						onScan={this.HandleScan}
 						/>
 						:  null
@@ -95,7 +93,7 @@ class App extends React.Component {
 					<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 					<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
 					<button onClick={() => this.ValidateQuiz()}>Klaar?</button>
-					<p>{this.state.Statistics["TimeSpent"]}</p>
+					<p>{this.state.TimeSpent}</p>
 				</div> 
 		); 
 		
@@ -139,7 +137,7 @@ class App extends React.Component {
 						:
 						<p color='red'>Helaas, wij konden geen resultaten inladen</p>
 					}
-					<button onClick={() => this.FinishQuiz()}>Goed gedaan!</button>
+					<button onClick={() => window.location.reload()}>Goed gedaan!</button>
 				</div>
 			);
 		
@@ -211,17 +209,13 @@ class App extends React.Component {
 		}
     }
 
-	// handles the error part of scanning qr codes
-	HandleError(error){
-		this.setState({Warning : error});
-	}
-	
 	// All statistics code
 	Timer() {
 		if(this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen") {
-			console.log("I should increment");
+			this.setState({TimeSpent : this.state.TimeSpent + 1});
 		}
 	}
+	// handles the leaderboard on the FinishScreen
 	HandleLeaderboard() {
 
 		// sends the statistics array to the server
@@ -231,7 +225,11 @@ class App extends React.Component {
 			"Content-Type": "text/plain; charset=UTF-8",
 			
 			},
-			body: JSON.stringify(this.state.Statistics),
+			body: JSON.stringify(
+				{
+					"TimeSpent" : this.state.TimeSpent,
+				}
+			),
 			})
 		.catch((error) => {
 		console.error('Error:', error);
@@ -241,25 +239,21 @@ class App extends React.Component {
   			.then((response) => response.json())
   			.then((data) => this.setState({Leaderboard : data}));
 	}
-
-	FinishQuiz() {
-		window.location.reload();
-	}
+	
 	// runs when the program is ready to run
 	componentDidMount() {
-
 		// reads the file Questions.json and uses it in the quiz
 		var Questions = require("../Local_Files/Quiz_Content/Questions.json");
 		this.setState({QuestionList : Questions});
 
 		// statistics functions
-		var Timer = setInterval(this.Timer, 1000);
-		this.Timer = Timer;
+		const Timer = setInterval(() => this.Timer(), 1000);
+		this.TimerID = Timer;
 	}
 
 	// runs when the program is ready to stop
 	componentWillUnmount() {
-		clearInterval(this.Timer);
+		clearInterval(this.TimerID);
 	}
 }
 
