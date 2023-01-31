@@ -10,7 +10,7 @@ class LeaderboardEntry extends React.Component {
     render() {
 		return(
 			<div className='LeaderboardEntryDiv'>
-				<p>{this.props.Entry["TimeSpent"]}</p>
+				
 			</div>
 		);
 	}

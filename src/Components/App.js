@@ -46,7 +46,7 @@ class App extends React.Component {
 			Warning : "",
 
 			// all variables user by the leaderboard functionality
-			Statistics : {"CorrectFirstTime" : 0, "TimeSpent" : 0},
+			Statistics : {"TimeSpent" : 0},
 			Leaderboard : []
 
 		}
@@ -95,6 +95,7 @@ class App extends React.Component {
 					<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 					<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
 					<button onClick={() => this.ValidateQuiz()}>Klaar?</button>
+					<p>{this.state.Statistics["TimeSpent"]}</p>
 				</div> 
 		); 
 		
@@ -136,7 +137,6 @@ class App extends React.Component {
 						this.state.Leaderboard.map((Entry, index) =>
 						<LeaderboardEntry key={index} Entry={Entry}/>)
 						:
-						
 						<p color='red'>Helaas, wij konden geen resultaten inladen</p>
 					}
 					<button onClick={() => this.FinishQuiz()}>Goed gedaan!</button>
@@ -215,8 +215,13 @@ class App extends React.Component {
 	HandleError(error){
 		this.setState({Warning : error});
 	}
+	
 	// All statistics code
-
+	Timer() {
+		if(this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen") {
+			console.log("I should increment");
+		}
+	}
 	HandleLeaderboard() {
 
 		// sends the statistics array to the server
@@ -246,10 +251,15 @@ class App extends React.Component {
 		// reads the file Questions.json and uses it in the quiz
 		var Questions = require("../Local_Files/Quiz_Content/Questions.json");
 		this.setState({QuestionList : Questions});
+
+		// statistics functions
+		var Timer = setInterval(this.Timer, 1000);
+		this.Timer = Timer;
 	}
 
 	// runs when the program is ready to stop
 	componentWillUnmount() {
+		clearInterval(this.Timer);
 	}
 }
 
