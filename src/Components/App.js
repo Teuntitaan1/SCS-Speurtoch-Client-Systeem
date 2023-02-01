@@ -72,117 +72,111 @@ class App extends React.Component {
 
 		switch (this.state.ProgramState) {
 		
-		// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
-		case "StartScreen":
+			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
+			case "StartScreen":
 
-			return(
-				<div className='StartScreenDiv'>
-					<h1>{"Welkom bij de Archeon speurtocht over bijen en zijn diverse soorten! (placeholder tekst)"}</h1>
-					<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Start</button>
-				</div>
-			);
+				return(
+					<>
+						<h1>{"Welkom bij de Archeon speurtocht over bijen en zijn diverse soorten! (placeholder tekst)"}</h1>
+						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Start</button>
+					</>
+				);
 
-		case "SelectionScreen":
+			case "SelectionScreen":
 
-		// upon completing the question, the checkmark renders, else it does not.
-		// The image has to be required.
-			return (
-				<div className='SelectionScreenDiv'>
-					<button onClick={() => this.setState({Scanning : !this.state.Scanning})}>Scannen</button>
-					
-					{this.state.Scanning === true ? 
-					
-						<QrReader
-						delay={100}
-						style={{height: 240, width: 320,}}
-						onScan={this.HandleScan}
-						onError={this.HandleError}
-						/>
-						:  null
-					}
-					
-					<p style={{"color" : "red"}}>{this.state.Warning}</p>
+			// upon completing the question, the checkmark renders, else it does not.
+			// The image has to be required.
+				return (
+					<>
+						<button onClick={() => this.setState({Scanning : !this.state.Scanning})}>Scannen</button>
+						
+						{this.state.Scanning === true ? 
+							<QrReader delay={100} style={{height: 240, width: 320,}} onScan={this.HandleScan} onError={this.HandleError}/>
+							:  
+							null
+						}
+						
+						<p style={{"color" : "red"}}>{this.state.Warning}</p>
 
-					<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
-					<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
-					<button onClick={() => this.setState({ProgramState : "FinishScreen"})}>Klaar?</button>
-				</div> 
-		); 
-		
-		case "DoneQuestionsScreen": 
+						<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
+						<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
+						<button onClick={() => this.setState({ProgramState : "FinishScreen"})}>Klaar?</button>
+					</> 
+			); 
 			
-			return(
-				<div>
-					<button onClick={() => {this.setState({ProgramState : "SelectionScreen"})}}>Terug</button>
-					{this.state.QuestionList.map((Question, index) =>
-					Question["Completed"] === true ? <CompletedQuestion key={index} Question = {Question}/> : null
-					)}
-				</div>
-			);
-		
-
-		case "AnswerScreen":
-		
-			return(
-				<div className='AnswerScreenDiv'>
-					<h1>{this.state.QuestionList[this.state.ActiveQuestion]["Title"]}</h1>
-					<h2>{this.state.QuestionList[this.state.ActiveQuestion]["Description"]}</h2>
-
-					{
-					/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
-					this.state.QuestionList[this.state.ActiveQuestion]["Options"].map((Option, index) =>
-						<button key={index} onClick={() => this.ValidateAnswer(Option)}>{Option}</button>)
-					}
-					<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Terug</button>
-				</div>
-			);
-
-		case "FinishScreen":
+			case "DoneQuestionsScreen": 
+				
+				return(
+					<>
+						<button onClick={() => {this.setState({ProgramState : "SelectionScreen"})}}>Terug</button>
+						{this.state.QuestionList.map((Question, index) => Question["Completed"] === true ? <CompletedQuestion key={index} Question = {Question}/> 
+						: null)}
+					</>
+				);
 			
-			return(
-				<div>
-					{
-						this.state.SendResults !== true ?
-							<div>
-								<input type={'text'} onChange={this.HandleNameChange} value={this.state.UserName}/>
-								<button onClick={() => this.HandleLeaderboard()}>{this.state.UserName === "" ? "Sla stap over" : "Verstuur resulaten"}</button>
-							</div> 
-							:
-							<div>
-								{
-									this.state.Leaderboard.length !== 0 ? 
-										<table>
-											<tbody>
-												<tr>
-													<th>Naam</th>
-													<th>Tijd</th>
-													<th>In 1x goed</th>
-												</tr>
-												{this.state.Leaderboard.map((Entry, index) => 
-													<tr key={index}>
-														<td>{Entry["UserName"]}</td>
-														<td>{Entry["TimeSpent"]}</td>
-														<td>{Entry["CorrectFirstTime"]}</td>
+
+			case "AnswerScreen":
+			
+				return(
+					<>
+						<h1>{this.state.QuestionList[this.state.ActiveQuestion]["Title"]}</h1>
+						<h2>{this.state.QuestionList[this.state.ActiveQuestion]["Description"]}</h2>
+						{
+						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
+						this.state.QuestionList[this.state.ActiveQuestion]["Options"].map((Option, index) =>
+							<button key={index} onClick={() => this.ValidateAnswer(Option)}>{Option}</button>)
+						}
+						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Terug</button>
+					</>
+				);
+
+			case "FinishScreen":
+				
+				return(
+					<>
+						{
+							this.state.SendResults !== true ?
+								<>
+									<h3>{"Wat is je naam? (niet verplicht)"}</h3>
+									<input type={'text'} onChange={this.HandleNameChange} value={this.state.UserName}/>
+									<button onClick={() => this.HandleLeaderboard()}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+								</> 
+								:
+								<>
+									{
+										this.state.Leaderboard.length !== 0 ? 
+											<table border={1} cellPadding={5}>
+												<tbody>
+													<tr>
+														<th>Naam</th>
+														<th>Tijd</th>
+														<th>In 1x goed</th>
 													</tr>
-												)}
-											</tbody>
-									</table>
-									:
-									<p color='red'>Helaas, wij konden geen resultaten inladen</p>
-								}
-								<button onClick={() => window.location.reload()}>Goed gedaan!</button>
-							</div>
-					}
-				</div>
-			);
-		
-		default:
+													{this.state.Leaderboard.map((Entry, index) => 
+														<tr key={index}>
+															<td>{Entry["UserName"]}</td>
+															<td>{Entry["TimeSpent"]}</td>
+															<td>{Entry["CorrectFirstTime"]}</td>
+														</tr>
+													)}
+												</tbody>
+										</table>
+										:
+										<p color='red'>Helaas, wij konden geen resultaten inladen</p>
+									}
+									<button onClick={() => window.location.reload()}>Goed gedaan!</button>
+								</>
+						}
+					</>
+				);
+			
+			default:
 
-			return(
-				<div className='ErrorScreenDiv'>
-					<h1>Error... er is iets fout gegaan!</h1>
-				</div>
-			);
+				return(
+					<>
+						<h1>Error... er is iets fout gegaan!</h1>
+					</>
+				);
 		} 
 	}
   
@@ -298,25 +292,17 @@ class App extends React.Component {
 		// doenst work, need fixing
 		var CorrectFirstTime = 0;
 		this.state.QuestionList.map((Question) => Question["CompletedFirstTime"] === true ? CorrectFirstTime++ : console.log("Didnt complete first time"));
-		
+
+		var Body = JSON.stringify({
+			"UserName" : UserNameForServer,
+			"TimeSpent" : this.state.TimeSpent,
+			"CorrectFirstTime" : CorrectFirstTime,});
 		// sends the statistics array to the server
 		fetch("http://localhost:8000", {
 			method: 'POST',
-			headers: {
-			"Content-Type": "text/plain; charset=UTF-8",
-			
-			},
-			body: JSON.stringify(
-				{
-					"UserName" : UserNameForServer,
-					"TimeSpent" : this.state.TimeSpent,
-					"CorrectFirstTime" : CorrectFirstTime,
-				}
-			),
-			})
-		.catch((error) => {
-		console.error('Error:', error);
-		});
+			headers: {"Content-Type": "text/plain; charset=UTF-8"},
+			body: Body})
+		.catch((error) => {console.error('Error:', error);});
 		// gets the leaderboard from the server
 		fetch('http://localhost:8000')
   			.then((response) => response.json())
