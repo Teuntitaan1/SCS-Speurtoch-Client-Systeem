@@ -2,7 +2,7 @@ import React from 'react';
 import '../StyleSheets/App.css';
 import QrReader from 'react-qr-scanner';
 import CompletedQuestion from './CompletedQuestion';
-import LeaderboardEntry from './LeaderboardEntry';
+
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -11,6 +11,9 @@ import LeaderboardEntry from './LeaderboardEntry';
 // 5.FinishScreen
 // 6. Anything else defaults to the error page
 
+//QRCode Formatting should be as followed
+// index of the question should be the containment of the qr code
+
 // TODO
 // Hints
 // Saving State of Quiz
@@ -18,11 +21,14 @@ import LeaderboardEntry from './LeaderboardEntry';
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
 // there is no feedback for questions that are answered wrong
-// the statistics server doesnt work
-// the quiz doesnt reset when it should
 
-//QRCode Formatting should be as followed
-// index of the question should be the containment of the qr code
+
+
+
+
+
+
+
 
 class App extends React.Component {
   
@@ -46,14 +52,20 @@ class App extends React.Component {
 			Warning : "",
 
 			// all variables user by the leaderboard functionality
+			SendResults : false,
 			TimeSpent : 0,
+			UserName : "",
 			Leaderboard : []
 
 		}
 		// event listeners
 
 		this.HandleScan = this.HandleScan.bind(this);
+		this.HandleError = this.HandleError.bind(this);
+		this.HandleNameChange = this.HandleNameChange.bind(this);
 	}
+
+
 
 	// all render code
 	render() {
@@ -84,6 +96,7 @@ class App extends React.Component {
 						delay={100}
 						style={{height: 240, width: 320,}}
 						onScan={this.HandleScan}
+						onError={this.HandleError}
 						/>
 						:  null
 					}
@@ -92,8 +105,7 @@ class App extends React.Component {
 
 					<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 					<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
-					<button onClick={() => this.ValidateQuiz()}>Klaar?</button>
-					<p>{this.state.TimeSpent}</p>
+					<button onClick={() => this.setState({ProgramState : "FinishScreen"})}>Klaar?</button>
 				</div> 
 		); 
 		
@@ -128,16 +140,39 @@ class App extends React.Component {
 		case "FinishScreen":
 			
 			return(
-				<div className='FinishScreenDiv'>
-					<h1>Hier komt het eindscherm!</h1>
+				<div>
 					{
-						this.state.Leaderboard.length !== 0 ? 
-						this.state.Leaderboard.map((Entry, index) =>
-						<LeaderboardEntry key={index} Entry={Entry}/>)
-						:
-						<p color='red'>Helaas, wij konden geen resultaten inladen</p>
+						this.state.SendResults !== true ?
+							<div>
+								<input type={'text'} onChange={this.HandleNameChange} value={this.state.UserName}/>
+								<button onClick={() => this.HandleLeaderboard()}>{this.state.UserName === "" ? "Sla stap over" : "Verstuur resulaten"}</button>
+							</div> 
+							:
+							<div>
+								{
+									this.state.Leaderboard.length !== 0 ? 
+										<table>
+											<tbody>
+												<tr>
+													<th>Naam</th>
+													<th>Tijd</th>
+													<th>In 1x goed</th>
+												</tr>
+												{this.state.Leaderboard.map((Entry, index) => 
+													<tr key={index}>
+														<td>{Entry["UserName"]}</td>
+														<td>{Entry["TimeSpent"]}</td>
+														<td>{Entry["CorrectFirstTime"]}</td>
+													</tr>
+												)}
+											</tbody>
+									</table>
+									:
+									<p color='red'>Helaas, wij konden geen resultaten inladen</p>
+								}
+								<button onClick={() => window.location.reload()}>Goed gedaan!</button>
+							</div>
 					}
-					<button onClick={() => window.location.reload()}>Goed gedaan!</button>
 				</div>
 			);
 		
@@ -151,13 +186,19 @@ class App extends React.Component {
 		} 
 	}
   
+
+
+
+
+
+
   	ValidateAnswer(Option) {
 
+		var NewQuestionList = this.state.QuestionList;
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
 		if (Option === this.state.QuestionList[this.state.ActiveQuestion]["CorrectAnswer"]) {
 		
 			// sets the active question to completed
-			var NewQuestionList = this.state.QuestionList;
 			NewQuestionList[this.state.ActiveQuestion]["Completed"] = true;
 			this.setState({QuestionList : NewQuestionList});			
 			// switches the state back to the selectionscreen
@@ -166,21 +207,26 @@ class App extends React.Component {
 			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
 		}
 		else {
+			// sets the active question to completed
+			NewQuestionList[this.state.ActiveQuestion]["CorrectFirstTime"] = false;
+			this.setState({QuestionList : NewQuestionList});
 			console.log("Incorrect Answer");
 		}
-  }
-  	
+  	}
+  	// only lets the user through when all questions have been answered
   	ValidateQuiz() {
 		
-		console.log(`${this.state.QuestionsCompleted}/${this.state.QuestionList.length} Answered`);
 		if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
 			
 		}
+		//currently doesnt work since debug
 		this.setState({ProgramState : "FinishScreen"});
 		this.HandleLeaderboard();
 	}
 
-  	// handles the scanning of the qr codes
+  	// handles all events
+	//
+	//
   	HandleScan(data){
     
 		if (data === null) {
@@ -208,16 +254,51 @@ class App extends React.Component {
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 		}
     }
-
+	
+	
+	
+	
+	
+	// handles errors received from the qr code scanner
+	HandleError(error) {
+		this.setState({Warning : error});
+	}
+	HandleNameChange(event) {
+		this.setState({UserName : event.target.value});
+	}
+	
+	
+	
+	
+	
+	
+	
 	// All statistics code
 	Timer() {
 		if(this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen") {
 			this.setState({TimeSpent : this.state.TimeSpent + 1});
 		}
 	}
+	
+	
+	
+	
+	
+	
 	// handles the leaderboard on the FinishScreen
 	HandleLeaderboard() {
 
+		// updates the state
+		this.setState({SendResults : true});
+		// sets the username provided, or "Anoniem" when none provided
+		var UserNameForServer = "Anoniem";
+		if (this.state.UserName !== "") {
+			UserNameForServer = this.state.UserName;
+		}
+		// doenst work, need fixing
+		var CorrectFirstTime = 0;
+		this.state.QuestionList.map((Question) => Question["CompletedFirstTime"] === true ? CorrectFirstTime++ : console.log("Didnt complete first time"));
+		
 		// sends the statistics array to the server
 		fetch("http://localhost:8000", {
 			method: 'POST',
@@ -227,7 +308,9 @@ class App extends React.Component {
 			},
 			body: JSON.stringify(
 				{
+					"UserName" : UserNameForServer,
 					"TimeSpent" : this.state.TimeSpent,
+					"CorrectFirstTime" : CorrectFirstTime,
 				}
 			),
 			})
@@ -240,6 +323,10 @@ class App extends React.Component {
   			.then((data) => this.setState({Leaderboard : data}));
 	}
 	
+
+
+
+
 	// runs when the program is ready to run
 	componentDidMount() {
 		// reads the file Questions.json and uses it in the quiz
@@ -250,7 +337,6 @@ class App extends React.Component {
 		const Timer = setInterval(() => this.Timer(), 1000);
 		this.TimerID = Timer;
 	}
-
 	// runs when the program is ready to stop
 	componentWillUnmount() {
 		clearInterval(this.TimerID);
