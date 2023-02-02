@@ -42,9 +42,10 @@ class App extends React.Component {
 			// all variables used for the quiz itself
 			QuestionList : [],
 			ActiveQuestion : null,
-			
-			QuestionsCompleted : 0, 
+			FirstAttempt : true,
 
+			QuestionsCompleted : 0, 
+			QuestionsCompletedFirstTime : 0,
 			// qr code variables
 			Scanning : false,
 			// if the warning is a blank string, nothing will render. else it will
@@ -192,6 +193,12 @@ class App extends React.Component {
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
 		if (Option === this.state.QuestionList[this.state.ActiveQuestion]["CorrectAnswer"]) {
 		
+			if (this.state.FirstAttempt === true) {
+				this.setState({QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime + 1});
+			}
+			else {
+				this.setState({FirstAttempt : true});
+			}
 			// sets the active question to completed
 			NewQuestionList[this.state.ActiveQuestion]["Completed"] = true;
 			this.setState({QuestionList : NewQuestionList});			
@@ -201,9 +208,7 @@ class App extends React.Component {
 			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
 		}
 		else {
-			// sets the active question to completed
-			NewQuestionList[this.state.ActiveQuestion]["CorrectFirstTime"] = false;
-			this.setState({QuestionList : NewQuestionList});
+			this.setState({FirstAttempt : false});
 			console.log("Incorrect Answer");
 		}
   	}
@@ -289,14 +294,11 @@ class App extends React.Component {
 		if (this.state.UserName !== "") {
 			UserNameForServer = this.state.UserName;
 		}
-		// doenst work, need fixing
-		var CorrectFirstTime = 0;
-		this.state.QuestionList.map((Question) => Question["CompletedFirstTime"] === true ? CorrectFirstTime++ : console.log("Didnt complete first time"));
 
 		var Body = JSON.stringify({
 			"UserName" : UserNameForServer,
 			"TimeSpent" : this.state.TimeSpent,
-			"CorrectFirstTime" : CorrectFirstTime,});
+			"CorrectFirstTime" : this.state.QuestionsCompletedFirstTime,});
 		// sends the statistics array to the server
 		fetch("http://localhost:8000", {
 			method: 'POST',
