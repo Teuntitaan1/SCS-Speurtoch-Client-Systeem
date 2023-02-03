@@ -13,7 +13,6 @@ import CompletedQuestion from './CompletedQuestion';
 
 // TODO
 // Hints
-// Saving State of Quiz
 // Look and feel of the program should be improved
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
@@ -22,31 +21,39 @@ class App extends React.Component {
   
 	constructor(props) {
 		super(props);
-
-		this.state = {
 		
-			// the state the program currently sits in, look at the top of the file for all allowed states
-			ProgramState : "StartScreen",
-			// all variables used for the quiz itself
-			QuestionList : [],
-			ActiveQuestion : null,
-			FirstAttempt : true,
-
-			QuestionsCompleted : 0, 
-			QuestionsCompletedFirstTime : 0,
-			// qr code variables
-			Scanning : false,
-			// if the warning is a blank string, nothing will render. else it will
-			// render the warning/error associated with the qr-code
-			Warning : "",
-
-			// all variables user by the leaderboard functionality
-			SendResults : false,
-			TimeSpent : 0,
-			UserName : "",
-			Leaderboard : []
-
+		// attempts to load Quizstate from storage
+		if (window.localStorage.getItem("QuizState") !== "") {
+			this.state = JSON.parse(window.localStorage.getItem("QuizState"));
 		}
+		else {
+			this.state = {
+		
+				// the state the program currently sits in, look at the top of the file for all allowed states
+				ProgramState : "StartScreen",
+				// all variables used for the quiz itself
+				QuestionList : [],
+				ActiveQuestion : null,
+				FirstAttempt : true,
+	
+				QuestionsCompleted : 0, 
+				QuestionsCompletedFirstTime : 0,
+				// qr code variables
+				Scanning : false,
+				// if the warning is a blank string, nothing will render. else it will
+				// render the warning/error associated with the qr-code
+				Warning : "",
+	
+				// all variables user by the leaderboard functionality
+				SendResults : false,
+				TimeSpent : 0,
+				UserName : "",
+				Leaderboard : []
+	
+			}
+	
+		}
+	
 		// event listeners
 
 		this.HandleQrCodeScan = this.HandleQrCodeScan.bind(this);
@@ -67,6 +74,7 @@ class App extends React.Component {
 					<>
 						<h1>{"Archeon Speurtocht Bijenlandgemeenschap en "}</h1>
 						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Begin!</button>
+						<button onClick={() => {this.ResetQuiz()}}>reset</button>
 					</>
 				);
 
@@ -136,7 +144,7 @@ class App extends React.Component {
 								<>
 									<h3>{"Wat is je naam? (niet verplicht)"}</h3>
 									<input type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
-									<button onClick={() => {this.PushPullLeaderboard()}}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+									<button onClick={() => {this.PushLeaderBoard()}}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
 								</> 
 								:
 								<>
@@ -161,7 +169,7 @@ class App extends React.Component {
 										:
 										<p>Aan het laden...</p>
 									}
-									<button onClick={() => window.location.reload()}>Goed gedaan!</button>
+									<button onClick={() => {this.ResetQuiz()}}>Goed gedaan!</button>
 								</>
 						}
 					</>
@@ -227,10 +235,34 @@ class App extends React.Component {
 			this.setState({TimeSpent : this.state.TimeSpent + 1});
 		}
 	}
-	
-	// handles the leaderboard on the FinishScreen
-	PushPullLeaderboard() {
+	TimerSave() {
+		var SavedState = {
+			// the state the program currently sits in, look at the top of the file for all allowed states
+			"ProgramState" : this.state.ProgramState,
+			// all variables used for the quiz itself
+			"QuestionList" : this.state.QuestionList,
+			"ActiveQuestion" : this.state.ActiveQuestion,
+			"FirstAttempt" : this.state.FirstAttempt,
 
+			"QuestionsCompleted" : this.state.QuestionsCompleted, 
+			"QuestionsCompletedFirstTime" : this.state.QuestionsCompletedFirstTime,
+			// qr code variables
+			"Scanning" : false,
+			// if the warning is a blank string, nothing will render. else it will
+			// render the warning/error associated with the qr-code
+			"Warning" : "",
+
+			// all variables user by the leaderboard functionality
+			"SendResults" : this.state.SendResults,
+			"TimeSpent" : this.state.TimeSpent,
+			"UserName" : this.state.UserName,
+			"Leaderboard" : this.state.Leaderboard
+			
+		}	
+		window.localStorage.setItem("QuizState" , JSON.stringify(SavedState));
+	}
+	
+	PushLeaderBoard() {
 		var Body = JSON.stringify({
 			"UserName" : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 			"TimeSpent" : this.state.TimeSpent,
@@ -242,15 +274,16 @@ class App extends React.Component {
 			headers: {"Content-Type": "text/plain; charset=UTF-8"},
 			body: Body})
 		.catch((error) => {console.error('Error:', error);});
-		// gets the leaderboard from the server
-		fetch('http://localhost:8000')
-  			.then((response) => response.json())
-  			.then((data) => this.setState({Leaderboard : data}));
 
 		// updates the state
 		this.setState({SendResults : true});
 	}
-	
+	PullLeaderBoard() {
+		// gets the leaderboard from the server
+		fetch('http://localhost:8000')
+		.then((response) => response.json())
+		.then((data) => this.setState({Leaderboard : data}));
+	}
 
 
 
@@ -259,14 +292,27 @@ class App extends React.Component {
 	componentDidMount() {
 		// reads the file Questions.json and uses it in the quiz
 		this.setState({QuestionList : require("../Local_Files/Quiz_Content/Questions.json")});
-
+		
 		// statistics functions
-		const Timer = setInterval(() => this.TimerTick(), 1000);
-		this.TimerID = Timer;
+		const QuizTimer = setInterval(() => this.TimerTick(), 1000);
+		this.TimerID = QuizTimer;
+
+		const SaveTimer = setInterval(() => this.TimerSave(), 5000);
+		this.SaveTimerID = SaveTimer;
+
+		const LeaderboardTimer = setInterval(() => this.PullLeaderBoard(), 5000);
+		this.LeaderboardTimerID = LeaderboardTimer;
 	}
 	// runs when the program is ready to stop
 	componentWillUnmount() {
 		clearInterval(this.TimerID);
+		clearInterval(this.SaveTimerID);
+		clearInterval(this.LeaderboardTimerID);
+	}
+
+	ResetQuiz() {
+		window.localStorage.setItem("QuizState", "");
+		window.location.reload();
 	}
 }
 
