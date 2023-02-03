@@ -11,24 +11,12 @@ import CompletedQuestion from './CompletedQuestion';
 // 5.FinishScreen
 // 6. Anything else defaults to the error page
 
-//QRCode Formatting should be as followed
-// index of the question should be the containment of the qr code
-
 // TODO
 // Hints
 // Saving State of Quiz
 // Look and feel of the program should be improved
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
-// there is no feedback for questions that are answered wrong
-
-
-
-
-
-
-
-
 
 class App extends React.Component {
   
@@ -61,9 +49,8 @@ class App extends React.Component {
 		}
 		// event listeners
 
-		this.HandleScan = this.HandleScan.bind(this);
-		this.HandleError = this.HandleError.bind(this);
-		this.HandleNameChange = this.HandleNameChange.bind(this);
+		this.HandleQrCodeScan = this.HandleQrCodeScan.bind(this);
+		this.HandleQrCodeError = this.HandleQrCodeError.bind(this);
 	}
 
 
@@ -78,8 +65,8 @@ class App extends React.Component {
 
 				return(
 					<>
-						<h1>{"Welkom bij de Archeon speurtocht over bijen en zijn diverse soorten! (placeholder tekst)"}</h1>
-						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Start</button>
+						<h1>{"Archeon Speurtocht Bijenlandgemeenschap en "}</h1>
+						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Begin!</button>
 					</>
 				);
 
@@ -89,10 +76,14 @@ class App extends React.Component {
 			// The image has to be required.
 				return (
 					<>
-						<button onClick={() => this.setState({Scanning : !this.state.Scanning})}>Scannen</button>
+						<button onClick={() => this.setState({Scanning : !this.state.Scanning})}>{this.state.Scanning !== true ? "Start" : "Stop"} met scannen</button>
 						
 						{this.state.Scanning === true ? 
-							<QrReader delay={100} style={{height: 240, width: 320,}} onScan={this.HandleScan} onError={this.HandleError}/>
+							<QrReader 
+								delay={100} 
+								style={{height: 240, width: 320,}} 
+								onScan={this.HandleQrCodeScan} 
+								onError={this.HandleQrCodeError}/>
 							:  
 							null
 						}
@@ -101,7 +92,11 @@ class App extends React.Component {
 
 						<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 						<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
-						<button onClick={() => this.setState({ProgramState : "FinishScreen"})}>Klaar?</button>
+						<button onClick={() => 
+							{this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ?
+								this.setState({ProgramState : "FinishScreen"}) :
+								console.log("Je mag er nog niet door")}}
+						>Klaar?</button>
 					</> 
 			); 
 			
@@ -127,6 +122,7 @@ class App extends React.Component {
 						this.state.QuestionList[this.state.ActiveQuestion]["Options"].map((Option, index) =>
 							<button key={index} onClick={() => this.ValidateAnswer(Option)}>{Option}</button>)
 						}
+						{this.state.FirstAttempt !== true ? <p>Helaas! Dat is niet het goede antwoord!</p> : null}
 						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Terug</button>
 					</>
 				);
@@ -139,8 +135,8 @@ class App extends React.Component {
 							this.state.SendResults !== true ?
 								<>
 									<h3>{"Wat is je naam? (niet verplicht)"}</h3>
-									<input type={'text'} onChange={this.HandleNameChange} value={this.state.UserName}/>
-									<button onClick={() => this.HandleLeaderboard()}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+									<input type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
+									<button onClick={() => {this.PushPullLeaderboard()}}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
 								</> 
 								:
 								<>
@@ -163,7 +159,7 @@ class App extends React.Component {
 												</tbody>
 										</table>
 										:
-										<p color='red'>Helaas, wij konden geen resultaten inladen</p>
+										<p>Aan het laden...</p>
 									}
 									<button onClick={() => window.location.reload()}>Goed gedaan!</button>
 								</>
@@ -180,11 +176,6 @@ class App extends React.Component {
 				);
 		} 
 	}
-  
-
-
-
-
 
 
   	ValidateAnswer(Option) {
@@ -193,112 +184,58 @@ class App extends React.Component {
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
 		if (Option === this.state.QuestionList[this.state.ActiveQuestion]["CorrectAnswer"]) {
 		
-			if (this.state.FirstAttempt === true) {
-				this.setState({QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime + 1});
-			}
-			else {
-				this.setState({FirstAttempt : true});
-			}
+			this.state.FirstAttempt === true ? this.setState({QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime + 1}) : this.setState({FirstAttempt : true});
 			// sets the active question to completed
 			NewQuestionList[this.state.ActiveQuestion]["Completed"] = true;
-			this.setState({QuestionList : NewQuestionList});			
-			// switches the state back to the selectionscreen
-			this.setState({ProgramState : "SelectionScreen"});
-			// Increments the QuestionsCompleted variable
-			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
+			this.setState({QuestionList : NewQuestionList, ProgramState : "SelectionScreen", QuestionsCompleted : this.state.QuestionsCompleted + 1});			
 		}
 		else {
 			this.setState({FirstAttempt : false});
 			console.log("Incorrect Answer");
 		}
   	}
-  	// only lets the user through when all questions have been answered
-  	ValidateQuiz() {
-		
-		if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
-			
-		}
-		//currently doesnt work since debug
-		this.setState({ProgramState : "FinishScreen"});
-		this.HandleLeaderboard();
-	}
 
   	// handles all events
 	//
 	//
-  	HandleScan(data){
-    
-		if (data === null) {
-			// do nothing
-			this.setState({Warning : ""});
-			return null; 
+  	HandleQrCodeScan(data){
+		// validates data
+		if (data === null || this.state.QuestionList[data["text"]] === undefined) {
+			if (data == null) {
+				this.setState({Warning : ""});
+			} 
+			else {
+				this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
+			}
+			return null;
 		}
-		// checks if the qrcode is valid by checking if it would return a key in our QuestionList
-		if (this.state.QuestionList[data["text"]] === undefined) {
-			this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
-			return null; 
-		}
-		
-		if (this.state.QuestionList[data["text"]]["Completed"] === false) {
-			
-			// sets the active question and turns of the scanner
-			this.setState({ActiveQuestion: data["text"]});
-			this.setState({ProgramState :"AnswerScreen"});
-			this.setState({Scanning : false});
-			
-			// resets the warning
-			this.setState({Warning : ""});
-		}
-		else {
+		// checks if the question has been answered or not
+		this.state.QuestionList[data["text"]]["Completed"] === false ?
+			this.setState({ActiveQuestion: data["text"], ProgramState :"AnswerScreen", Scanning : false, Warning : ""}) 
+		:
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
-		}
-    }
-	
-	
-	
-	
-	
+	}
 	// handles errors received from the qr code scanner
-	HandleError(error) {
+	HandleQrCodeError(error) {
 		this.setState({Warning : error});
 	}
-	HandleNameChange(event) {
-		this.setState({UserName : event.target.value});
-	}
-	
-	
-	
-	
-	
-	
+		
 	
 	// All statistics code
-	Timer() {
+	TimerTick() {
 		if(this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen") {
 			this.setState({TimeSpent : this.state.TimeSpent + 1});
 		}
 	}
 	
-	
-	
-	
-	
-	
 	// handles the leaderboard on the FinishScreen
-	HandleLeaderboard() {
-
-		// updates the state
-		this.setState({SendResults : true});
-		// sets the username provided, or "Anoniem" when none provided
-		var UserNameForServer = "Anoniem";
-		if (this.state.UserName !== "") {
-			UserNameForServer = this.state.UserName;
-		}
+	PushPullLeaderboard() {
 
 		var Body = JSON.stringify({
-			"UserName" : UserNameForServer,
+			"UserName" : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 			"TimeSpent" : this.state.TimeSpent,
 			"CorrectFirstTime" : this.state.QuestionsCompletedFirstTime,});
+
 		// sends the statistics array to the server
 		fetch("http://localhost:8000", {
 			method: 'POST',
@@ -309,6 +246,9 @@ class App extends React.Component {
 		fetch('http://localhost:8000')
   			.then((response) => response.json())
   			.then((data) => this.setState({Leaderboard : data}));
+
+		// updates the state
+		this.setState({SendResults : true});
 	}
 	
 
@@ -318,11 +258,10 @@ class App extends React.Component {
 	// runs when the program is ready to run
 	componentDidMount() {
 		// reads the file Questions.json and uses it in the quiz
-		var Questions = require("../Local_Files/Quiz_Content/Questions.json");
-		this.setState({QuestionList : Questions});
+		this.setState({QuestionList : require("../Local_Files/Quiz_Content/Questions.json")});
 
 		// statistics functions
-		const Timer = setInterval(() => this.Timer(), 1000);
+		const Timer = setInterval(() => this.TimerTick(), 1000);
 		this.TimerID = Timer;
 	}
 	// runs when the program is ready to stop
