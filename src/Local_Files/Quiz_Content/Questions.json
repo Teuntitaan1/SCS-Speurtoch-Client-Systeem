@@ -1,13 +1,13 @@
 [
     
-    {"Title" : "Vraag 1", "Description" : "Werkt", "Completed" : false,
+    {"Title" : "Vraag 1", "Description" : "Werkt", "Completed" : false, "Hint" : "Test",
       "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
 
         "CorrectAnswer" : "Willekeurig",
 
       "ExtraInfo" : "Bijen zijn erg cool!"
     },
-    {"Title" : "Vraag 2", "Description" : "Dit?", "Completed" : false,
+    {"Title" : "Vraag 2", "Description" : "Dit?", "Completed" : false, "Hint" : "Testing 2",
     "Options" : ["Willekeurig"],
 
       "CorrectAnswer" : "Willekeurig",
