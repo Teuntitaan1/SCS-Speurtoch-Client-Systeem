@@ -99,7 +99,7 @@ class App extends React.Component {
 						
 						<p style={{"color" : "red"}}>{this.state.Warning}</p>
 
-						<p>{this.state.CurrentHint}</p>
+						<p>Hint: {this.state.CurrentHint}</p>
 
 						<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 						<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
@@ -191,6 +191,7 @@ class App extends React.Component {
 		} 
 	}
 
+	// generates a hint used in the selectionscreen
 	GenerateHint() {
 
 		var GotHint = false;
@@ -198,19 +199,27 @@ class App extends React.Component {
 		var TijdperkList = ["PREHISTORIE", "MIDDELEEUWEN", "ROMEINSETIJD"];
 
 		while (GotHint === false) {
+			// loops through the questionlist array
+			// eslint-disable-next-line
 			this.state.QuestionList.every(Question => {
-				console.log(`Checking hint from ${Question.Title}, Completed = ${Question.Completed}, Tijdperk = ${Question.Tijdperk}`);
+				// skips the question if it has already been completed
 				if (Question.Completed === false) {
+					// checks if its tijdperk is equal to the desired tijdperk
 					if (Question.Tijdperk === TijdperkList[CurrentTijdperk]) {
+						// sets the hint to the found hint
 						this.setState({CurrentHint : Question.Hint});
 						GotHint = true;
 						console.log(`Got hint from ${Question.Title}, Tijdperk = ${Question.Tijdperk}`);
+						// stops the .every()
 						return false;
 					}
 				}
+				// continues the .every() when the question isnt usefull
 				return true;
 			});
+			// if no questions could be found matching the desired tijdperk, move the tijdperk + 1
 			CurrentTijdperk++;
+			// if all possible tijdperken have been searched through and nothing was found, all questions have been answered and the quiz is done
 			if (CurrentTijdperk - 1 === TijdperkList.length) {
 				this.setState({CurrentHint : "Je hebt alle vragen beantwoord, goed gedaan!"});
 				GotHint = true;
@@ -272,8 +281,9 @@ class App extends React.Component {
 	}
 		
 	
-	// All statistics code
+	// All timer code
 	TimerTick() {
+		// increments the TimeSpent variable if the user is activly participating in the quiz
 		if(this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen") {
 			this.setState({TimeSpent : this.state.TimeSpent + 1});
 		}
@@ -306,16 +316,18 @@ class App extends React.Component {
 			Leaderboard : this.state.Leaderboard
 			
 		}	
+		// saves the program to localstate
 		window.localStorage.setItem("QuizState" , JSON.stringify(SavedState));
 	}
 	
 	PushLeaderBoard() {
+		// statistics to sent to the server
 		var Body = JSON.stringify({
 			UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 			TimeSpent : this.state.TimeSpent,
 			CorrectFirstTime : this.state.QuestionsCompletedFirstTime,});
 
-		// sends the statistics array to the server
+		// sends the Body array to the server
 		fetch("http://localhost:8000", {
 			method: 'POST',
 			headers: {"Content-Type": "text/plain; charset=UTF-8"},
@@ -327,7 +339,7 @@ class App extends React.Component {
 	}
 	
 	PullLeaderBoard() {
-		// gets the leaderboard from the server
+		// gets the leaderboard from the server and displays it on the finishscreen
 		fetch('http://localhost:8000')
 		.then((response) => response.json())
 		.then((data) => this.setState({Leaderboard : data}));
@@ -339,7 +351,7 @@ class App extends React.Component {
 	// runs when the program is ready to run
 	componentDidMount() {
 		
-		// statistics functions
+		// prepares the various timers used in the program
 		const QuizTimer = setInterval(() => this.TimerTick(), 1*1000);
 		this.TimerID = QuizTimer;
 
@@ -351,12 +363,14 @@ class App extends React.Component {
 	}
 	// runs when the program is ready to stop
 	componentWillUnmount() {
+		// lets the timers go
 		clearInterval(this.TimerID);
 		clearInterval(this.SaveTimerID);
 		clearInterval(this.LeaderboardTimerID);
 	}
 
 	ResetQuiz() {
+		// deletes the saved quiz from storage and quickly reloads the page to reset the client side quiz so it begins with a clean slate
 		window.localStorage.setItem("QuizState", "");
 		window.location.reload();
 	}
