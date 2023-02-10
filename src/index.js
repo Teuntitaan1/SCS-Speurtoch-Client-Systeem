@@ -15,6 +15,7 @@ root.render(
       <>
       <br/>
       <hr/>
+      <h3>Debug bedieningspaneel</h3>
       <button onClick={() => {window.localStorage.setItem("QuizState", "");
 		  window.location.reload();}}>Reset</button> 
       </>

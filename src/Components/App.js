@@ -10,7 +10,7 @@ import CompletedQuestion from './CompletedQuestion';
 // 3.DoneQuestionsScreen
 // 4.AnswerScreen
 // 5.FinishScreen
-// 6. Anything else defaults to the error page
+// 6.Anything else defaults to the error page
 
 
 // ALL POSSIBLE LOCATIONS
@@ -19,7 +19,6 @@ import CompletedQuestion from './CompletedQuestion';
 //ROMEINSETIJD
 
 // TODO
-// Hints
 // Look and feel of the program should be improved
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
@@ -29,7 +28,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		console.log(`Debug mode: ${this.props.debugmode}`);
-
+		const QuestionList = require("../Local_Files/Quiz_Content/Questions.json");
 		// attempts to load Quizstate from storage
 		window.localStorage.getItem("QuizState") !== "" ? 
 			this.state = JSON.parse(window.localStorage.getItem("QuizState"))
@@ -38,7 +37,7 @@ class App extends React.Component {
 				// the state the program currently sits in, look at the top of the file for all allowed states
 				ProgramState : "StartScreen",
 				// all variables used for the quiz itself
-				QuestionList : require("../Local_Files/Quiz_Content/Questions.json"),
+				QuestionList : QuestionList,
 				ActiveQuestion : null,
 				FirstAttempt : true,
 				AnsweredCorrect : false,
@@ -69,7 +68,6 @@ class App extends React.Component {
 
 	// all render code
 	render() {
-
 		switch (this.state.ProgramState) {
 		
 			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
@@ -78,12 +76,11 @@ class App extends React.Component {
 				return(
 					<>
 						<h1>{"Archeon Speurtocht Bijenlandgemeenschap"}</h1>
-						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Begin!</button>
+						<button onClick={() => {this.setState({ProgramState : "SelectionScreen"}); this.GenerateHint();}}>Begin!</button>
 					</>
 				);
 
 			case "SelectionScreen":
-
 			// upon completing the question, the checkmark renders, else it does not.
 			// The image has to be required.
 				return (
@@ -101,6 +98,8 @@ class App extends React.Component {
 						}
 						
 						<p style={{"color" : "red"}}>{this.state.Warning}</p>
+
+						<p>{this.state.CurrentHint}</p>
 
 						<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
 						<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
@@ -192,6 +191,32 @@ class App extends React.Component {
 		} 
 	}
 
+	GenerateHint() {
+
+		var GotHint = false;
+		var CurrentTijdperk = 0;
+		var TijdperkList = ["PREHISTORIE", "MIDDELEEUWEN", "ROMEINSETIJD"];
+
+		while (GotHint === false) {
+			this.state.QuestionList.every(Question => {
+				console.log(`Checking hint from ${Question.Title}, Completed = ${Question.Completed}, Tijdperk = ${Question.Tijdperk}`);
+				if (Question.Completed === false) {
+					if (Question.Tijdperk === TijdperkList[CurrentTijdperk]) {
+						this.setState({CurrentHint : Question.Hint});
+						GotHint = true;
+						console.log(`Got hint from ${Question.Title}, Tijdperk = ${Question.Tijdperk}`);
+						return false;
+					}
+				}
+				return true;
+			});
+			CurrentTijdperk++;
+			if (CurrentTijdperk - 1 === TijdperkList.length) {
+				this.setState({CurrentHint : "Je hebt alle vragen beantwoord, goed gedaan!"});
+				GotHint = true;
+			}
+		}
+	}
 
   	ValidateAnswer(Option) {
 
@@ -206,6 +231,10 @@ class App extends React.Component {
 			NewQuestionList[this.state.ActiveQuestion].Completed = true;
 			this.setState({QuestionList : NewQuestionList, QuestionsCompleted : this.state.QuestionsCompleted + 1});
 			
+			
+			this.GenerateHint();
+
+
 			// cool sequence for the users
 			setTimeout(() => {
 				this.setState({ProgramState : "SelectionScreen", AnsweredCorrect : false});
@@ -262,6 +291,7 @@ class App extends React.Component {
 			QuestionsCompleted : this.state.QuestionsCompleted, 
 			QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime,
 
+			CurrentHint : null,
 
 			// qr code variables
 			Scanning : false,
