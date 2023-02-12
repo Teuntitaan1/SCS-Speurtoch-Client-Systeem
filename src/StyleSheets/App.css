@@ -1,7 +1,7 @@
 /*Loads the 2 fonts the site from the Archeon uses contained in the Fonts directory*/
 @font-face {
     font-family: "Triplex-Light";
-    src: url("../Local_Files/Fonts/Triplex\ Light.ttf");
+    src: url("../Fonts/Triplex\ Light.ttf");
 }
 
 button {

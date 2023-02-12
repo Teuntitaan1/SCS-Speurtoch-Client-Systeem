@@ -1,7 +1,14 @@
 import React from 'react';
-import '../StyleSheets/App.css';
+import './StyleSheets/App.css';
 import QrReader from 'react-qr-scanner';
-import CompletedQuestion from './CompletedQuestion';
+import CompletedQuestion from './Components/CompletedQuestion';
+
+// image imports
+import QrCodeButton from './Images/QrCodeButton.svg';
+import ArrowDown from './Images/Pijltje.svg'
+import Logo from './Images/Archeon logo.png'
+import DutchFlag from './Images/NederlandseVlag.png'
+import BackArrow from './Images/PijlNaarLinks.svg'
 
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
@@ -18,6 +25,7 @@ import CompletedQuestion from './CompletedQuestion';
 //ROMEINSETIJD
 
 // TODO
+// fix the leaderboard
 // qr code scanner doenst work on phones/safari
 // Look and feel of the program should be improved
 // needs extra info after answering a question
@@ -27,8 +35,9 @@ class App extends React.Component {
   
 	constructor(props) {
 		super(props);
+
 		console.log(`Debug mode: ${this.props.debugmode}`);
-		const QuestionList = require("../Local_Files/Quiz_Content/Questions.json");
+		const QuestionList = require("./Questions.json");
 		// attempts to load Quizstate from storage
 
 		// if the key doesnt exist it generates a new one
@@ -42,6 +51,7 @@ class App extends React.Component {
 				this.state = {
 					// the state the program currently sits in, look at the top of the file for all allowed states
 					ProgramState : "StartScreen",
+					PreviousState : "StartScreen",
 					// all variables used for the quiz itself
 					QuestionList : QuestionList,
 					ActiveQuestion : null,
@@ -105,67 +115,76 @@ class App extends React.Component {
 
 	// all render code
 	render() {
+		// generates a nice looking progress bar
+		var progressbar = 
+			<>
+				<div style={{borderWidth : 5+"px", borderColor : 'black', width : 100+"%", height : 2.5+"rem"}}>
+					<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}></div>
+				</div>
+				<p style={{textAlign : 'center'}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} beantwoord</p>
+			</>
+
+		// chooses what to display in the main part of the program
+		var programbody = null;
+		
 		switch (this.state.ProgramState) {
 		
 			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
 			case "StartScreen":
 
-				return(
+				programbody =
 					<>
 						<h1>{"Archeon Speurtocht Bijenlandgemeenschap"}</h1>
-						<button onClick={() => {this.setState({ProgramState : "SelectionScreen"}); this.GenerateHint();}}>Begin!</button>
-					</>
-				);
+						<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}}>Begin!</button>
+						
+					</>;
+					break;
 
 			case "SelectionScreen":
 			// upon completing the question, the checkmark renders, else it does not.
 			// The image has to be required.
-				return (
-					<>
-						<button onClick={() => this.setState({Scanning : !this.state.Scanning})}>{this.state.Scanning !== true ? "Start" : "Stop"} met scannen</button>
-						
+				programbody =
+					<>	
 						{this.state.Scanning === true ? 
-							<QrReader 
-								delay={100} 
-								style={{height: 240, width: 320,}} 
-								onScan={this.HandleQrCodeScan} 
-								onError={this.HandleQrCodeError}
-								legacyMode={"true"}/>
+							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap'}}>
+							
+								<QrReader 
+									delay={0} 
+									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
+									onScan={this.HandleQrCodeScan} 
+									onError={this.HandleQrCodeError}/>
+								<button onClick={() => this.setState({Scanning : false})}>Stop met scannen</button>
+								<p style={{color : "red"}}>{this.state.Warning}</p>
+
+							</div>
 							:  
-							null
+							<div style={{display : 'flex', justifyContent : 'center'}}>
+								<img onClick={() => this.setState({Scanning : true})} src={QrCodeButton} alt="Qr code button"
+									style={{height: 16+"rem", width: 16+"rem"}} />
+							</div>
+
 						}
 						
-						<p style={{"color" : "red"}}>{this.state.Warning}</p>
+						<div style={{display : 'flex', justifyContent : 'center', paddingTop : 2+"rem"}}>
+							<img onClick={() => this.SwitchProgramState("DoneQuestionsScreen")} src={ArrowDown} alt="DoneQuestionsbutton" style={{height: 5+"rem", width: 5+"rem"}}/>
+						</div>
 
-						<p>Hint: {this.state.CurrentHint}</p>
-
-						<p>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} goed beantwoord!</p>
-						<button onClick={() => this.setState({ProgramState : "DoneQuestionsScreen"})}>Vragen</button>
-						{/*Big button statement, lets the user through when all questions have been answered, else it doesnt*/}
-						<button onClick={() => 
-							{this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ?
-								this.setState({ProgramState : "FinishScreen"}) :
-								console.log("Je mag er nog niet door")}}
-						>{this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ?
-							"Verzenden" : `Nog ${this.state.QuestionList.length - this.state.QuestionsCompleted} ${this.state.QuestionList.length - this.state.QuestionsCompleted === 1 ? "vraag" : "vragen"}`
-						}</button>
-					</> 
-			); 
+					</>;
+				break;
 			
 			case "DoneQuestionsScreen": 
 				
-				return(
+				programbody =
 					<>
-						<button onClick={() => {this.setState({ProgramState : "SelectionScreen"})}}>Terug</button>
 						{this.state.QuestionList.map((Question, index) => Question.Completed === true ? <CompletedQuestion key={index} Question = {Question}/> 
 						: null)}
-					</>
-				);
+					</>;
+				break;
 			
 
 			case "AnswerScreen":
 			
-				return(
+				programbody =
 					<>
 						<h1>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
 						<h2>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
@@ -175,60 +194,99 @@ class App extends React.Component {
 							<button key={index} onClick={() => this.ValidateAnswer(Option)}>{Option}</button>)
 						}
 						{this.state.FirstAttempt !== true ? <p>Helaas! Dat is niet het goede antwoord!</p> : this.state.AnsweredCorrect === true ? <p>Goed gedaan!</p> : null}
-						<button onClick={() => this.setState({ProgramState : "SelectionScreen"})}>Terug</button>
-					</>
-				);
+					</>;
+				break;
 
 			case "FinishScreen":
 				
-				return(
+				programbody =
 					<>
-						{
-							this.state.SendResults !== true ?
-								<>
-									<h3>{"Wat is je naam? (niet verplicht)"}</h3>
-									<input type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
-									<button onClick={() => {this.PushLeaderBoard(); this.PullLeaderBoard()}}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
-								</> 
-								:
-								<>
-									{
-										this.state.Leaderboard.length !== 0 ? 
-											<table border={1} cellPadding={5}>
-												<tbody>
-													<tr>
-														<th>Naam</th>
-														<th>Tijd</th>
-														<th>In 1x goed</th>
+						{this.state.SendResults !== true ?
+							<>
+								<h3>{"Wat is je naam? (niet verplicht)"}</h3>
+								<input type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
+								<button onClick={() => {this.PushLeaderBoard(); this.PullLeaderBoard()}}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+							</> 
+							:
+							<>
+								<h3>Je score</h3>
+								{
+									this.state.Leaderboard.length !== 0 ? 
+										<table border={1} cellPadding={5}>
+											<tbody>
+												<tr>
+													<th>Naam</th>
+													<th>Tijd</th>
+													<th>In 1x goed</th>
+												</tr>
+												{this.state.Leaderboard.map((Entry, index) => 
+													<tr key={index}>
+														<td>{Entry.UserName}</td>
+														<td>{Entry.TimeSpent}</td>
+														<td>{Entry.CorrectFirstTime}</td>
 													</tr>
-													{this.state.Leaderboard.map((Entry, index) => 
-														<tr key={index}>
-															<td>{Entry.UserName}</td>
-															<td>{Entry.TimeSpent}</td>
-															<td>{Entry.CorrectFirstTime}</td>
-														</tr>
-													)}
-												</tbody>
-										</table>
-										:
-										<p>Aan het laden...</p>
-									}
-									<button onClick={() => {this.ResetQuiz()}}>Goed gedaan!</button>
-								</>
+												)}
+											</tbody>
+									</table>
+									:
+									<p>Aan het laden...</p>
+								}
+								<p>Laat dit scherm zien bij de kassa voor een cool prijsje!</p>
+								<button onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
+							</>
 						}
-					</>
-				);
+					</>;
+				break;
 			
 			default:
 
-				return(
+				programbody =
 					<>
 						<h1>Error... er is iets fout gegaan!</h1>
-					</>
-				);
-		} 
+					</>;
+				break;
+
+
+
+		}
+		
+		// renders based on what programbody is
+		return(
+			<>
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 4+"rem", position : 'absolute', top : 0+"%", left : 0+"%", display : 'flex', justifyContent: 'space-between'}}>
+					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 4+"rem"}} src={BackArrow} alt="A backarrow"/>
+					<img style={{height : 4+"rem"}} src={Logo} alt="Logo of the archeon website"/>
+					<img style={{height : 4+"rem"}} src={DutchFlag} alt="A dutch flag"/>
+				</div>
+				
+				<div style={{paddingTop : 4+"rem"}}>
+					{progressbar}
+					{programbody}
+				</div>
+
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 4+"rem", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
+					<p style={{textAlign : "center"}}>Hint: {this.state.CurrentHint}</p>
+				</div>
+
+				{this.props.debugmode === true ?
+					<div>
+						<hr/>
+						<h3>Debug bedieningspaneel</h3>
+						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
+
+					</div>
+					: null}
+			</>
+			
+		); 
 	}
 
+	SwitchProgramState(NewState) {
+		if (this.state.ProgramState !== "FinishScreen") {
+			var OldState = this.state.ProgramState;
+			this.setState({ProgramState : NewState, PreviousState : OldState}); 
+		}
+	}
 	// generates a hint used in the selectionscreen
 	GenerateHint() {
 
@@ -284,7 +342,16 @@ class App extends React.Component {
 
 			// cool sequence for the users
 			setTimeout(() => {
-				this.setState({ProgramState : "SelectionScreen", AnsweredCorrect : false});
+				
+				// if all questions have been answered, finish the quiz, please work
+				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
+					this.SwitchProgramState("FinishScreen");
+				}
+				else {
+					this.SwitchProgramState("SelectionScreen");
+					this.setState({AnsweredCorrect : false});
+				}
+				
 			}, 2000);			
 		}
 		else {
@@ -297,6 +364,7 @@ class App extends React.Component {
 	//
 	//
   	HandleQrCodeScan(data){
+		
 		// validates data
 		if (data === null || this.state.QuestionList[data.text] === undefined) {
 			if (data == null) {
@@ -330,6 +398,7 @@ class App extends React.Component {
 		var SavedState = {
 			// the state the program currently sits in, look at the top of the file for all allowed states
 			ProgramState : this.state.ProgramState,
+			PreviousState : this.state.PreviousState,
 			// all variables used for the quiz itself
 			QuestionList : this.state.QuestionList,
 			ActiveQuestion : this.state.ActiveQuestion,
@@ -339,7 +408,7 @@ class App extends React.Component {
 			QuestionsCompleted : this.state.QuestionsCompleted, 
 			QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime,
 
-			CurrentHint : null,
+			CurrentHint : this.state.CurrentHint,
 
 			// qr code variables
 			Scanning : false,
@@ -369,15 +438,15 @@ class App extends React.Component {
 				CorrectFirstTime : this.state.QuestionsCompletedFirstTime})};
 
 		// sends the Body array to the server
-		fetch(this.props.serverip, Body).catch((error) => {console.error('Error:', error);});
+		fetch("http://localhost:8000", Body).catch((error) => {console.error('Error:', error);});
 
 		// updates the state
 		this.setState({SendResults : true});
 	}
-	
+	// broke all of a sudden
 	PullLeaderBoard() {
 		// gets the leaderboard from the server and displays it on the finishscreen
-		fetch(this.props.serverip).then((response) => {response.json();}).then((data) => {this.setState({Leaderboard : data});});
+		fetch("http://localhost:8000").then((response) => {response.json()}).then((ReceivedData) => {console.log(ReceivedData)});
 	}
 
 
