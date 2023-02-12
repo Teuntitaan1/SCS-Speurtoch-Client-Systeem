@@ -36,51 +36,16 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 
-		console.log(`Debug mode: ${this.props.debugmode}`);
 		const QuestionList = require("./Questions.json");
 		// attempts to load Quizstate from storage
 
 		// if the key doesnt exist it generates a new one
-		if (window.localStorage.getItem("QuizState") !== null) {
-			// if the key is empty it generates a new one too
-			if (window.localStorage.getItem("QuizState") !== "") {
-				// else it loads the quiz from memory
-				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
-			}
-			else {
-				this.state = {
-					// the state the program currently sits in, look at the top of the file for all allowed states
-					ProgramState : "StartScreen",
-					PreviousState : "StartScreen",
-					// all variables used for the quiz itself
-					QuestionList : QuestionList,
-					ActiveQuestion : null,
-					FirstAttempt : true,
-					AnsweredCorrect : false,
-	
-					QuestionsCompleted : 0, 
-					QuestionsCompletedFirstTime : 0,
-					// qr code variables
-					Scanning : false,
-					// if the warning is a blank string, nothing will render. else it will
-					// render the warning/error associated with the qr-code
-					Warning : "",
-					
-					// all variables user by the leaderboard functionality
-					SendResults : false,
-					TimeSpent : 0,
-					UserName : "",
-					Leaderboard : [],
-	
-				}
-			}
-		}
-		else {
-			
+		if (window.localStorage.getItem("QuizState") === null || window.localStorage.getItem("QuizState") === "") {
 			window.localStorage.setItem("QuizState" , "");
 			this.state = {
 				// the state the program currently sits in, look at the top of the file for all allowed states
 				ProgramState : "StartScreen",
+				PreviousState : "StartScreen",
 				// all variables used for the quiz itself
 				QuestionList : QuestionList,
 				ActiveQuestion : null,
@@ -94,15 +59,18 @@ class App extends React.Component {
 				// if the warning is a blank string, nothing will render. else it will
 				// render the warning/error associated with the qr-code
 				Warning : "",
-	
+				
 				// all variables user by the leaderboard functionality
 				SendResults : false,
 				TimeSpent : 0,
 				UserName : "",
 				Leaderboard : [],
 
+				
 			}
-
+		}
+		else {
+			this.state = JSON.parse(window.localStorage.getItem("QuizState"));
 		}
 	
 		// event listeners
@@ -146,21 +114,21 @@ class App extends React.Component {
 				programbody =
 					<>	
 						{this.state.Scanning === true ? 
-							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap'}}>
+							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"%", height : 20+"rem"}}>
 							
 								<QrReader 
 									delay={0} 
 									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
 									onScan={this.HandleQrCodeScan} 
 									onError={this.HandleQrCodeError}/>
-								<button onClick={() => this.setState({Scanning : false})}>Stop met scannen</button>
-								<p style={{color : "red"}}>{this.state.Warning}</p>
+								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px"}} >Stop met scannen</button>
+								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
 
 							</div>
 							:  
 							<div style={{display : 'flex', justifyContent : 'center'}}>
 								<img onClick={() => this.setState({Scanning : true})} src={QrCodeButton} alt="Qr code button"
-									style={{height: 16+"rem", width: 16+"rem"}} />
+									style={{height: 20+"rem", width: 20+"rem"}} />
 							</div>
 
 						}
@@ -265,7 +233,8 @@ class App extends React.Component {
 				</div>
 
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 4+"rem", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
-					<p style={{textAlign : "center"}}>Hint: {this.state.CurrentHint}</p>
+					<p style={{ textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 1.1+"rem"}}>Hint: {this.state.CurrentHint}</p>
+					<footer style={{position : 'relative', bottom : 10+"%", textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 0.8+"rem"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
 				</div>
 
 				{this.props.debugmode === true ?
@@ -281,10 +250,13 @@ class App extends React.Component {
 		); 
 	}
 
-	SwitchProgramState(NewState) {
-		if (this.state.ProgramState !== "FinishScreen") {
+	SwitchProgramState(NewState, StatesShouldMatch = false) {
+		if (StatesShouldMatch !== true) {
 			var OldState = this.state.ProgramState;
 			this.setState({ProgramState : NewState, PreviousState : OldState}); 
+		}
+		else {
+			this.setState({ProgramState : NewState, PreviousState : NewState}); 
 		}
 	}
 	// generates a hint used in the selectionscreen
@@ -345,14 +317,14 @@ class App extends React.Component {
 				
 				// if all questions have been answered, finish the quiz, please work
 				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
-					this.SwitchProgramState("FinishScreen");
+					this.SwitchProgramState("FinishScreen", true);
 				}
 				else {
-					this.SwitchProgramState("SelectionScreen");
+					this.SwitchProgramState("SelectionScreen", true);
 					this.setState({AnsweredCorrect : false});
 				}
 				
-			}, 2000);			
+			}, 1200);			
 		}
 		else {
 			this.setState({FirstAttempt : false});
@@ -395,34 +367,7 @@ class App extends React.Component {
 		}
 	}
 	TimerSave() {
-		var SavedState = {
-			// the state the program currently sits in, look at the top of the file for all allowed states
-			ProgramState : this.state.ProgramState,
-			PreviousState : this.state.PreviousState,
-			// all variables used for the quiz itself
-			QuestionList : this.state.QuestionList,
-			ActiveQuestion : this.state.ActiveQuestion,
-			FirstAttempt : this.state.FirstAttempt,
-			AnsweredCorrect : this.state.AnsweredCorrect,
-
-			QuestionsCompleted : this.state.QuestionsCompleted, 
-			QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime,
-
-			CurrentHint : this.state.CurrentHint,
-
-			// qr code variables
-			Scanning : false,
-			// if the warning is a blank string, nothing will render. else it will
-			// render the warning/error associated with the qr-code
-			Warning : "",
-
-			// all variables user by the leaderboard functionality
-			SendResults : this.state.SendResults,
-			TimeSpent : this.state.TimeSpent,
-			UserName : this.state.UserName,
-			Leaderboard : this.state.Leaderboard
-			
-		}	
+		var SavedState = this.state;
 		// saves the program to localstate
 		window.localStorage.setItem("QuizState" , JSON.stringify(SavedState));
 	}
