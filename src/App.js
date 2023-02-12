@@ -446,7 +446,9 @@ class App extends React.Component {
 	// broke all of a sudden
 	PullLeaderBoard() {
 		// gets the leaderboard from the server and displays it on the finishscreen
-		fetch("http://localhost:8000").then((response) => {response.json()}).then((ReceivedData) => {console.log(ReceivedData)});
+		fetch('http://localhost:8000')
+		.then((response) => response.json())
+		.then((data) => this.setState({Leaderboard : data}));
 	}
 
 
@@ -459,7 +461,7 @@ class App extends React.Component {
 		const QuizTimer = setInterval(() => this.TimerTick(), 1*1000);
 		this.TimerID = QuizTimer;
 
-		const SaveTimer = setInterval(() => this.TimerSave(), 1*1000);
+		const SaveTimer = setInterval(() => this.TimerSave(), 5*1000);
 		this.SaveTimerID = SaveTimer;
 
 		const LeaderboardTimer = setInterval(() => this.PullLeaderBoard(), 20*1000);
