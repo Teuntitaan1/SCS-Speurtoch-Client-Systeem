@@ -3,7 +3,6 @@ import '../StyleSheets/App.css';
 import QrReader from 'react-qr-scanner';
 import CompletedQuestion from './CompletedQuestion';
 
-
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -19,6 +18,7 @@ import CompletedQuestion from './CompletedQuestion';
 //ROMEINSETIJD
 
 // TODO
+// qr code scanner doenst work on phones/safari
 // Look and feel of the program should be improved
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
@@ -30,9 +30,44 @@ class App extends React.Component {
 		console.log(`Debug mode: ${this.props.debugmode}`);
 		const QuestionList = require("../Local_Files/Quiz_Content/Questions.json");
 		// attempts to load Quizstate from storage
-		window.localStorage.getItem("QuizState") !== "" ? 
-			this.state = JSON.parse(window.localStorage.getItem("QuizState"))
-			:
+
+		// if the key doesnt exist it generates a new one
+		if (window.localStorage.getItem("QuizState") !== null) {
+			// if the key is empty it generates a new one too
+			if (window.localStorage.getItem("QuizState") !== "") {
+				// else it loads the quiz from memory
+				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
+			}
+			else {
+				this.state = {
+					// the state the program currently sits in, look at the top of the file for all allowed states
+					ProgramState : "StartScreen",
+					// all variables used for the quiz itself
+					QuestionList : QuestionList,
+					ActiveQuestion : null,
+					FirstAttempt : true,
+					AnsweredCorrect : false,
+	
+					QuestionsCompleted : 0, 
+					QuestionsCompletedFirstTime : 0,
+					// qr code variables
+					Scanning : false,
+					// if the warning is a blank string, nothing will render. else it will
+					// render the warning/error associated with the qr-code
+					Warning : "",
+					
+					// all variables user by the leaderboard functionality
+					SendResults : false,
+					TimeSpent : 0,
+					UserName : "",
+					Leaderboard : [],
+	
+				}
+			}
+		}
+		else {
+			
+			window.localStorage.setItem("QuizState" , "");
 			this.state = {
 				// the state the program currently sits in, look at the top of the file for all allowed states
 				ProgramState : "StartScreen",
@@ -57,6 +92,8 @@ class App extends React.Component {
 				Leaderboard : [],
 
 			}
+
+		}
 	
 		// event listeners
 
@@ -92,7 +129,8 @@ class App extends React.Component {
 								delay={100} 
 								style={{height: 240, width: 320,}} 
 								onScan={this.HandleQrCodeScan} 
-								onError={this.HandleQrCodeError}/>
+								onError={this.HandleQrCodeError}
+								legacyMode={"true"}/>
 							:  
 							null
 						}
@@ -322,17 +360,16 @@ class App extends React.Component {
 	
 	PushLeaderBoard() {
 		// statistics to sent to the server
-		var Body = JSON.stringify({
-			UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
-			TimeSpent : this.state.TimeSpent,
-			CorrectFirstTime : this.state.QuestionsCompletedFirstTime,});
-
-		// sends the Body array to the server
-		fetch("http://localhost:8000", {
+		var Body = {
 			method: 'POST',
 			headers: {"Content-Type": "text/plain; charset=UTF-8"},
-			body: Body})
-		.catch((error) => {console.error('Error:', error);});
+			body: JSON.stringify({
+				UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
+				TimeSpent : this.state.TimeSpent,
+				CorrectFirstTime : this.state.QuestionsCompletedFirstTime})};
+
+		// sends the Body array to the server
+		fetch(this.props.serverip, Body).catch((error) => {console.error('Error:', error);});
 
 		// updates the state
 		this.setState({SendResults : true});
@@ -340,9 +377,7 @@ class App extends React.Component {
 	
 	PullLeaderBoard() {
 		// gets the leaderboard from the server and displays it on the finishscreen
-		fetch('http://localhost:8000')
-		.then((response) => response.json())
-		.then((data) => this.setState({Leaderboard : data}));
+		fetch(this.props.serverip).then((response) => {response.json();}).then((data) => {this.setState({Leaderboard : data});});
 	}
 
 
@@ -355,7 +390,7 @@ class App extends React.Component {
 		const QuizTimer = setInterval(() => this.TimerTick(), 1*1000);
 		this.TimerID = QuizTimer;
 
-		const SaveTimer = setInterval(() => this.TimerSave(), 5*1000);
+		const SaveTimer = setInterval(() => this.TimerSave(), 1*1000);
 		this.SaveTimerID = SaveTimer;
 
 		const LeaderboardTimer = setInterval(() => this.PullLeaderBoard(), 20*1000);

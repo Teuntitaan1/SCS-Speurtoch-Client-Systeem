@@ -8,7 +8,7 @@ const debug = true;
 
 root.render(
   <React.StrictMode>
-    <App debugmode={debug}/>
+    <App debugmode={debug} serverip={"http://localhost:8000"}/>
     
     {/*Debug reset button, will be removed in production*/}
     {debug === true ?
