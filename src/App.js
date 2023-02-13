@@ -1,8 +1,11 @@
-import React from 'react';
+// my own components etc
 import './StyleSheets/App.css';
-import QrReader from 'react-qr-scanner';
 import CompletedQuestion from './Components/CompletedQuestion';
 
+// library imports
+import React from 'react';
+import QrReader from 'react-qr-scanner';
+import QrScanner from 'qr-scanner';
 // image imports
 import QrCodeButton from './Images/QrCodeButton.svg';
 import ArrowDown from './Images/Pijltje.svg'
@@ -26,7 +29,7 @@ import BackArrow from './Images/PijlNaarLinks.svg'
 
 // TODO
 // fix the leaderboard
-// qr code scanner doenst work on phones/safari
+// qr code scanner doenst work on phones/safari ( timeout issue )
 // Look and feel of the program should be improved
 // needs extra info after answering a question
 // Program looks ugly af, should work on that
@@ -77,6 +80,7 @@ class App extends React.Component {
 
 		this.HandleQrCodeScan = this.HandleQrCodeScan.bind(this);
 		this.HandleQrCodeError = this.HandleQrCodeError.bind(this);
+
 	}
 
 
@@ -114,6 +118,8 @@ class App extends React.Component {
 				programbody =
 					<>	
 						{this.state.Scanning === true ? 
+							/*Qr code generator for the non legacy mode users*/
+							this.props.legacymode === false ? 
 							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"%", height : 20+"rem"}}>
 							
 								<QrReader 
@@ -125,7 +131,14 @@ class App extends React.Component {
 								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
 
 							</div>
+							:
+							/*Qr code generator for the legacy mode users*/
+							<div style={{width : 100+"%", height : 20+"rem"} }>
+								<input type={'file'} onChange={(event) => {this.HandleLegacyQrCodeScan(event.target.files[0]);}} accept="image/png, image/jpeg"></input>
+								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
+							</div>
 							:  
+							/*if not scanning display the image*/
 							<div style={{display : 'flex', justifyContent : 'center'}}>
 								<img onClick={() => this.setState({Scanning : true})} src={QrCodeButton} alt="Qr code button"
 									style={{height: 20+"rem", width: 20+"rem"}} />
@@ -357,6 +370,40 @@ class App extends React.Component {
 	HandleQrCodeError(error) {
 		this.setState({Warning : error});
 	}
+	// legacy qr code scanning will be implemented here
+	HandleLegacyQrCodeScan(data) {
+		
+		this.setState({Warning : ""});
+		QrScanner.scanImage(data, {returnDetailedScanResult : true})
+			.then(result => {
+				console.log(result);
+				if (this.state.QuestionList[result.data] === undefined) {
+					this.setState({Warning : "Deze qr-code is niet geldig, probeer een andere!"});
+				}
+				else {
+					this.state.QuestionList[result.data].Completed === false ?
+					this.setState({ActiveQuestion: result.data, ProgramState :"AnswerScreen", Scanning : false, Warning : ""})
+					:
+					this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
+				}
+			})
+			.catch(error => {
+				switch (error) {
+					case "No QR code found":
+						this.setState({Warning : "We hebben geen qr-code kunnen vinden, probeer het nog een keer!"});
+						break;
+					case "Unsupported image type.":
+						this.setState({Warning : "Dit bestandstype wordt niet ondersteund, probeer een andere!"});
+						break;
+					default:
+						this.setState({Warning : error});
+				}
+			});
+		
+
+	}
+
+
 		
 	
 	// All timer code
