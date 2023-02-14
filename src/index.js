@@ -5,7 +5,7 @@ import App from './App';
 import { isSafari } from 'react-device-detect';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const debug = true;
+const debug = false;
 const legacymode = isSafari === true ? true : false;
 
 

@@ -87,10 +87,9 @@ class App extends React.Component {
 		// generates a nice looking progress bar
 		var progressbar = 
 			<>
-				<div style={{borderWidth : 5+"px", borderColor : 'black', width : 100+"%", height : 2.5+"rem"}}>
-					<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}></div>
+				<div style={{borderWidth : 5+"px", borderColor : 'black', width : 100+"%", height : 1+"rem"}}>
+					<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}><p style={{textAlign : 'end'}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length}</p></div>
 				</div>
-				<p style={{textAlign : 'center'}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length} beantwoord</p>
 			</>
 
 		// chooses what to display in the main part of the program
@@ -146,7 +145,7 @@ class App extends React.Component {
 
 						}
 						
-						<div style={{display : 'flex', justifyContent : 'center', paddingTop : 2+"rem"}}>
+						<div style={{display : 'flex', justifyContent : 'center', paddingTop : 1+"rem"}}>
 							<img onClick={() => this.SwitchProgramState("DoneQuestionsScreen")} src={ArrowDown} alt="DoneQuestionsbutton" style={{height: 5+"rem", width: 5+"rem"}}/>
 						</div>
 
@@ -246,20 +245,20 @@ class App extends React.Component {
 		// renders based on what programbody is
 		return(
 			<>
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 4+"rem", position : 'absolute', top : 0+"%", left : 0+"%", display : 'flex', justifyContent: 'space-between'}}>
-					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 4+"rem"}} src={BackArrow} alt="A backarrow"/>
-					<img style={{height : 4+"rem"}} src={Logo} alt="Logo of the archeon website"/>
-					<img style={{height : 4+"rem"}} src={DutchFlag} alt="A dutch flag"/>
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', top : 0+"%", left : 0+"%", display : 'flex', justifyContent: 'space-between'}}>
+					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%"}} src={BackArrow} alt="A backarrow"/>
+					<img style={{height : 100+"%"}} src={Logo} alt="Logo of the archeon website"/>
+					<img style={{height : 100+"%"}} src={DutchFlag} alt="A dutch flag"/>
 				</div>
 				
-				<div style={{paddingTop : 4+"rem"}}>
-					{progressbar}
+				<div style={{paddingTop : 3+"rem"}}>
+					<p style={{ textAlign : 'center', fontWeight : 'bold', fontSize : 1.1+"rem"}}>Hint: {this.state.CurrentHint}</p>
 					{programbody}
 				</div>
 
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 4+"rem", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
-					<p style={{ textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 1.1+"rem"}}>Hint: {this.state.CurrentHint}</p>
-					<footer style={{position : 'relative', bottom : 10+"%", textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 0.8+"rem"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
+					{progressbar}
+					<footer style={{position : 'relative', bottom : 0+"%", textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 0.8+"rem"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
 				</div>
 
 				{this.props.debugmode === true ?
