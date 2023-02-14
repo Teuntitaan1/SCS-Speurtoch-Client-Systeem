@@ -12,7 +12,7 @@ const legacymode = isSafari === true ? true : false;
 
 root.render(
   <React.StrictMode>
-    <App debugmode={debug} legacymode={legacymode}/>
+    <App debugmode={debug} legacymode={false}/>
   </React.StrictMode>
 );
 
