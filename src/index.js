@@ -5,7 +5,7 @@ import App from './App';
 import { browserName, browserVersion } from 'react-device-detect';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const debug = true;
+const debug = false;
 console.log(`BrowserName: ${browserName}, BrowserVersion: ${browserVersion}`);
 
 

@@ -122,8 +122,7 @@ class App extends React.Component {
 									delay={0} 
 									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
 									onScan={this.HandleQrCodeScan} 
-									onError={this.HandleQrCodeError}
-									facingMode={"rear"}/>
+									onError={this.HandleQrCodeError}/>
 
 								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px"}} >Stop met scannen</button>
 								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
@@ -133,13 +132,13 @@ class App extends React.Component {
 							/*if not scanning display the image*/
 							<div style={{display : 'flex', justifyContent : 'center'}}>
 								<img onClick={() => this.setState({Scanning : true})} src={QrCodeButton} alt="Qr code button"
-									style={{height: 20+"rem", width: 20+"rem"}} />
+									style={{height: 20+"rem", width: 90+"%"}} />
 							</div>
 
 						}
 						
-						<div style={{display : 'flex', justifyContent : 'center', paddingTop : 1+"rem"}}>
-							<img onClick={() => this.SwitchProgramState("DoneQuestionsScreen")} src={ArrowDown} alt="DoneQuestionsbutton" style={{height: 5+"rem", width: 5+"rem"}}/>
+						<div style={{display : 'flex', justifyContent : 'center'}}>
+							<img onClick={() => this.SwitchProgramState("DoneQuestionsScreen")} src={ArrowDown} alt="DoneQuestionsbutton" style={{height: 4+"rem", width: 4+"rem"}}/>
 						</div>
 
 					</>;
@@ -198,14 +197,14 @@ class App extends React.Component {
 											<tbody>
 												<tr>
 													<th>Naam</th>
-													<th>Tijd</th>
 													<th>In 1x goed</th>
+													<th>Tijd</th>
 												</tr>
 												{this.state.Leaderboard.map((Entry, index) => 
 													<tr key={index}>
 														<td>{Entry.UserName}</td>
-														<td>{Entry.TimeSpent}</td>
 														<td>{Entry.CorrectFirstTime}</td>
+														<td>{Entry.TimeSpent}</td>
 													</tr>
 												)}
 											</tbody>
@@ -233,8 +232,6 @@ class App extends React.Component {
 		}
 		
 
-
-
 		// renders based on what programbody is
 		return(
 			<>
@@ -244,12 +241,12 @@ class App extends React.Component {
 					<img style={{height : 100+"%"}} src={DutchFlag} alt="A dutch flag"/>
 				</div>
 				
-				<div style={{paddingTop : 3+"rem"}}>
+				<div style={{paddingTop : 15+"%"}}>
 					<p style={{ textAlign : 'center', fontWeight : 'bold', fontSize : 1.1+"rem"}}>Hint: {this.state.CurrentHint}</p>
 					{programbody}
 				</div>
 
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"%", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
 					{progressbar}
 					<footer style={{position : 'relative', bottom : 0+"%", textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 0.8+"rem"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
 				</div>
@@ -393,7 +390,9 @@ class App extends React.Component {
 			body: JSON.stringify({
 				UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 				TimeSpent : this.state.TimeSpent,
-				CorrectFirstTime : this.state.QuestionsCompletedFirstTime})};
+				CorrectFirstTime : this.state.QuestionsCompletedFirstTime,
+				// calculates a score based on different statistics
+				Score : this.state.QuestionsCompleted / this.state.TimeSpent})};
 
 		// sends the Body array to the server
 		fetch("http://localhost:8000", Body).catch((error) => {console.error('Error:', error);});
@@ -406,7 +405,7 @@ class App extends React.Component {
 		// gets the leaderboard from the server and displays it on the finishscreen
 		fetch('http://localhost:8000')
 		.then((response) => response.json())
-		.then((data) => this.setState({Leaderboard : data}));
+		.then((data) => {this.setState({Leaderboard : data}); console.log(`Pullled, got data: ${data}`)});
 	}
 
 	// runs when the program is ready to run
@@ -416,10 +415,10 @@ class App extends React.Component {
 		const QuizTimer = setInterval(() => this.TimerTick(), 1*1000);
 		this.TimerID = QuizTimer;
 
-		const SaveTimer = setInterval(() => this.TimerSave(), 5*1000);
+		const SaveTimer = setInterval(() => this.TimerSave(), 1*1000);
 		this.SaveTimerID = SaveTimer;
 
-		const LeaderboardTimer = setInterval(() => this.PullLeaderBoard(), 20*1000);
+		const LeaderboardTimer = setInterval(() => this.PullLeaderBoard(), 10*1000);
 		this.LeaderboardTimerID = LeaderboardTimer;
 	}
 	// runs when the program is ready to stop
