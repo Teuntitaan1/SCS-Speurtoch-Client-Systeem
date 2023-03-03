@@ -7,11 +7,10 @@ import React from 'react';
 import QrReader from 'react-qr-scanner';
 // image imports
 import QrCodeButton from './Images/QrCodeButton.svg';
-import ArrowDown from './Images/Pijltje.svg'
-import Logo from './Images/Archeon logo.png'
-import DutchFlag from './Images/NederlandseVlag.png'
-import BackArrow from './Images/PijlNaarLinks.svg'
-
+import ArrowDown from './Images/Pijltje.svg';
+import Logo from './Images/Archeon logo.png';
+import BackArrow from './Images/PijlNaarLinks.svg';
+import HintIcon from './Images/HintIcon.svg';
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -28,7 +27,9 @@ import BackArrow from './Images/PijlNaarLinks.svg'
 
 // TODO
 // fix the leaderboard
-// Program looks ugly af, should work on that
+// prettify the Startscreen
+// prettify the FinishScreen
+// prettify the Questionsscreen
 
 class App extends React.Component {
   
@@ -163,13 +164,19 @@ class App extends React.Component {
 			
 				programbody =
 					<>
-						<h1>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-						<h2>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
+						<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
+						<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
+						<div style={{display : 'flex'}}>
 						{
 						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
 						this.state.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) =>
-							<button key={index} onClick={() => this.ValidateAnswer(Option)}>{Option}</button>)
+							<div style={{backgroundColor : "#56a222", width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {this.ValidateAnswer(Option);}}>
+								<div style={{borderRadius : 360+"rem", backgroundColor : "#457c1f", width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index}</div>
+								<p style={{textAlign : 'center'}}>{Option}</p>
+							</div>
+							)
 						}
+						</div>
 						{this.state.FirstAttempt !== true ? <p>Helaas! Dat is niet het goede antwoord!</p> : this.state.AnsweredCorrect === true ? <p>Goed gedaan!</p> : null}
 					</>;
 				break;
@@ -235,20 +242,24 @@ class App extends React.Component {
 		// renders based on what programbody is
 		return(
 			<>
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', top : 0+"%", left : 0+"%", display : 'flex', justifyContent: 'space-between'}}>
-					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%"}} src={BackArrow} alt="A backarrow"/>
-					<img style={{height : 100+"%"}} src={Logo} alt="Logo of the archeon website"/>
-					<img style={{height : 100+"%"}} src={DutchFlag} alt="A dutch flag"/>
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', top : 0+"%", left : 0+"%"}}>
+					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/>
+					<img style={{height : 100+"%", position : 'absolute', left : 100/3+"%"}} src={Logo} alt="Logo of the archeon website"/>
 				</div>
 				
 				<div style={{paddingTop : 15+"%"}}>
-					<p style={{ textAlign : 'center', fontWeight : 'bold', fontSize : 1.1+"rem"}}>Hint: {this.state.CurrentHint}</p>
-					{programbody}
+					<div style={{backgroundColor : "#457c1f", marginTop : 7+"%", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
+						<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
+						<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
+					</div> 
+					<div style={{marginTop : 2+"%"}}>
+						{programbody}
+					</div>
 				</div>
 
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"%", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
 					{progressbar}
-					<footer style={{position : 'relative', bottom : 0+"%", textAlign : 'center', opacity : 0.8, fontWeight : 'bold', fontSize : 0.8+"rem"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
+					<footer style={{position : 'absolute', bottom : 0+"%", left : 35+"%", opacity : 0.8, fontWeight : 'bold', fontSize : 100+"%"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
 				</div>
 
 				{this.props.debugmode === true ?
