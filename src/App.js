@@ -118,7 +118,7 @@ class App extends React.Component {
 					<>	
 						{this.state.Scanning === true ? 
 							/*Qr code generator for the non legacy mode users*/
-							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"vw", height : 20+"rem"}}>
+							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"%", height : 20+"rem"}}>
 							
 								<QrReader 
 									delay={0} 
