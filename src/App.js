@@ -1,7 +1,6 @@
 // my own components etc
 import './StyleSheets/App.css';
-import CompletedQuestion from './Components/CompletedQuestion';
-
+import CompletedQuestionsManager from './Components/CompletedQuestionsManager'
 // library imports
 import React from 'react';
 import QrReader from 'react-qr-scanner';
@@ -27,7 +26,6 @@ import HintIcon from './Images/HintIcon.svg';
 
 // TODO
 // fix the leaderboard
-// prettify the Startscreen
 // prettify the FinishScreen
 // prettify the Questionsscreen
 
@@ -100,11 +98,14 @@ class App extends React.Component {
 			case "StartScreen":
 
 				programbody =
-					<>
-						<h1>{"Archeon Speurtocht Bijenlandgemeenschap"}</h1>
-						<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}}>Begin!</button>
+					<div>
+						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
+						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
+						<div style={{display : 'flex', justifyContent : 'center', marginTop : 15+"rem"}}>
+							<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 15+"rem", height : 5+"rem", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
+						</div>
 						
-					</>;
+					</div>;
 					break;
 
 
@@ -117,7 +118,7 @@ class App extends React.Component {
 					<>	
 						{this.state.Scanning === true ? 
 							/*Qr code generator for the non legacy mode users*/
-							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"%", height : 20+"rem"}}>
+							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"vw", height : 20+"rem"}}>
 							
 								<QrReader 
 									delay={0} 
@@ -151,10 +152,7 @@ class App extends React.Component {
 			case "DoneQuestionsScreen": 
 				
 				programbody =
-					<>
-						{this.state.QuestionList.map((Question, index) => Question.Completed === true ? <CompletedQuestion key={index} Question = {Question}/> 
-						: null)}
-					</>;
+					<CompletedQuestionsManager QuestionList={this.state.QuestionList}/>
 				break;
 			
 
@@ -243,22 +241,34 @@ class App extends React.Component {
 		return(
 			<>
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', top : 0+"%", left : 0+"%"}}>
+					
 					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/>
-					<img style={{height : 100+"%", position : 'absolute', left : 100/3+"%"}} src={Logo} alt="Logo of the archeon website"/>
+					<img style={{height : 100+"%", position : 'absolute', right : 0+"%"}} src={Logo} alt="Logo of the archeon website"/>
+
 				</div>
 				
 				<div style={{paddingTop : 15+"%"}}>
-					<div style={{backgroundColor : "#457c1f", marginTop : 7+"%", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
-						<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
-						<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
-					</div> 
+					
+					{this.state.ProgramState !== "StartScreen" ? 
+						<div style={{backgroundColor : "#457c1f", marginTop : 7+"%", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
+							<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
+							<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
+						</div> 
+						:
+						null}
+					
 					<div style={{marginTop : 2+"%"}}>
 						{programbody}
 					</div>
+
 				</div>
 
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"%", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
-					{progressbar}
+					
+					<div>
+						{progressbar}
+					</div>
+
 					<footer style={{position : 'absolute', bottom : 0+"%", left : 35+"%", opacity : 0.8, fontWeight : 'bold', fontSize : 100+"%"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
 				</div>
 
