@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/static/css/main.e8026305.css",
-    "main.js": "/static/js/main.5362cbfa.js",
+    "main.js": "/static/js/main.7da88f57.js",
     "static/media/Archeon logo.png": "/static/media/Archeon logo.9cd9d02440a65c08aa5d.png",
     "static/media/Triplex Light.ttf": "/static/media/Triplex Light.88c7d927507f3e045176.ttf",
     "static/media/HintIcon.svg": "/static/media/HintIcon.3cfd984606c3eb503856d491857ccc24.svg",
     "index.html": "/index.html",
-    "static/media/Pijltje.svg": "/static/media/Pijltje.931bbd768ef4404f37e3fb3ed230eb0d.svg",
+    "static/media/checklist-alt-svgrepo-com.svg": "/static/media/checklist-alt-svgrepo-com.ce4034a4a288fc9984ba4b904c6aa83a.svg",
     "static/media/QrCodeButton.svg": "/static/media/QrCodeButton.90c0e4e6017e71d6784759808009eb4f.svg",
     "static/media/PijlNaarLinks.svg": "/static/media/PijlNaarLinks.68761bf1202963a05ad89396d41bced8.svg",
     "main.e8026305.css.map": "/static/css/main.e8026305.css.map",
-    "main.5362cbfa.js.map": "/static/js/main.5362cbfa.js.map"
+    "main.7da88f57.js.map": "/static/js/main.7da88f57.js.map"
   },
   "entrypoints": [
     "static/css/main.e8026305.css",
-    "static/js/main.5362cbfa.js"
+    "static/js/main.7da88f57.js"
   ]
 }
