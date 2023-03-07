@@ -1,32 +1,25 @@
 [
     
-    {"Title" : "Vraag 1", "Description" : "Werkt", "Completed" : false, "Hint" : "PREHISTORIE 1", "Tijdperk" : "PREHISTORIE",
-      "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
-
-        "CorrectAnswer" : "Willekeurig",
-
+    {"Title" : "Vraag 1", "Description" : "Werkt", "Completed" : false, "Hint" : "In de prehistorie vindt jij mij!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+        "CorrectAnswer" : "Willekeurig"
+      },
+      "WinterMode" : {
+        "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+        "CorrectAnswer" : "Willekeurig"
+      },
       "ExtraInfo" : "Bijen zijn erg cool!"
     },
-    {"Title" : "Vraag 2", "Description" : "Dit?", "Completed" : false, "Hint" : "MIDDELEEUWEN 1", "Tijdperk" : "MIDDELEEUWEN",
-    "Options" : ["Willekeurig"],
-
-      "CorrectAnswer" : "Willekeurig",
-
-    "ExtraInfo" : "Bijen zijn erg cool!"
-    },
-    {"Title" : "Vraag 3", "Description" : "Dit?", "Completed" : false, "Hint" : "PREHISTORIE 2", "Tijdperk" : "PREHISTORIE",
-    "Options" : ["Willekeurig"],
-
-      "CorrectAnswer" : "Willekeurig",
-
-    "ExtraInfo" : "Bijen zijn erg cool!"
-    },
-    {"Title" : "Vraag 4", "Description" : "Dit?", "Completed" : false, "Hint" : "ROMEINSETIJD 1", "Tijdperk" : "ROMEINSETIJD",
-    "Options" : ["Willekeurig"],
-
-      "CorrectAnswer" : "Willekeurig",
-
-    "ExtraInfo" : "Bijen zijn erg cool!"
+    {"Title" : "Vraag 2", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+      "ZomerMode" : {
+        "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+        "CorrectAnswer" : "Willekeurig"
+      },
+      "WinterMode" : {
+        "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+        "CorrectAnswer" : "Willekeurig"
+      },
+      "ExtraInfo" : "Bijen zijn erg cool!"
     }
-   
 ]

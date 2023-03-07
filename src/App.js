@@ -27,6 +27,7 @@ import HintIcon from './Images/HintIcon.svg';
 // TODO
 // fix the leaderboard
 // prettify the FinishScreen
+// improve on making the ui more intuitive to use
 // Add Summer-Winter functionality
 
 class App extends React.Component {
@@ -34,6 +35,8 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 
+		var date = new Date();
+		console.log(`Current date ${date.toLocaleDateString()}`);
 		const QuestionList = require("./Questions.json");
 		// attempts to load Quizstate from storage
 
@@ -46,6 +49,7 @@ class App extends React.Component {
 				PreviousState : "StartScreen",
 				// all variables used for the quiz itself
 				QuestionList : QuestionList,
+				QuestionMode : date.getMonth() > 11 || date.getMonth() < 4 ? "WinterMode" : "ZomerMode",
 				ActiveQuestion : null,
 				FirstAttempt : true,
 				AnsweredCorrect : false,
@@ -63,6 +67,7 @@ class App extends React.Component {
 				TimeSpent : 0,
 				UserName : "",
 				Leaderboard : [],
+
 
 				
 			}
@@ -143,7 +148,7 @@ class App extends React.Component {
 						<div style={{display : 'flex'}}>
 						{
 						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
-						this.state.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) =>
+						this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
 							<div style={{backgroundColor : "#56a222", width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option);}}}>
 								<div style={{borderRadius : 360+"rem", backgroundColor : "#457c1f", width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index}</div>
 								<p style={{textAlign : 'center'}}>{Option}</p>
@@ -211,14 +216,14 @@ class App extends React.Component {
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"vh", position : 'absolute', top : 0+"%", left : 0+"%"}}>
 					
 					{/*Moves the program back into its previous state*/}
-					{this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen" ? 
+					{this.state.ProgramState === "AnswerScreen" || this.state.ProgramState === "DoneQuestionsScreen" ? 
 					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
 					{/*Archeon logo*/}
 					<div style={{display : 'flex', justifyContent : 'center', height : 100+"%"}}>
 						<img onClick={() => {window.open('https://www.archeon.nl/index.html', '_blank');}} style={{}} src={Logo} alt="Logo of the archeon website"/>
 					</div>
 					{/*Moves the program to the DoneQuestionsScreen state*/}
-					{this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen" && this.state.ProgramState !== "DoneQuestionsScreen" ? 
+					{this.state.ProgramState === "SelectionScreen"  ? 
 					<img onClick={() => {this.SwitchProgramState("DoneQuestionsScreen");}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 100+"%", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 				</div>
 				
@@ -275,7 +280,7 @@ class App extends React.Component {
 
 		var NewQuestionList = this.state.QuestionList;
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
-		if (Option === this.state.QuestionList[this.state.ActiveQuestion].CorrectAnswer) {
+		if (Option === this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].CorrectAnswer) {
 		
 			// feedback for the user
 			this.setState({AnsweredCorrect : true});
@@ -307,41 +312,41 @@ class App extends React.Component {
 		}
   	}
 
-		// generates a hint used in the selectionscreen
-		GenerateHint() {
+	// generates a hint used in the selectionscreen
+	GenerateHint() {
 
-			var GotHint = false;
-			var CurrentTijdperk = 0;
-			var TijdperkList = ["PREHISTORIE", "MIDDELEEUWEN", "ROMEINSETIJD"];
-	
-			while (GotHint === false) {
-				// loops through the questionlist array
-				// eslint-disable-next-line
-				this.state.QuestionList.every(Question => {
-					// skips the question if it has already been completed
-					if (Question.Completed === false) {
-						// checks if its tijdperk is equal to the desired tijdperk
-						if (Question.Tijdperk === TijdperkList[CurrentTijdperk]) {
-							// sets the hint to the found hint
-							this.setState({CurrentHint : Question.Hint});
-							GotHint = true;
-							console.log(`Got hint from ${Question.Title}, Tijdperk = ${Question.Tijdperk}`);
-							// stops the .every()
-							return false;
-						}
+		var GotHint = false;
+		var CurrentTijdperk = 0;
+		var TijdperkList = ["PREHISTORIE", "MIDDELEEUWEN", "ROMEINSETIJD"];
+
+		while (GotHint === false) {
+			// loops through the questionlist array
+			// eslint-disable-next-line
+			this.state.QuestionList.every(Question => {
+				// skips the question if it has already been completed
+				if (Question.Completed === false) {
+					// checks if its tijdperk is equal to the desired tijdperk
+					if (Question.Tijdperk === TijdperkList[CurrentTijdperk]) {
+						// sets the hint to the found hint
+						this.setState({CurrentHint : Question.Hint});
+						GotHint = true;
+						console.log(`Got hint from ${Question.Title}, Tijdperk = ${Question.Tijdperk}`);
+						// stops the .every()
+						return false;
 					}
-					// continues the .every() when the question isnt usefull
-					return true;
-				});
-				// if no questions could be found matching the desired tijdperk, move the tijdperk + 1
-				CurrentTijdperk++;
-				// if all possible tijdperken have been searched through and nothing was found, all questions have been answered and the quiz is done
-				if (CurrentTijdperk - 1 === TijdperkList.length) {
-					this.setState({CurrentHint : "Je hebt alle vragen beantwoord, goed gedaan!"});
-					GotHint = true;
 				}
+				// continues the .every() when the question isnt usefull
+				return true;
+			});
+			// if no questions could be found matching the desired tijdperk, move the tijdperk + 1
+			CurrentTijdperk++;
+			// if all possible tijdperken have been searched through and nothing was found, all questions have been answered and the quiz is done
+			if (CurrentTijdperk - 1 === TijdperkList.length) {
+				this.setState({CurrentHint : "Je hebt alle vragen beantwoord, goed gedaan!"});
+				GotHint = true;
 			}
 		}
+	}
 
   	// handles all Qr-code code
   	HandleQrCodeScan(data){
@@ -425,10 +430,7 @@ class App extends React.Component {
 		clearInterval(this.SaveTimerID);
 		clearInterval(this.LeaderboardTimerID);
 	}
-
-
-
-	
+	// resets the program	
 	ResetQuiz() {
 		// deletes the saved quiz from storage and quickly reloads the page to reset the client side quiz so it begins with a clean slate
 		window.localStorage.setItem("QuizState", "");
