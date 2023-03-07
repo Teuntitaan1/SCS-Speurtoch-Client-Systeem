@@ -10,8 +10,13 @@ class CompletedQuestionsManager extends React.Component {
     }
 
     SetActiveQuestion(index) {
-        if (this.state.ActiveQuestion !== index) {
-            this.setState({ActiveQuestion : index});
+        if (index !== null) {
+            if (this.state.ActiveQuestion !== index) {
+                this.setState({ActiveQuestion : index});
+            }
+            else {
+                this.setState({ActiveQuestion : null});
+            }
         }
         else {
             this.setState({ActiveQuestion : null});
@@ -20,32 +25,38 @@ class CompletedQuestionsManager extends React.Component {
     render() {
         return(
             <>
-                <div style={{display : 'flex'}}>
-                {this.props.QuestionList.map((Question, index) => 
-                    <button key={index} onClick={() => {Question.Completed ? this.SetActiveQuestion(index) : console.log("Vraag nog niet beantwoord")}} style={{borderRadius : 360+"rem", width : 3+"rem", height : 3+"rem", backgroundColor : Question.Completed ? "#7ed957" : "#a6a6a6", textAlign : 'center', color : "#ffffff"}}>{index}</button> 
-                )}
+                <div style={{display : 'flex', flexWrap : 'wrap'}}>
+                    {this.props.QuestionList.map((Question, index) => 
+                        <button key={index} onClick={() => {Question.Completed ? this.SetActiveQuestion(index) : this.SetActiveQuestion(null);}} style={{borderRadius : 360+"rem", width : 3+"rem", height : 3+"rem", backgroundColor : Question.Completed ? "#7ed957" : "#a6a6a6", textAlign : 'center', color : "#ffffff"}}>{index}</button> 
+                    )}
                 </div>
-                {this.state.ActiveQuestion !== null ? 
-                    <>
-                        <h4>{this.props.QuestionList[this.state.ActiveQuestion].Description}</h4>
-                        <div style={{display : 'flex'}}>
-                        {this.props.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) => 
-                            <p key={index} style={
-                                {
-                                    backgroundColor : Option === this.props.QuestionList[this.state.ActiveQuestion].CorrectAnswer ? "#7ed957" : "#e14747",
-                                    width : 2+"rem",
-                                    height : 2+"rem",
-                                    borderRadius : 360+"rem",
-                                    textAlign : 'center'
-                                }}>{index}</p>)
-                        }
-                        </div>
-                        <h3>Wist je dat?</h3>
-                        <p>{this.props.QuestionList[this.state.ActiveQuestion].ExtraInfo}</p>
-                </>
-                    :
-                    null
-                }
+
+                <div>
+                    {this.state.ActiveQuestion !== null ? 
+                        <>
+                            <h2 style={{textAlign : 'center'}}>{this.props.QuestionList[this.state.ActiveQuestion].Description}</h2>
+                            <hr></hr>
+                            <div style={{display : 'flex', flexWrap : 'wrap', justifyContent : 'center'}}>
+                                {this.props.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) => 
+                                    <div key={index} style={
+                                        {
+                                            backgroundColor : Option === this.props.QuestionList[this.state.ActiveQuestion].CorrectAnswer ? "#7ed957" : "#e14747",
+                                            width : 3+"rem",
+                                            height : 3+"rem",
+                                            borderRadius : 15+"px",
+                                            textAlign : 'center'
+                                        }}><p style={{position : 'relative', top : 0+"%"}}>{index}</p></div>)
+                                }
+                                
+                            </div>
+                            <p>{this.props.QuestionList[this.state.ActiveQuestion].CorrectAnswer} was het goede antwoord!</p>
+                            <h2 style={{textAlign : 'center'}}>Wist je dat?</h2>
+                            <p>{this.props.QuestionList[this.state.ActiveQuestion].ExtraInfo}</p>
+                        </>
+                        :
+                        null
+                    }
+                </div>
             </>
         );
     }

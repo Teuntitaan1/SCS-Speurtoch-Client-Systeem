@@ -6,7 +6,7 @@ import React from 'react';
 import QrReader from 'react-qr-scanner';
 // image imports
 import QrCodeButton from './Images/QrCodeButton.svg';
-import ArrowDown from './Images/Pijltje.svg';
+import CompletedQuestionsButton from './Images/checklist-alt-svgrepo-com.svg';
 import Logo from './Images/Archeon logo.png';
 import BackArrow from './Images/PijlNaarLinks.svg';
 import HintIcon from './Images/HintIcon.svg';
@@ -77,18 +77,8 @@ class App extends React.Component {
 
 	}
 
-
-
 	// all render code
 	render() {
-		// generates a nice looking progress bar
-		var progressbar = 
-			<>
-				<div style={{borderWidth : 5+"px", borderColor : 'black', width : 100+"%", height : 1+"rem"}}>
-					<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}><p style={{textAlign : 'end'}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length}</p></div>
-				</div>
-			</>
-
 		// chooses what to display in the main part of the program
 		var programbody = null;
 		
@@ -101,15 +91,12 @@ class App extends React.Component {
 					<div>
 						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
 						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
-						<div style={{display : 'flex', justifyContent : 'center', marginTop : 15+"rem"}}>
-							<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 15+"rem", height : 5+"rem", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
+						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
+							<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 20+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
 						</div>
 						
 					</div>;
 					break;
-
-
-
 
 			case "SelectionScreen":
 			// upon completing the question, the checkmark renders, else it does not.
@@ -138,26 +125,15 @@ class App extends React.Component {
 							</div>
 
 						}
-						
-						<div style={{display : 'flex', justifyContent : 'center'}}>
-							<img onClick={() => this.SwitchProgramState("DoneQuestionsScreen")} src={ArrowDown} alt="DoneQuestionsbutton" style={{height: 4+"rem", width: 4+"rem"}}/>
-						</div>
-
 					</>;
 				break;
 			
-
-
-
 			case "DoneQuestionsScreen": 
 				
 				programbody =
 					<CompletedQuestionsManager QuestionList={this.state.QuestionList}/>
 				break;
 			
-
-
-
 			case "AnswerScreen":
 			
 				programbody =
@@ -168,7 +144,7 @@ class App extends React.Component {
 						{
 						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
 						this.state.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) =>
-							<div style={{backgroundColor : "#56a222", width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {this.ValidateAnswer(Option);}}>
+							<div style={{backgroundColor : "#56a222", width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option);}}}>
 								<div style={{borderRadius : 360+"rem", backgroundColor : "#457c1f", width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index}</div>
 								<p style={{textAlign : 'center'}}>{Option}</p>
 							</div>
@@ -178,10 +154,6 @@ class App extends React.Component {
 						{this.state.FirstAttempt !== true ? <p>Helaas! Dat is niet het goede antwoord!</p> : this.state.AnsweredCorrect === true ? <p>Goed gedaan!</p> : null}
 					</>;
 				break;
-
-
-
-
 
 			case "FinishScreen":
 				
@@ -231,45 +203,49 @@ class App extends React.Component {
 						<h1>Error... er is iets fout gegaan!</h1>
 					</>;
 				break;
-
-
-
 		}
 		
-
 		// renders based on what programbody is
 		return(
 			<>
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"%", position : 'absolute', top : 0+"%", left : 0+"%"}}>
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"vh", position : 'absolute', top : 0+"%", left : 0+"%"}}>
 					
-					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/>
-					<img style={{height : 100+"%", position : 'absolute', right : 0+"%"}} src={Logo} alt="Logo of the archeon website"/>
-
+					{/*Moves the program back into its previous state*/}
+					{this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen" ? 
+					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
+					{/*Archeon logo*/}
+					<div style={{display : 'flex', justifyContent : 'center', height : 100+"%"}}>
+						<img onClick={() => {window.open('https://www.archeon.nl/index.html', '_blank');}} style={{}} src={Logo} alt="Logo of the archeon website"/>
+					</div>
+					{/*Moves the program to the DoneQuestionsScreen state*/}
+					{this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen" && this.state.ProgramState !== "DoneQuestionsScreen" ? 
+					<img onClick={() => {this.SwitchProgramState("DoneQuestionsScreen");}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 100+"%", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 				</div>
 				
-				<div style={{paddingTop : 15+"%"}}>
-					
+				{/*Hint label on top of the screen and screen state body*/}
+				<div style={{marginTop: 11+"vh"}}>
+					{/*Hint label*/}
 					{this.state.ProgramState !== "StartScreen" ? 
-						<div style={{backgroundColor : "#457c1f", marginTop : 7+"%", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
+						<div style={{backgroundColor : "#457c1f", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
 							<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
 							<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
 						</div> 
 						:
 						null}
-					
-					<div style={{marginTop : 2+"%"}}>
+					{/*Main program body*/}	
+					<div style={{marginTop : 1+"vh"}}>
 						{programbody}
 					</div>
-
 				</div>
 
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"%", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
-					
-					<div>
-						{progressbar}
+				{/*Bottom part of the program*/}
+				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"vh", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
+					{/*Progress bar*/}
+					<div style={{width : 100+"%", height : 75+"%", position : 'absolute', bottom : 4.5+"vh"}}>
+						<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}>
+							<p style={{fontWeight : 'bold', textAlign : 'end', position : 'relative', top : 30+"%"}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length}</p>
+						</div>
 					</div>
-
-					<footer style={{position : 'absolute', bottom : 0+"%", left : 35+"%", opacity : 0.8, fontWeight : 'bold', fontSize : 100+"%"}}>Bezige Bijtjes @{new Date().getFullYear()}</footer>
 				</div>
 
 				{this.props.debugmode === true ?
@@ -383,7 +359,7 @@ class App extends React.Component {
 		// checks if the question has been answered or not
 		this.state.QuestionList[data.text].Completed === false ?
 			this.setState({ActiveQuestion: data.text, ProgramState :"AnswerScreen", Scanning : false, Warning : ""}) 
-		:
+			:
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 	}
 	// handles errors received from the qr code scanner
