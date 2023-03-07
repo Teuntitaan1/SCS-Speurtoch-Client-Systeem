@@ -27,7 +27,7 @@ import HintIcon from './Images/HintIcon.svg';
 // TODO
 // fix the leaderboard
 // prettify the FinishScreen
-// prettify the Questionsscreen
+// Add Summer-Winter functionality
 
 class App extends React.Component {
   
@@ -92,7 +92,7 @@ class App extends React.Component {
 						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
 						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
 						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
-							<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 20+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
+							<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
 						</div>
 						
 					</div>;
