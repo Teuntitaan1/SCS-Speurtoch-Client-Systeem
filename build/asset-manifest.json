@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.e8026305.css",
-    "main.js": "/static/js/main.8be0dc79.js",
+    "main.js": "/static/js/main.1f0a50bf.js",
     "static/media/Archeon logo.png": "/static/media/Archeon logo.9cd9d02440a65c08aa5d.png",
     "static/media/Triplex Light.ttf": "/static/media/Triplex Light.88c7d927507f3e045176.ttf",
     "static/media/HintIcon.svg": "/static/media/HintIcon.3cfd984606c3eb503856d491857ccc24.svg",
@@ -10,10 +10,10 @@
     "static/media/QrCodeButton.svg": "/static/media/QrCodeButton.90c0e4e6017e71d6784759808009eb4f.svg",
     "static/media/PijlNaarLinks.svg": "/static/media/PijlNaarLinks.68761bf1202963a05ad89396d41bced8.svg",
     "main.e8026305.css.map": "/static/css/main.e8026305.css.map",
-    "main.8be0dc79.js.map": "/static/js/main.8be0dc79.js.map"
+    "main.1f0a50bf.js.map": "/static/js/main.1f0a50bf.js.map"
   },
   "entrypoints": [
     "static/css/main.e8026305.css",
-    "static/js/main.8be0dc79.js"
+    "static/js/main.1f0a50bf.js"
   ]
 }

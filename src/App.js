@@ -10,6 +10,7 @@ import CompletedQuestionsButton from './Images/checklist-alt-svgrepo-com.svg';
 import Logo from './Images/Archeon logo.png';
 import BackArrow from './Images/PijlNaarLinks.svg';
 import HintIcon from './Images/HintIcon.svg';
+import { isDesktop } from 'react-device-detect';
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -29,6 +30,8 @@ import HintIcon from './Images/HintIcon.svg';
 // prettify the FinishScreen
 // improve on making the ui more intuitive to use
 // Add Summer-Winter functionality
+
+var DesktTop = isDesktop;  
 
 class App extends React.Component {
   
@@ -117,7 +120,16 @@ class App extends React.Component {
 									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
 									onScan={this.HandleQrCodeScan} 
 									onError={this.HandleQrCodeError}
-									facingmode={"environment"}
+									constraints={
+										DesktTop
+										  ? undefined
+										  : {
+											  video: {
+												facingMode: "rear"
+											  }
+											}
+									  }
+									facingmode={"rear"}
 								/>
 
 								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f"}} >Stop met scannen</button>
@@ -138,7 +150,7 @@ class App extends React.Component {
 			case "DoneQuestionsScreen": 
 				
 				programbody =
-					<CompletedQuestionsManager QuestionList={this.state.QuestionList}/>
+					<CompletedQuestionsManager QuestionList={this.state.QuestionList} QuestionMode={this.state.QuestionMode}/>
 				break;
 			
 			case "AnswerScreen":

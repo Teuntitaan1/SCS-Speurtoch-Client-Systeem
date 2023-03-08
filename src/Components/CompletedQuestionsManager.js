@@ -37,10 +37,10 @@ class CompletedQuestionsManager extends React.Component {
                             <h2 style={{textAlign : 'center'}}>{this.props.QuestionList[this.state.ActiveQuestion].Description}</h2>
                             <hr></hr>
                             <div style={{display : 'flex', flexWrap : 'wrap', justifyContent : 'center'}}>
-                                {this.props.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) => 
+                                {this.props.QuestionList[this.state.ActiveQuestion][this.props.QuestionMode].Options.map((Option, index) => 
                                     <div key={index} style={
                                         {
-                                            backgroundColor : Option === this.props.QuestionList[this.state.ActiveQuestion].CorrectAnswer ? "#7ed957" : "#e14747",
+                                            backgroundColor : Option === this.props.QuestionList[this.state.ActiveQuestion][this.props.QuestionMode].CorrectAnswer ? "#7ed957" : "#e14747",
                                             width : 3+"rem",
                                             height : 3+"rem",
                                             borderRadius : 15+"px",
@@ -49,7 +49,7 @@ class CompletedQuestionsManager extends React.Component {
                                 }
                                 
                             </div>
-                            <p>{this.props.QuestionList[this.state.ActiveQuestion].CorrectAnswer} was het goede antwoord!</p>
+                            <p>{this.props.QuestionList[this.state.ActiveQuestion][this.props.QuestionMode].CorrectAnswer} was het goede antwoord!</p>
                             <h2 style={{textAlign : 'center'}}>Wist je dat?</h2>
                             <p>{this.props.QuestionList[this.state.ActiveQuestion].ExtraInfo}</p>
                         </>
