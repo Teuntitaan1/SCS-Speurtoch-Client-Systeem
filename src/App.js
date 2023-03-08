@@ -117,7 +117,7 @@ class App extends React.Component {
 									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
 									onScan={this.HandleQrCodeScan} 
 									onError={this.HandleQrCodeError}
-									facingmode={"rear"}
+									facingmode={"environment"}
 								/>
 
 								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f"}} >Stop met scannen</button>
