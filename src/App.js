@@ -61,7 +61,7 @@ class App extends React.Component {
 				// if the warning is a blank string, nothing will render. else it will
 				// render the warning/error associated with the qr-code
 				Warning : "",
-				
+
 				// all variables user by the leaderboard functionality
 				SendResults : false,
 				TimeSpent : 0,
@@ -116,7 +116,9 @@ class App extends React.Component {
 									delay={0} 
 									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
 									onScan={this.HandleQrCodeScan} 
-									onError={this.HandleQrCodeError}/>
+									onError={this.HandleQrCodeError}
+									facingmode={"rear"}
+								/>
 
 								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f"}} >Stop met scannen</button>
 								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
@@ -206,6 +208,8 @@ class App extends React.Component {
 				programbody =
 					<>
 						<h1>Error... er is iets fout gegaan!</h1>
+						<h2>Mogelijk heb je geen toegang gegeven tot de camera?</h2>
+						<p>Klik op de terugknop en probeer het nog een keer!</p>
 					</>;
 				break;
 		}
@@ -216,7 +220,7 @@ class App extends React.Component {
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"vh", position : 'absolute', top : 0+"%", left : 0+"%"}}>
 					
 					{/*Moves the program back into its previous state*/}
-					{this.state.ProgramState === "AnswerScreen" || this.state.ProgramState === "DoneQuestionsScreen" ? 
+					{this.state.ProgramState === "AnswerScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "ErrorScreen" ? 
 					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
 					{/*Archeon logo*/}
 					<div style={{display : 'flex', justifyContent : 'center', height : 100+"%"}}>
@@ -258,6 +262,7 @@ class App extends React.Component {
 						<hr/>
 						<h3>Debug bedieningspaneel</h3>
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
+						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
 
 					</div>
 					: null}
@@ -369,7 +374,9 @@ class App extends React.Component {
 	}
 	// handles errors received from the qr code scanner
 	HandleQrCodeError(error) {
-		this.setState({Warning : error});
+		console.log(error);
+		this.setState({Scanning : false});
+		this.SwitchProgramState("ErrorScreen");
 	}
 	// handles all timer code
 	TimerTick() {
