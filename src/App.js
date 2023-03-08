@@ -28,8 +28,8 @@ import HintIcon from './Images/HintIcon.svg';
 // fix the leaderboard
 // prettify the FinishScreen
 // improve on making the ui more intuitive to use
-// making the indexes start from 1 instead of 0
-// Add Summer-Winter functionality
+// add a points system // improve on the formula and display of that system
+// feedback for the user when a question is answered wrong
 
 class App extends React.Component {
   
@@ -52,11 +52,13 @@ class App extends React.Component {
 				QuestionList : QuestionList,
 				QuestionMode : date.getMonth() > 11 || date.getMonth() < 4 ? "WinterMode" : "ZomerMode",
 				ActiveQuestion : null,
-				FirstAttempt : true,
 				AnsweredCorrect : false,
 
 				QuestionsCompleted : 0, 
+				Attemps : 0,
 				QuestionsCompletedFirstTime : 0,
+				StartedQuestion : Date.now(),
+
 				// qr code variables
 				Scanning : false,
 				// if the warning is a blank string, nothing will render. else it will
@@ -67,6 +69,7 @@ class App extends React.Component {
 				SendResults : false,
 				TimeSpent : 0,
 				UserName : "",
+				TotalPoints : 0,
 				Leaderboard : [],
 
 
@@ -98,7 +101,7 @@ class App extends React.Component {
 						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
 						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
 						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
-							<button onClick={() => {this.SwitchProgramState("SelectionScreen");this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
+							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
 						</div>
 						
 					</div>;
@@ -121,7 +124,7 @@ class App extends React.Component {
 								/>
 
 								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f"}} >Stop met scannen</button>
-								<p style={{color : "red", height : 2+"rem", position : 'absolute', marginTop : 52+"vh"}}>{this.state.Warning}</p>
+								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
 
 							</div>
 							:
@@ -145,20 +148,25 @@ class App extends React.Component {
 			
 				programbody =
 					<>
+						#6BCD28
+						#56a222
 						<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
 						<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
 						<div style={{display : 'flex'}}>
 						{
 						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
 						this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
-							<div style={{backgroundColor : "#56a222", width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option);}}}>
+							<div style={{
+								backgroundColor : "#56a222", 
+								width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option);}}}>
 								<div style={{borderRadius : 360+"rem", backgroundColor : "#457c1f", width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
 								<p style={{textAlign : 'center'}}>{Option}</p>
 							</div>
 							)
 						}
 						</div>
-						{this.state.FirstAttempt !== true ? <p>Helaas! Dat is niet het goede antwoord!</p> : this.state.AnsweredCorrect === true ? <p>Goed gedaan!</p> : null}
+						{this.state.Attemps > 0 ? <p>Helaas! Dat is niet het goede antwoord!</p> : this.state.AnsweredCorrect === true ? <p>Goed gedaan!</p> : null}
+						<p>{this.state.TotalPoints} + {Math.floor(1000/(this.state.Attemps + 1)+1000/(Math.floor((Date.now() - this.state.StartedQuestion))/1000))}</p>
 					</>;
 				break;
 
@@ -187,7 +195,7 @@ class App extends React.Component {
 												{this.state.Leaderboard.map((Entry, index) => 
 													<tr key={index}>
 														<td>{Entry.UserName}</td>
-														<td>{Entry.CorrectFirstTime}</td>
+														<td>{Entry.TotalPoints}</td>
 														<td>{Entry.TimeSpent}</td>
 													</tr>
 												)}
@@ -234,7 +242,7 @@ class App extends React.Component {
 				{/*Hint label on top of the screen and screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>
 					{/*Hint label*/}
-					{this.state.ProgramState !== "StartScreen" ? 
+					{this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" ? 
 						<div style={{backgroundColor : "#457c1f", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
 							<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
 							<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
@@ -289,11 +297,14 @@ class App extends React.Component {
 		
 			// feedback for the user
 			this.setState({AnsweredCorrect : true});
-			this.state.FirstAttempt === true ? this.setState({QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime + 1}) : this.setState({FirstAttempt : true});
+			// is this the first attempt of the user?
+			if (this.state.Attemps === 0) {
+				this.setState({QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime + 1});
+			}
 			// sets the active question to completed
 			NewQuestionList[this.state.ActiveQuestion].Completed = true;
 			this.setState({QuestionList : NewQuestionList, QuestionsCompleted : this.state.QuestionsCompleted + 1});
-			
+			this.setState({TotalPoints : this.state.TotalPoints + Math.floor(1000/(this.state.Attemps + 1)+1000/(Math.floor((Date.now() - this.state.StartedQuestion)/1000)))});
 			
 			this.GenerateHint();
 
@@ -306,13 +317,13 @@ class App extends React.Component {
 				}
 				else {
 					this.SwitchProgramState("SelectionScreen", true);
-					this.setState({AnsweredCorrect : false});
+					this.setState({AnsweredCorrect : false, Attemps : 0});
 				}
 				
 			}, 1200);			
 		}
 		else {
-			this.setState({FirstAttempt : false});
+			this.setState({Attemps : this.state.Attemps + 1});
 			console.log("Incorrect Answer");
 		}
   	}
@@ -368,7 +379,7 @@ class App extends React.Component {
 		}
 		// checks if the question has been answered or not
 		this.state.QuestionList[data.text].Completed === false ?
-			this.setState({ActiveQuestion: data.text, ProgramState :"AnswerScreen", Scanning : false, Warning : ""}) 
+			this.setState({ActiveQuestion: data.text, ProgramState :"AnswerScreen", Scanning : false, Warning : "", StartedQuestion : Date.now()}) 
 			:
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 	}
@@ -381,7 +392,7 @@ class App extends React.Component {
 	// handles all timer code
 	TimerTick() {
 		// increments the TimeSpent variable if the user is activly participating in the quiz
-		if(this.state.ProgramState !== "StartScreen" && this.state.ProgramState !== "FinishScreen") {
+		if(this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "AnswerScreen") {
 			this.setState({TimeSpent : this.state.TimeSpent + 1});
 		}
 	}
@@ -400,6 +411,7 @@ class App extends React.Component {
 				UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 				TimeSpent : this.state.TimeSpent,
 				CorrectFirstTime : this.state.QuestionsCompletedFirstTime,
+				TotalPoints : this.state.TotalPoints,
 				// calculates a score based on different statistics
 				Score : this.state.QuestionsCompleted / this.state.TimeSpent})};
 
@@ -427,7 +439,7 @@ class App extends React.Component {
 		const SaveTimer = setInterval(() => this.TimerSave(), 1*1000);
 		this.SaveTimerID = SaveTimer;
 
-		const LeaderboardTimer = setInterval(() => this.PullLeaderBoard(), 10*1000);
+		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 10*1000);
 		this.LeaderboardTimerID = LeaderboardTimer;
 	}
 	// runs when the program is ready to stop
