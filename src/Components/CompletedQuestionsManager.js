@@ -27,7 +27,7 @@ class CompletedQuestionsManager extends React.Component {
             <>
                 <div style={{display : 'flex', flexWrap : 'wrap'}}>
                     {this.props.QuestionList.map((Question, index) => 
-                        <button key={index} onClick={() => {Question.Completed ? this.SetActiveQuestion(index) : this.SetActiveQuestion(null);}} style={{borderRadius : 360+"rem", width : 3+"rem", height : 3+"rem", backgroundColor : Question.Completed ? "#7ed957" : "#a6a6a6", textAlign : 'center', color : "#ffffff"}}>{index}</button> 
+                        <button key={index} onClick={() => {Question.Completed ? this.SetActiveQuestion(index) : this.SetActiveQuestion(null);}} style={{borderRadius : 360+"rem", width : 3+"rem", height : 3+"rem", backgroundColor : Question.Completed ? "#7ed957" : "#a6a6a6", textAlign : 'center', color : "#ffffff"}}>{index+1}</button> 
                     )}
                 </div>
 
@@ -45,7 +45,7 @@ class CompletedQuestionsManager extends React.Component {
                                             height : 3+"rem",
                                             borderRadius : 15+"px",
                                             textAlign : 'center'
-                                        }}><p style={{position : 'relative', top : 0+"%"}}>{index}</p></div>)
+                                        }}><p style={{position : 'relative', top : 0+"%"}}>{index+1}</p></div>)
                                 }
                                 
                             </div>

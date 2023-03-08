@@ -21,5 +21,148 @@
         "CorrectAnswer" : "Willekeurig"
       },
       "ExtraInfo" : "Bijen zijn erg cool!"
-    }
+    },
+    {"Title" : "Vraag 3", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+    "ZomerMode" : {
+      "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+      "CorrectAnswer" : "Willekeurig"
+    },
+    "WinterMode" : {
+      "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+      "CorrectAnswer" : "Willekeurig"
+    },
+    "ExtraInfo" : "Bijen zijn erg cool!"
+  },
+  {"Title" : "Vraag 4", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+  "ZomerMode" : {
+    "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+    "CorrectAnswer" : "Willekeurig"
+  },
+  "WinterMode" : {
+    "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+    "CorrectAnswer" : "Willekeurig"
+  },
+  "ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 5", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 6", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},    
+{"Title" : "Vraag 7", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 8", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 9", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 10", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 11", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 12", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 13", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 14", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+},
+{"Title" : "Vraag 15", "Description" : "Dit?", "Completed" : false, "Hint" : "kijk bij het pondje in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+"ZomerMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"WinterMode" : {
+  "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt"],
+  "CorrectAnswer" : "Willekeurig"
+},
+"ExtraInfo" : "Bijen zijn erg cool!"
+}
 ]

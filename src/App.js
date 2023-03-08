@@ -28,6 +28,7 @@ import HintIcon from './Images/HintIcon.svg';
 // fix the leaderboard
 // prettify the FinishScreen
 // improve on making the ui more intuitive to use
+// making the indexes start from 1 instead of 0
 // Add Summer-Winter functionality
 
 class App extends React.Component {
@@ -151,7 +152,7 @@ class App extends React.Component {
 						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
 						this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
 							<div style={{backgroundColor : "#56a222", width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option);}}}>
-								<div style={{borderRadius : 360+"rem", backgroundColor : "#457c1f", width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index}</div>
+								<div style={{borderRadius : 360+"rem", backgroundColor : "#457c1f", width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
 								<p style={{textAlign : 'center'}}>{Option}</p>
 							</div>
 							)
