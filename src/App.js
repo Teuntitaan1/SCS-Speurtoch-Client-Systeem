@@ -166,7 +166,11 @@ class App extends React.Component {
 						}
 						</div>
 						{this.state.Attemps > 0 ? <p>Helaas! Dat is niet het goede antwoord!</p> : this.state.AnsweredCorrect === true ? <p>Goed gedaan!</p> : null}
-						<p>{this.state.TotalPoints} + {Math.floor(1000/(this.state.Attemps + 1)+1000/(Math.floor((Date.now() - this.state.StartedQuestion))/1000))}</p>
+						<p>{this.state.TotalPoints} + {
+						(2000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? 
+							(2000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) :
+							0
+						}</p>
 					</>;
 				break;
 
@@ -304,7 +308,11 @@ class App extends React.Component {
 			// sets the active question to completed
 			NewQuestionList[this.state.ActiveQuestion].Completed = true;
 			this.setState({QuestionList : NewQuestionList, QuestionsCompleted : this.state.QuestionsCompleted + 1});
-			this.setState({TotalPoints : this.state.TotalPoints + Math.floor(1000/(this.state.Attemps + 1)+1000/(Math.floor((Date.now() - this.state.StartedQuestion)/1000)))});
+			this.setState({TotalPoints : 
+				(2000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? 
+					this.state.TotalPoints + (2000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) :
+					this.state.TotalPoints + 0
+				});
 			
 			this.GenerateHint();
 
