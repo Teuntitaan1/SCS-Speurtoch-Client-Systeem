@@ -1,15 +1,15 @@
 // my own components etc
-import './StyleSheets/App.css';
-import CompletedQuestionsManager from './Components/CompletedQuestionsManager'
+import '../StyleSheets/App.css';
+import CompletedQuestionsManager from './CompletedQuestionsManager'
 // library imports
 import React from 'react';
 import QrReader from 'react-qr-scanner';
 // image imports
-import QrCodeButton from './Images/QrCodeButton.svg';
-import CompletedQuestionsButton from './Images/checklist-alt-svgrepo-com.svg';
-import Logo from './Images/Archeon logo.png';
-import BackArrow from './Images/PijlNaarLinks.svg';
-import HintIcon from './Images/HintIcon.svg';
+import QrCodeButton from '../Images/QrCodeButton.svg';
+import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
+import Logo from '../Images/Archeon logo.png';
+import BackArrow from '../Images/PijlNaarLinks.svg';
+import HintIcon from '../Images/HintIcon.svg';
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -29,7 +29,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const QuestionList = require("./Questions.json");
+		const QuestionList = require("../Questions.json");
 		// attempts to load Quizstate from storage
 
 		// if the key doesnt exist it generates a new one
@@ -86,21 +86,18 @@ class App extends React.Component {
 		
 			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
 			case "StartScreen":
-
 				programbody =
-					<div>
+					<>
 						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
 						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
 						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
 							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
 						</div>
 						
-					</div>;
+					</>;
 					break;
 
 			case "SelectionScreen":
-			// upon completing the question, the checkmark renders, else it does not.
-			// The image has to be required.
 				programbody =
 					<>	
 						{this.state.Scanning === true ? 
@@ -130,13 +127,11 @@ class App extends React.Component {
 				break;
 			
 			case "DoneQuestionsScreen": 
-				
 				programbody =
 					<CompletedQuestionsManager QuestionList={this.state.QuestionList} QuestionMode={this.state.QuestionMode}/>
 				break;
 			
 			case "AnswerScreen":
-			
 				programbody =
 					<>
 						<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
@@ -158,7 +153,6 @@ class App extends React.Component {
 				break;
 
 			case "FinishScreen":
-				
 				programbody =
 					<>
 						{this.state.SendResults !== true ?
@@ -199,7 +193,6 @@ class App extends React.Component {
 				break;
 			
 			default:
-
 				programbody =
 					<>
 						<h1>Error... er is iets fout gegaan!</h1>
@@ -236,6 +229,7 @@ class App extends React.Component {
 						</div> 
 						:
 						null}
+					
 					{/*Main program body*/}	
 					<div style={{marginTop : 1+"vh"}}>
 						{programbody}
@@ -244,12 +238,14 @@ class App extends React.Component {
 
 				{/*Bottom part of the program*/}
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"vh", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
+					
 					{/*Progress bar*/}
 					<div style={{width : 100+"%", height : 75+"%", position : 'absolute', bottom : 4.5+"vh"}}>
 						<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}>
 							<p style={{fontWeight : 'bold', textAlign : 'end', position : 'relative', top : 30+"%"}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length}</p>
 						</div>
 					</div>
+
 				</div>
 
 				{this.props.debugmode === true ?
@@ -262,7 +258,6 @@ class App extends React.Component {
 					</div>
 					: null}
 			</>
-			
 		); 
 	}
 	// handy function used all throughout the program to switch the ProgramState and PreviousState variable so that the program adapts based on input
