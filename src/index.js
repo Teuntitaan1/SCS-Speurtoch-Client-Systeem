@@ -3,15 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './Local_Files/StyleSheets/index.css';
 import App from './Local_Files/Components/App';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-const debug = false;
-
-
-
-
-root.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App debugmode={debug}/>
+    <App debugmode={true}/>
   </React.StrictMode>
 );
 
