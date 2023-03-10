@@ -10,6 +10,7 @@ import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
 import Logo from '../Images/Archeon logo.png';
 import BackArrow from '../Images/PijlNaarLinks.svg';
 import HintIcon from '../Images/HintIcon.svg';
+import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -19,7 +20,7 @@ import HintIcon from '../Images/HintIcon.svg';
 // 6.Anything else defaults to the error page
 
 // TODO
-// fix the leaderboard
+// prettify the leaderboard
 // prettify the FinishScreen
 // improve on making the ui more intuitive to use
 // add a points system // improve on the display of that system
@@ -61,6 +62,7 @@ class App extends React.Component {
 
 				// all variables user by the leaderboard functionality
 				SendResults : false,
+				Uuid : crypto.randomUUID(),
 				TimeSpent : 0,
 				UserName : "",
 				TotalPoints : 0,
@@ -91,7 +93,7 @@ class App extends React.Component {
 						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
 						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
 						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
-							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem"}}>Begin!</button>
+							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem", color : "#000000"}}>Begin!</button>
 						</div>
 						
 					</>;
@@ -111,7 +113,7 @@ class App extends React.Component {
 									onError={this.HandleQrCodeError}
 								/>
 
-								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f"}} >Stop met scannen</button>
+								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} >Stop met scannen</button>
 								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
 
 							</div>
@@ -153,45 +155,77 @@ class App extends React.Component {
 				break;
 
 			case "FinishScreen":
+			
 				programbody =
-					<>
-						{this.state.SendResults !== true ?
-							<>
-								<h3>{"Wat is je naam? (niet verplicht)"}</h3>
-								<input type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
-								<button onClick={() => {this.PushLeaderBoard(); this.PullLeaderBoard()}}>{this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
-							</> 
-							:
-							<>
-								<h3>Je score</h3>
-								{
-									this.state.Leaderboard.length !== 0 ? 
-										<table border={1} cellPadding={5}>
-											<tbody>
-												<tr>
-													<th>Naam</th>
-													<th>In 1x goed</th>
-													<th>Tijd</th>
-												</tr>
-												{this.state.Leaderboard.map((Entry, index) => 
+					<>	
+						<div>
+							<h2 style={{textAlign : 'center'}}>{"Bekijk je resultaten!"}</h2>
+							<div style={{display : 'flex', justifyContent : 'center'}}>
+								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
+									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
+								<button style={{backgroundColor : "#56a222", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
+									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard(); this.PullLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true)}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+							</div>
+						</div>
+
+						<div>
+						{
+							this.state.Leaderboard.length !== 0 ? 
+								<table border={1} cellPadding={5} style={{marginTop : 1+"rem", width  : 100+"%"}}>
+									<tbody>
+										<tr style={{textAlign : 'center'}}>
+											<th style={{backgroundColor : "#56a222"}}>#</th>
+											<th style={{backgroundColor : "#56a222"}}>Naam</th>
+											<th style={{backgroundColor : "#56a222"}}>Punten</th>
+										</tr>
+										{this.state.Leaderboard.slice(0, 4).map((Entry, index) => {
+												if (this.state.Uuid === Entry.Uuid) {
+													return (
+														<tr style={{backgroundColor : "#457c1f"}} key={index}>
+															<td style={{textAlign : 'center'}}>{Entry.Position}</td>
+															<td style={{textAlign : 'center'}}>{Entry.UserName}</td>
+															<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
+														</tr>
+													);
+												}
+												return (
 													<tr key={index}>
-														<td>{Entry.UserName}</td>
-														<td>{Entry.TotalPoints}</td>
-														<td>{Entry.TimeSpent}</td>
+														<td style={{textAlign : 'center'}}>{Entry.Position}</td>
+														<td style={{textAlign : 'center'}}>{Entry.UserName}</td>
+														<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
 													</tr>
-												)}
-											</tbody>
-									</table>
-									:
-									<p>Aan het laden...</p>
-								}
-								<p>Laat dit scherm zien bij de kassa voor een cool prijsje!</p>
-								<button onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
-							</>
+												);})}
+		
+										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 4).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
+											<tr style={{backgroundColor : "#457c1f"}}>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.Position;};})}</td>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName;};})}</td>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;};})}</td>
+											</tr>
+											: 
+											null}
+									</tbody>
+							</table>
+							:
+							<p>Aan het laden...</p>
 						}
-					</>;
+						</div>
+					</>; 
 				break;
 			
+			case "FinalScreen":
+				programbody = 
+				<>
+					<h1 style={{textAlign : 'center', fontSize : 5+"vh"}}>Goed gedaan! Loop naar de kassa, laat dit zien en krijg een cool prijsje!</h1>
+					<div style={{display : 'flex', justifyContent : 'center'}}>
+						<button style={{backgroundColor : "#56a222", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
+					</div>
+					<div style={{display : 'flex', justifyContent : 'center', marginTop : 1+"rem"}}>
+						<img src={PartyImage} alt='Goed gedaan!' style={{width : 80+"vw", height : 40+"vh"}}></img>
+					</div>
+				</>
+				break;
+
 			default:
 				programbody =
 					<>
@@ -396,14 +430,13 @@ class App extends React.Component {
 				TimeSpent : this.state.TimeSpent,
 				CorrectFirstTime : this.state.QuestionsCompletedFirstTime,
 				TotalPoints : this.state.TotalPoints,
-				// calculates a score based on different statistics
-				Score : this.state.QuestionsCompleted / this.state.TimeSpent})};
+				Uuid : this.state.Uuid})};
 
 		// sends the Body array to the server
-		fetch("http://localhost:8000", Body).catch((error) => {console.error('Error:', error);});
+		fetch("http://localhost:8000", Body).
+			then(() => this.setState({SendResults : true})).
+			catch((error) => {console.error('Error:', error);});
 
-		// updates the state
-		this.setState({SendResults : true});
 	}
 	// broke all of a sudden
 	PullLeaderBoard() {
@@ -423,7 +456,7 @@ class App extends React.Component {
 		const SaveTimer = setInterval(() => {window.localStorage.setItem("QuizState" , JSON.stringify(this.state));}, 1*1000);
 		this.SaveTimerID = SaveTimer;
 		// updates the leaderboard
-		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 10*1000);
+		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 1*1000);
 		this.LeaderboardTimerID = LeaderboardTimer;
 	}
 	// runs when the program is ready to stop
