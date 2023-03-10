@@ -198,9 +198,9 @@ class App extends React.Component {
 		
 										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 4).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
 											<tr style={{backgroundColor : "#457c1f"}}>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.Position;};})}</td>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName;};})}</td>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;};})}</td>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.Position;}; return null;})}</td>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName;}; return null;})}</td>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
 											</tr>
 											: 
 											null}
@@ -433,9 +433,9 @@ class App extends React.Component {
 				Uuid : this.state.Uuid})};
 
 		// sends the Body array to the server
-		fetch("http://localhost:8000", Body).
-			then(() => this.setState({SendResults : true})).
-			catch((error) => {console.error('Error:', error);});
+		fetch("http://localhost:8000", Body)
+			.then(() => this.setState({SendResults : true}))
+				.catch((error) => {console.error('Error:', error);});
 
 	}
 	// broke all of a sudden
