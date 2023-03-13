@@ -67,10 +67,19 @@ class App extends React.Component {
 				UserName : "",
 				TotalPoints : 0,
 				Leaderboard : [],
+
+				// technical properties
+				LastVisited : Date.now()
 			}
 		}
 		else {
-			this.state = JSON.parse(window.localStorage.getItem("QuizState"));
+			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*24) > Date.now()) {
+				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
+			}
+			else {
+				this.ResetQuiz();
+			}
+			
 		}
 	
 		// event listeners
@@ -195,7 +204,7 @@ class App extends React.Component {
 														<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
 													</tr>
 												);})}
-		
+										{/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
 										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 4).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
 											<tr style={{backgroundColor : "#457c1f"}}>
 												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.Position;}; return null;})}</td>
@@ -453,7 +462,7 @@ class App extends React.Component {
 		const QuizTimer = setInterval(() => {if(this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "AnswerScreen") {this.setState({TimeSpent : this.state.TimeSpent + 1});}}, 1*1000);
 		this.TimerID = QuizTimer;
 		// saves the program
-		const SaveTimer = setInterval(() => {window.localStorage.setItem("QuizState" , JSON.stringify(this.state));}, 1*1000);
+		const SaveTimer = setInterval(() => {this.setState({LastVisited : Date.now()}); window.localStorage.setItem("QuizState" , JSON.stringify(this.state));}, 1*1000);
 		this.SaveTimerID = SaveTimer;
 		// updates the leaderboard
 		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 1*1000);
