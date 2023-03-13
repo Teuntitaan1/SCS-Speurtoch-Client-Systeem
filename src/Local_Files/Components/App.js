@@ -145,20 +145,26 @@ class App extends React.Component {
 			case "AnswerScreen":
 				programbody =
 					<>
-						<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-						<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
-						<div style={{display : 'flex'}}>
-						{
-						/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
-						this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
-							<div style={{
-								backgroundColor : this.state.OptionColorList[index], 
-								width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out'}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
-								<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
-								<p style={{textAlign : 'center'}}>{Option}</p>
+						<div style={{position : 'relative', left : this.state.AnsweredCorrect !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
+							<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
+							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
+							<div style={{display : 'flex'}}>
+							{
+							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
+							this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
+								<div style={{
+									backgroundColor : this.state.OptionColorList[index], 
+									width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out'}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
+									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
+									<p style={{textAlign : 'center'}}>{Option}</p>
+								</div>
+								)
+							}
 							</div>
-							)
-						}
+						</div>
+
+						<div style={{position : 'relative', left : this.state.AnsweredCorrect === true ? 0+"%" : 200+"%",   transition : 'left 1s ease-in-out'}}>
+							<p style={{textAlign : 'center'}}>Ballen</p>
 						</div>
 					</>;
 				break;
@@ -329,28 +335,24 @@ class App extends React.Component {
 				AnsweredCorrect : true,
 				QuestionsCompletedFirstTime : this.state.Attemps === 0 ? this.state.QuestionsCompletedFirstTime + 1 : this.state.QuestionsCompletedFirstTime
 				});
+
 			// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
-			this.setState({TotalPoints : 
-				(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? 
-					this.state.TotalPoints + (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) :
-					this.state.TotalPoints + 0
-				});
+			var Points = (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0
+			
+			this.setState({TotalPoints : this.state.TotalPoints + Points});
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
 
 			// cool sequence for the users
 			setTimeout(() => {
-				
-				// if all questions have been answered, finish the quiz, please work
+				// if all questions have been answered, finish the quiz
 				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
 					this.SwitchProgramState("FinishScreen", true);
 				}
 				else {
 					this.SwitchProgramState("SelectionScreen", true);
 				}
-				this.setState({OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"], AnsweredCorrect : false, Attemps : 0});
-				
-			}, 1200);			
+			}, 4000);			
 		}
 		else {
 			this.setState({Attemps : this.state.Attemps + 1});
@@ -419,7 +421,14 @@ class App extends React.Component {
 		}
 		// checks if the question has been answered or not
 		this.state.QuestionList[data.text].Completed === false ?
-			this.setState({ActiveQuestion: data.text, ProgramState :"AnswerScreen", Scanning : false, Warning : "", StartedQuestion : Date.now()}) 
+			this.setState({
+				ActiveQuestion: data.text,
+				ProgramState :"AnswerScreen",
+				Scanning : false, Warning : "",
+				StartedQuestion : Date.now(),
+				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
+				AnsweredCorrect : false,
+				Attemps : 0}) 
 			:
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 	}
