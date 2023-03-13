@@ -158,19 +158,19 @@ class App extends React.Component {
 									backgroundColor : this.state.OptionColorList[index], 
 									width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out'}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
 									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
-									<p style={{textAlign : 'center', fontSize : 2.5+"vh"}}>{Option}</p>
+									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', bottom : 15+"%"}}>{Option}</p>
 								</div>
 								)
 							}
 							</div>
-							<p>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</p>
+							<h3>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</h3>
 							
 							
 							<p style={{position : 'absolute', left : 0+"%", top : 0+"%", fontWeight : 'bold', transform: `rotate(${-15}deg)`}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0 } punten</p>
 
 						</div>
 
-						<div style={{position : 'relative', bottom : 35+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",   transition : 'left 1s ease-in-out'}}>
+						<div style={{position : 'relative', bottom : 25+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",   transition : 'left 1s ease-in-out'}}>
 							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0}</h1>
 							{this.state.AnsweredCorrect === true ?
 							<>
