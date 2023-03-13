@@ -21,9 +21,10 @@ import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 
 // TODO
 // prettify the leaderboard
-// prettify the FinishScreen
 // improve on making the ui more intuitive to use
-// add a points system // improve on the display of that system
+// add audio
+// add the questions
+// prettify the StartScreen
 
 class App extends React.Component {
   
@@ -69,11 +70,12 @@ class App extends React.Component {
 				Leaderboard : [],
 
 				// technical properties
-				LastVisited : Date.now()
+				LastVisited : Date.now(),
+				ShowGoodJobScreen : true
 			}
 		}
 		else {
-			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*24) > Date.now()) {
+			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*6) > Date.now()) {
 				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
 			}
 			else {
@@ -145,7 +147,7 @@ class App extends React.Component {
 			case "AnswerScreen":
 				programbody =
 					<>
-						<div style={{position : 'relative', left : this.state.AnsweredCorrect !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
+						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
 							<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
 							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
 							<div style={{display : 'flex'}}>
@@ -156,15 +158,29 @@ class App extends React.Component {
 									backgroundColor : this.state.OptionColorList[index], 
 									width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out'}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
 									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
-									<p style={{textAlign : 'center'}}>{Option}</p>
+									<p style={{textAlign : 'center', fontSize : 2.5+"vh"}}>{Option}</p>
 								</div>
 								)
 							}
 							</div>
+							<p>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</p>
+							
+							
+							<p style={{position : 'absolute', left : 0+"%", top : 0+"%", fontWeight : 'bold', transform: `rotate(${-15}deg)`}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0 } punten</p>
+
 						</div>
 
-						<div style={{position : 'relative', left : this.state.AnsweredCorrect === true ? 0+"%" : 200+"%",   transition : 'left 1s ease-in-out'}}>
-							<p style={{textAlign : 'center'}}>Ballen</p>
+						<div style={{position : 'relative', bottom : 35+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",   transition : 'left 1s ease-in-out'}}>
+							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0}</h1>
+							{this.state.AnsweredCorrect === true ?
+							<>
+								<p style={{textAlign : 'center', fontWeight : 'bold'}}>{Math.floor(this.state.TimeSpent) > 0 ? Math.floor(this.state.TimeSpent/60) + `${this.state.TimeSpent/60 > 1 || this.state.TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{this.state.TimeSpent % 60} {this.state.TimeSpent % 60 > 1 || this.state.TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
+								<hr></hr>
+								<p style={{textAlign : 'center', fontWeight : 'bold'}}>{this.state.QuestionsCompletedFirstTime} {this.state.QuestionsCompletedFirstTime > 1 || this.state.QuestionsCompletedFirstTime === 0 ? "vragen" : "vraag"} in 1x goed</p>
+								<hr></hr>
+								<h2 style={{textAlign : 'center', fontWeight : 'bold', fontStyle : 'italic'}}>Goed gedaan!</h2>
+							</> 
+							 : null}
 						</div>
 					</>;
 				break;
@@ -271,7 +287,7 @@ class App extends React.Component {
 				{/*Hint label on top of the screen and screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>
 					{/*Hint label*/}
-					{this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" ? 
+					{this.state.ProgramState === "SelectionScreen" ? 
 						<div style={{backgroundColor : "#457c1f", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
 							<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
 							<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
@@ -285,7 +301,7 @@ class App extends React.Component {
 					</div>
 				</div>
 
-				{/*Bottom part of the program*/}
+				{/*Footer of the program*/}
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"vh", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
 					
 					{/*Progress bar*/}
@@ -333,13 +349,9 @@ class App extends React.Component {
 				QuestionList : NewQuestionList,
 				QuestionsCompleted : this.state.QuestionsCompleted + 1,
 				AnsweredCorrect : true,
+				ShowGoodJobScreen : true,
 				QuestionsCompletedFirstTime : this.state.Attemps === 0 ? this.state.QuestionsCompletedFirstTime + 1 : this.state.QuestionsCompletedFirstTime
 				});
-
-			// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
-			var Points = (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0
-			
-			this.setState({TotalPoints : this.state.TotalPoints + Points});
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
 
@@ -352,7 +364,10 @@ class App extends React.Component {
 				else {
 					this.SwitchProgramState("SelectionScreen", true);
 				}
-			}, 4000);			
+				// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
+				var Points = (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0
+				this.setState({TotalPoints : this.state.TotalPoints + Points});
+			}, 3000);			
 		}
 		else {
 			this.setState({Attemps : this.state.Attemps + 1});
@@ -427,10 +442,14 @@ class App extends React.Component {
 				Scanning : false, Warning : "",
 				StartedQuestion : Date.now(),
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
-				AnsweredCorrect : false,
-				Attemps : 0}) 
+				Attemps : 0,
+				AnsweredCorrect : false}) 
 			:
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
+
+		setTimeout(() => {
+			this.setState({ShowGoodJobScreen : false});
+		}, 1000);
 	}
 	// handles errors received from the qr code scanner
 	HandleQrCodeError(error) {
