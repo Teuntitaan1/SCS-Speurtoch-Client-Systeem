@@ -4,6 +4,7 @@ import CompletedQuestionsManager from './CompletedQuestionsManager'
 // library imports
 import React from 'react';
 import QrReader from 'react-qr-scanner';
+import Confetti from 'react-confetti'
 // image imports
 import QrCodeButton from '../Images/QrCodeButton.svg';
 import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
@@ -71,7 +72,8 @@ class App extends React.Component {
 
 				// technical properties
 				LastVisited : Date.now(),
-				ShowGoodJobScreen : true
+				ShowGoodJobScreen : true,
+				ShouldShowConffetti : false,
 			}
 		}
 		else {
@@ -170,7 +172,7 @@ class App extends React.Component {
 
 						</div>
 
-						<div style={{position : 'relative', bottom : 25+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",   transition : 'left 1s ease-in-out'}}>
+						<div style={{position : 'relative', bottom : 25+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
 							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0}</h1>
 							{this.state.AnsweredCorrect === true ?
 							<>
@@ -181,7 +183,7 @@ class App extends React.Component {
 								<h2 style={{textAlign : 'center', fontWeight : 'bold', fontStyle : 'italic'}}>Goed gedaan!</h2>
 							</> 
 							 : null}
-						</div>
+						</div> 
 					</>;
 				break;
 
@@ -196,7 +198,7 @@ class App extends React.Component {
 								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
 									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/> : null}
 								<button style={{backgroundColor : "#56a222", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
-									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true)}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
 							</div>
 						</div>
 
@@ -315,6 +317,11 @@ class App extends React.Component {
 
 				</div>
 
+				{/*Confetti to be show all accross the screen*/}
+				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
+					<Confetti/>
+				</div>
+
 				{this.props.debugmode === true ?
 					<div>
 						<hr/>
@@ -352,7 +359,8 @@ class App extends React.Component {
 				QuestionsCompleted : this.state.QuestionsCompleted + 1,
 				AnsweredCorrect : true,
 				ShowGoodJobScreen : true,
-				QuestionsCompletedFirstTime : this.state.Attemps === 0 ? this.state.QuestionsCompletedFirstTime + 1 : this.state.QuestionsCompletedFirstTime
+				QuestionsCompletedFirstTime : this.state.Attemps === 0 ? this.state.QuestionsCompletedFirstTime + 1 : this.state.QuestionsCompletedFirstTime,
+				ShouldShowConffetti : true,
 				});
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
@@ -369,7 +377,7 @@ class App extends React.Component {
 				}
 				// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
 				var Points = (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0
-				this.setState({TotalPoints : this.state.TotalPoints + Points});
+				this.setState({TotalPoints : this.state.TotalPoints + Points, ShouldShowConffetti : false});
 			}, 4000);			
 		}
 		else {
@@ -446,7 +454,8 @@ class App extends React.Component {
 				StartedQuestion : Date.now(),
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
 				Attemps : 0,
-				AnsweredCorrect : false}) 
+				AnsweredCorrect : false,
+				ShouldShowConffetti : false}) 
 			:
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 
