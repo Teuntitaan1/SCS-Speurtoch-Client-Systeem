@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './Local_Files/StyleSheets/index.css';
 import App from './Local_Files/Components/App';
 
-const localhost = "http://localhost:8000"; 
-const externalhost = "https://leaderboard-server.onrender.com";
+const host = "https://leaderboard-server.onrender.com";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App debugmode={true} leaderboardip={externalhost}/>
+    <App debugmode={true} leaderboardip={host}/>
   </React.StrictMode>
 );
 

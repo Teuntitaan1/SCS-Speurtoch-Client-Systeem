@@ -192,46 +192,48 @@ class App extends React.Component {
 						<div>
 							<h2 style={{textAlign : 'center'}}>{"Bekijk je resultaten!"}</h2>
 							<div style={{display : 'flex', justifyContent : 'center'}}>
+								{this.state.SendResults !== true ?
 								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
-									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/>
+									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/> : null}
 								<button style={{backgroundColor : "#56a222", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
-									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard(); this.PullLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true)}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true)}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
 							</div>
 						</div>
 
 						<div>
 						{
 							this.state.Leaderboard.length !== 0 ? 
-								<table border={1} cellPadding={5} style={{marginTop : 1+"rem", width  : 100+"%"}}>
+								<table border={1} cellPadding={5} style={{marginTop : 1+"rem", width  : 100+"%", borderCollapse : 'collapse', borderRadius : 1+"rem"}}>
 									<tbody>
 										<tr style={{textAlign : 'center'}}>
-											<th style={{backgroundColor : "#56a222"}}>#</th>
-											<th style={{backgroundColor : "#56a222"}}>Naam</th>
-											<th style={{backgroundColor : "#56a222"}}>Punten</th>
+											<th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>#</th>
+											<th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>Naam</th>
+											<th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>Punten</th>
 										</tr>
-										{this.state.Leaderboard.slice(0, 4).map((Entry, index) => {
+										{/*This can be improved upon*/}
+										{this.state.Leaderboard.slice(0, 5).map((Entry, index) => {
 												if (this.state.Uuid === Entry.Uuid) {
 													return (
 														<tr style={{backgroundColor : "#457c1f"}} key={index}>
-															<td style={{textAlign : 'center'}}>{index + 1}</td>
-															<td style={{textAlign : 'center'}}>{Entry.UserName}</td>
-															<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
+															<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{index + 1}</td>
+															<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "..."}</td>
+															<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.TotalPoints}</td>
 														</tr>
 													);
 												}
 												return (
 													<tr key={index}>
-														<td style={{textAlign : 'center'}}>{index + 1}</td>
-														<td style={{textAlign : 'center'}}>{Entry.UserName}</td>
-														<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
+														<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{index + 1}</td>
+														<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "..."}</td>
+														<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.TotalPoints}</td>
 													</tr>
 												);})}
 										{/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
-										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 4).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
+										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 5).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
 											<tr style={{backgroundColor : "#457c1f"}}>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry, index) => {if(this.state.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName;}; return null;})}</td>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
+												<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.state.Leaderboard.map((Entry, index) => {if(this.state.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
+												<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>
+												<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
 											</tr>
 											: 
 											null}
@@ -358,9 +360,9 @@ class App extends React.Component {
 			// cool sequence for the users
 			setTimeout(() => {
 				// if all questions have been answered, finish the quiz
-				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
-					this.SwitchProgramState("FinishScreen", true);
+				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ? true : false) {
 					this.PullLeaderBoard();
+					this.SwitchProgramState("FinishScreen", true);
 				}
 				else {
 					this.SwitchProgramState("SelectionScreen", true);
@@ -472,7 +474,7 @@ class App extends React.Component {
 
 		// sends the Body array to the server
 		fetch(this.props.leaderboardip, Body)
-			.then(() => {this.setState({SendResults : true});})
+			.then(() => {this.setState({SendResults : true}); this.PullLeaderBoard();})
 				.catch((error) => {console.error('Error:', error);});
 
 	}
@@ -481,7 +483,7 @@ class App extends React.Component {
 		// gets the leaderboard from the server and displays it on the finishscreen
 		fetch(this.props.leaderboardip)
 		.then((response) => response.json())
-		.then((data) => {this.setState({Leaderboard : data}); console.log(`Pullled, got data: ${data}`)});
+		.then((data) => {this.setState({Leaderboard : data}); console.log("Got data!")});
 	}
 
 	// runs when the program is ready to run
@@ -494,7 +496,7 @@ class App extends React.Component {
 		const SaveTimer = setInterval(() => {this.setState({LastVisited : Date.now()}); window.localStorage.setItem("QuizState" , JSON.stringify(this.state));}, 1*1000);
 		this.SaveTimerID = SaveTimer;
 		// updates the leaderboard
-		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 5*1000);
+		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 3*1000);
 		this.LeaderboardTimerID = LeaderboardTimer;
 	}
 	// runs when the program is ready to stop
