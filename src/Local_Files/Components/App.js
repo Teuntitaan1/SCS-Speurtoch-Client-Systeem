@@ -213,7 +213,7 @@ class App extends React.Component {
 												if (this.state.Uuid === Entry.Uuid) {
 													return (
 														<tr style={{backgroundColor : "#457c1f"}} key={index}>
-															<td style={{textAlign : 'center'}}>{Entry.Position}</td>
+															<td style={{textAlign : 'center'}}>{index + 1}</td>
 															<td style={{textAlign : 'center'}}>{Entry.UserName}</td>
 															<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
 														</tr>
@@ -221,7 +221,7 @@ class App extends React.Component {
 												}
 												return (
 													<tr key={index}>
-														<td style={{textAlign : 'center'}}>{Entry.Position}</td>
+														<td style={{textAlign : 'center'}}>{index + 1}</td>
 														<td style={{textAlign : 'center'}}>{Entry.UserName}</td>
 														<td style={{textAlign : 'center'}}>{Entry.TotalPoints}</td>
 													</tr>
@@ -229,7 +229,7 @@ class App extends React.Component {
 										{/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
 										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 4).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
 											<tr style={{backgroundColor : "#457c1f"}}>
-												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.Position;}; return null;})}</td>
+												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry, index) => {if(this.state.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
 												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName;}; return null;})}</td>
 												<td style={{textAlign : 'center'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
 											</tr>
@@ -367,7 +367,7 @@ class App extends React.Component {
 				// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
 				var Points = (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0
 				this.setState({TotalPoints : this.state.TotalPoints + Points});
-			}, 3000);			
+			}, 4000);			
 		}
 		else {
 			this.setState({Attemps : this.state.Attemps + 1});
@@ -449,7 +449,7 @@ class App extends React.Component {
 
 		setTimeout(() => {
 			this.setState({ShowGoodJobScreen : false});
-		}, 1000);
+		}, 1500);
 	}
 	// handles errors received from the qr code scanner
 	HandleQrCodeError(error) {
@@ -493,7 +493,7 @@ class App extends React.Component {
 		const SaveTimer = setInterval(() => {this.setState({LastVisited : Date.now()}); window.localStorage.setItem("QuizState" , JSON.stringify(this.state));}, 1*1000);
 		this.SaveTimerID = SaveTimer;
 		// updates the leaderboard
-		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 1*1000);
+		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 5*1000);
 		this.LeaderboardTimerID = LeaderboardTimer;
 	}
 	// runs when the program is ready to stop
