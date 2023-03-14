@@ -4,7 +4,7 @@ import './Local_Files/StyleSheets/index.css';
 import App from './Local_Files/Components/App';
 
 const localhost = "http://localhost:8000"; 
-const externalhost = "https://leaderboard-server.onrender.com";
+const externalhost = "https://leaderboard-server.onrender.com:8000";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -472,7 +472,7 @@ class App extends React.Component {
 
 		// sends the Body array to the server
 		fetch(this.props.leaderboardip, Body)
-			.then(() => this.setState({SendResults : true}))
+			.then(() => {this.setState({SendResults : true});})
 				.catch((error) => {console.error('Error:', error);});
 
 	}
