@@ -149,7 +149,7 @@ class App extends React.Component {
 					<>
 						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
 							<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
+							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
 							<div style={{display : 'flex'}}>
 							{
 							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
@@ -360,6 +360,7 @@ class App extends React.Component {
 				// if all questions have been answered, finish the quiz
 				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0) {
 					this.SwitchProgramState("FinishScreen", true);
+					this.PullLeaderBoard();
 				}
 				else {
 					this.SwitchProgramState("SelectionScreen", true);
@@ -470,7 +471,7 @@ class App extends React.Component {
 				Uuid : this.state.Uuid})};
 
 		// sends the Body array to the server
-		fetch("http://localhost:8000", Body)
+		fetch(this.props.leaderboardip, Body)
 			.then(() => this.setState({SendResults : true}))
 				.catch((error) => {console.error('Error:', error);});
 
@@ -478,7 +479,7 @@ class App extends React.Component {
 	// broke all of a sudden
 	PullLeaderBoard() {
 		// gets the leaderboard from the server and displays it on the finishscreen
-		fetch('http://localhost:8000')
+		fetch(this.props.leaderboardip)
 		.then((response) => response.json())
 		.then((data) => {this.setState({Leaderboard : data}); console.log(`Pullled, got data: ${data}`)});
 	}
