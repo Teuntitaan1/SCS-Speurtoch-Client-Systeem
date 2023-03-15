@@ -12,6 +12,7 @@ import Logo from '../Images/Archeon logo.png';
 import BackArrow from '../Images/PijlNaarLinks.svg';
 import HintIcon from '../Images/HintIcon.svg';
 import PartyImage from '../Images/party-popper-svgrepo-com.svg';
+import DownButton from '../Images/Pijltje.svg'
 // ALL POSSIBLE PROGRAM STATES
 // 1.StartScreen
 // 2.SelectionScreen
@@ -24,7 +25,7 @@ import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 // prettify the leaderboard
 // improve on making the ui more intuitive to use
 // add audio
-// add the questions
+// grammar check
 // prettify the StartScreen
 
 class App extends React.Component {
@@ -152,29 +153,29 @@ class App extends React.Component {
 				programbody =
 					<>
 						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
-							<h1 style={{fontWeight : 'bold', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center'}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
-							<div style={{display : 'flex'}}>
+							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 5+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
+							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 4+"vh", marginTop : -1+"rem"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
+							<div style={{justifyContent : 'center'}}>
 							{
 							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
 							this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
 								<div style={{
 									backgroundColor : this.state.OptionColorList[index], 
-									width : 10+"rem", height : 5+"rem", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out'}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
+									width : 90+"vw", height : 10+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
 									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
 									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', bottom : 15+"%"}}>{Option}</p>
 								</div>
 								)
 							}
 							</div>
-							<h3>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</h3>
-							
-							
-							<p style={{position : 'absolute', left : 0+"%", top : 0+"%", fontWeight : 'bold', transform: `rotate(${-15}deg)`}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0 } punten</p>
+							<div style={{display : 'flex', justifyContent : 'center', marginTop : 0+"vh"}}>
+								<img src={DownButton} onClick={() => {this.SwitchProgramState("InfoToAnswerScreen");}} style={{width : 10+"vw", height : 10+"vh"}} alt='DownButton'></img>
+							</div>
+							<p style={{position : 'absolute', left : 0+"%", bottom : 0+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0 } punten</p>
 
 						</div>
 
-						<div style={{position : 'relative', bottom : 25+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
+						<div style={{position : 'relative', bottom : 50+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
 							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0}</h1>
 							{this.state.AnsweredCorrect === true ?
 							<>
@@ -188,7 +189,14 @@ class App extends React.Component {
 						</div> 
 					</>;
 				break;
+			
 
+			case "InfoToAnswerScreen":
+				programbody = 
+					<>
+						<h3>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</h3>
+					</>;
+				break;
 			case "FinishScreen":
 			
 				programbody =
@@ -279,7 +287,7 @@ class App extends React.Component {
 				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"vh", position : 'absolute', top : 0+"%", left : 0+"%"}}>
 					
 					{/*Moves the program back into its previous state*/}
-					{this.state.ProgramState === "AnswerScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "ErrorScreen" ? 
+					{this.state.ProgramState === "AnswerScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "ErrorScreen" || this.state.ProgramState === "InfoToAnswerScreen" ? 
 					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
 					{/*Archeon logo*/}
 					<div style={{display : 'flex', justifyContent : 'center', height : 100+"%"}}>
