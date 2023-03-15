@@ -487,7 +487,6 @@ class App extends React.Component {
 				.catch((error) => {console.error('Error:', error);});
 
 	}
-	// broke all of a sudden
 	PullLeaderBoard() {
 		// gets the leaderboard from the server and displays it on the finishscreen
 		fetch(this.props.leaderboardip)

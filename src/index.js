@@ -5,6 +5,8 @@ import App from './Local_Files/Components/App';
 
 const host = "https://leaderboard-server.onrender.com";
 
+screen.orientation.lock("Pportrait");
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App debugmode={true} leaderboardip={host}/>
