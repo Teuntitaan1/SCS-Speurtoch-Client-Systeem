@@ -27,6 +27,12 @@ import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 // add the questions
 // prettify the StartScreen
 
+try {
+	ScreenOrientation.lock("portrait").then(() => {console.log("Locked orientation to portrait")});
+} catch (error) {
+	console.log(error);
+}
+
 class App extends React.Component {
   
 	constructor(props) {

@@ -1,17 +1,228 @@
 [
-    
-    {"Title" : "Vraag 1", "Completed" : false, "Hint" : "In de prehistorie vindt jij mij!", "Tijdperk" : "PREHISTORIE",
+ 
+    {"Title" : "Waar is de honingbij?", "Completed" : false, "Hint" : "Ben je al bij het begin van het park geweest?", "Tijdperk" : "MIDDELEEUWEN",
       "ZomerMode" : {
-        "Description" : "Werkt",
-        "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt", "Test"],
-        "CorrectAnswer" : "Willekeurig",
-        "InfoToAnswer" : "Dit is een cool verhaaltje over de bijen en hun soorten"
+        "Description" : "In welk tijdperk kan je de honingbij nu vinden in het park?",
+        "Options" : ["Prehistorie", "Romeinse Tijd", "Middeleeuwen", "Je kan ze overal vinden"],
+        "CorrectAnswer" : "Je kan ze overal vinden",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de honingbij! In de zomer ben ik met mijn zusjes overal in het park nectar aan het verzamelen! Vind jij honing ook zo lekker als ik? Bzz bzz!"
       },
       "WinterMode" : {
-        "Description" : "Werkt",
-        "Options" : ["Willekeurig", "Antwoord", "Om te kijken of het werkt", "Test"],
-        "CorrectAnswer" : "Willekeurig",
-        "InfoToAnswer" : "Dit is een cool verhaaltje over de bijen en hun soorten"
+        "Description" : "In welk tijdperk kan je de honingbij nu niet vinden in het park?",
+        "Options" : ["Prehistorie", "Romeinse Tijd", "Middeleeuwen", "Je kan ze nergens vinden"],
+        "CorrectAnswer" : "Je kan ze nergens vinden",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de honingbij! In de winter ben ik een heel lang dutje aan het doen met mijn zusjes. Ik ben veel te druk met dromen over honing, dus ik ben nu niet te spotten in het park! Bzz bzz!"
+      },
+      "ExtraInfo" : "De honingbij vind je natuurlijk niet alleen in het park. Wist je dat er in nederland 45.000 honingbijen zijn?"
+    },
+	{"Title" : "Steenhommel anders, wat dan?", "Completed" : false, "Hint" : "Ik ben bij een warme plek bij de prehistorie!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Description" : "Wat is een opvallend verschil tussen de steenhommel en andere hommels?",
+        "Options" : ["Hij heeft langere antennes", "“Hij heeft maar 4 poten", "Hij heeft andere kleuren dan andere hommels", "Hij is een stuk kleiner dan andere hommels"],
+        "CorrectAnswer" : "Hij heeft andere kleuren dan andere hommels",
+        "InfoToAnswer" : "Bzz bzz! Ik ben een steenhommel! Ik ga vlieg samen met mijn vriendjes door het park. Ik heb zwarte haren en een rode kont. Mijn andere vriendjes de tuinhommel en de aardhommel hebben een vacht die lijken op een honingbij! Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Wat is een opvallend verschil tussen de steenhommel en andere hommels?",
+        "Options" : ["Hij heeft langere antennes", "“Hij heeft maar 4 poten", "Hij heeft andere kleuren dan andere hommels", "Hij is een stuk kleiner dan andere hommels"],
+        "CorrectAnswer" : "Hij heeft andere kleuren dan andere hommels",
+        "InfoToAnswer" : "Bzz bzz! Ik ben een steenhommel! Ik ga vlieg samen met mijn vriendjes door het park. Ik heb zwarte haren en een rode kont. Mijn andere vriendjes de tuinhommel en de aardhommel hebben een vacht die lijken op een honingbij! Bzz bzz!"
+      },
+      "ExtraInfo" : "Wist je dat de steenhommel zijn naam heeft gekregen door zijn huisje? Hij nestelt namelijk vaak onder stenen!"
+    },
+	{"Title" : "De lekkerste bloem", "Completed" : false, "Hint" : "Ik ben bij de bloemetjes van de romeinse tijd!", "Tijdperk" : "ROMEINSETIJD",
+      "ZomerMode" : {
+        "Description" : "Welk van deze bloemen trekt het snelst bijen aan?",
+        "Options" : ["Meidoorn", "Lavendel", "Paardenbloem", "Madeliefje"],
+        "CorrectAnswer" : "Lavendel",
+        "InfoToAnswer" : "Bzz Bzz ik en mijn zusjes gaan weer eten! Maar waar hebben wij meest zin in? we willen natuurlijk zoveel mogelijk honing kunnen maken! Om de bloem met meest stuifmeel te verzamelen zoeken we naar een bloem die veel uv-straling uitstraalt. Uv-straling word vooral uitgestraalt door rode/paarse kleuren!"
+      },
+      "WinterMode" : {
+        "Description" : "Welk van deze bloemen trekt het snelst bijen aan?",
+        "Options" : ["Meidoorn", "Lavendel", "Paardenbloem", "Madeliefje"],
+        "CorrectAnswer" : "Lavendel",
+        "InfoToAnswer" : "Bzz Bzz ik en mijn zusjes gaan weer eten! Maar waar hebben wij meest zin in? we willen natuurlijk zoveel mogelijk honing kunnen maken! Om de bloem met meest stuifmeel te verzamelen zoeken we naar een bloem die veel uv-straling uitstraalt. Uv-straling word vooral uitgestraalt door rode/paarse kleuren!"
+      },
+      "ExtraInfo" : "---"
+    },
+	{"Title" : "Uiterlijk gewone wespbij", "Completed" : false, "Hint" : "Ik ben bij het water van de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+      "ZomerMode" : {
+        "Description" : "Waarom lijkt een wespbij op een wesp?",
+        "Options" : ["Hij kan dan makkelijker bloemen vinden", "Hierdoor blijft hij beter warm in de zomer", "Hij kan hierdoor beter camoufleren tussen zijn korf", "Hierdoor wordt hij minder snel aangevallen door roofdieren"],
+        "CorrectAnswer" : "Hierdoor wordt hij minder snel aangevallen door roofdieren",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de wespbij! Samen met mijn vriendjes vlieg ik door de lucht. Ik hoef niet bang te zijn voor roofdieren omdat zij denken dat ik een wesp ben! Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Waarom lijkt een wespbij op een wesp?",
+        "Options" : ["Hij kan dan makkelijker bloemen vinden", "Hierdoor blijft hij beter warm in de zomer", "Hij kan hierdoor beter camoufleren tussen zijn korf", "Hierdoor wordt hij minder snel aangevallen door roofdieren"],
+        "CorrectAnswer" : "Hierdoor wordt hij minder snel aangevallen door roofdieren",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de wespbij! Samen met mijn vriendjes vlieg ik door de lucht. Ik hoef niet bang te zijn voor roofdieren omdat zij denken dat ik een wesp ben! Bzz bzz!"
+      },
+      "ExtraInfo" : "De wespbij staat niet op de rode lijst, hij is niet bedreigd! Helaas is dit niet met alle bijen zo, daarom moeten we met ons allen ons best doen om de bijen te beschermen!"
+    },
+	{"Title" : "Uiterlijk wolbij", "Completed" : false, "Hint" : "Kom maar eens naar het doolhof!", "Tijdperk" : "ROMEINSETIJD",
+      "ZomerMode" : {
+        "Description" : "Waarom is de grote wolbij anders dan andere bijen?",
+        "Options" : ["Hij heeft een grotere rug dan andere bijen", "Hij heeft geen strepen", "Hij heeft stippels in plaats van strepen", "Hij heeft geen angel"],
+        "CorrectAnswer" : "Hij heeft een grotere rug dan andere bijen",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de grote wolbij. Ik hou heel erg van honing! Mijn rug is groter dan dat van andere bijen met zachte haartjes aan de zijkant! Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Waarom is de grote wolbij anders dan andere bijen?",
+        "Options" : ["Hij heeft een grotere rug dan andere bijen", "Hij heeft geen strepen", "Hij heeft stippels in plaats van strepen", "Hij heeft geen angel"],
+        "CorrectAnswer" : "Hij heeft een grotere rug dan andere bijen",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de grote wolbij. Ik hou heel erg van honing! Mijn rug is groter dan dat van andere bijen met zachte haartjes aan de zijkant! Bzz bzz!"
+      },
+      "ExtraInfo" : "Niet alleen de rug is anders, zijn middenlichaam is ook erg groot!"
+    },
+	{"Title" : "Waar ben ik te vinden?", "Completed" : false, "Hint" : "Ik ben bij de tuinen in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+      "ZomerMode" : {
+        "Description" : "Welke bij komt alleen in de middeleeuwen voor?",
+        "Options" : ["Honingbij", "Boomhommel", "Tuinhommel", "Steenhommel"],
+        "CorrectAnswer" : "Tuinhommel",
+        "InfoToAnswer" : "Bzz bzz! In het park ben ik samen met mijn vriendjes aan het rond vliegen. Ik zie alleen in de middeleeuwen de tuinhommel, en in de andere plekken de Steenhommel en de boomhommel! Groetjes van de honingbij! Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Welke bijen vliegen er in de winter?",
+        "Options" : ["De tuinhommel en de steenhommel", "De boomhommel en de honingbij", "Er vliegen geen bijtjes in de winter", "De steenhommel en de boomhommel"],
+        "CorrectAnswer" : "Er vliegen geen bijtjes in de winter",
+        "InfoToAnswer" : "Bzz bzz! Sssstt! Mijn vriendjes zijn aan het slapen. De boomhommel en de steenhommel slapen, en mijn honingbij zusjes slapen ook! Ik ga weer lekker verder slapen, Bzz bzz!"
+      },
+      "ExtraInfo" : "Wist je dat de tuinhommel vooral voorkomt in tuinen, parken en boomplantages?"
+    },
+	{"Title" : "Honing, waarom?", "Completed" : false, "Hint" : "Ik ben bij het badhuis van de romeinen!", "Tijdperk" : "ROMEINSETIJD",
+      "ZomerMode" : {
+        "Description" : "Waarom maakt de honingbij honing?",
+        "Options" : ["Honing vinden ze veel lekkerder dan nectar", "Omdat honing beter is voor de jonge bijen", "Ze gebruiken het om de winter door te komen", "Nectar bevriest in de winter"],
+        "CorrectAnswer" : "Ze gebruiken het om de winter door te komen",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de honingbij! Samen met mijn broertjes en zusjes maak ik honing om de winter door te komen! Dit is omdat honing veel langer goed blijft dan nectar! Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Waarom maakt de honingbij honing?",
+        "Options" : ["Honing vinden ze veel lekkerder dan nectar", "Omdat honing beter is voor de jonge bijen", "Ze gebruiken het om de winter door te komen", "Nectar bevriest in de winter"],
+        "CorrectAnswer" : "Ze gebruiken het om de winter door te komen",
+        "InfoToAnswer" : "Bzz bzz! Ik ben de honingbij! Samen met mijn broertjes en zusjes maak ik honing om de winter door te komen! Dit is omdat honing veel langer goed blijft dan nectar! Bzz bzz!"
+      },
+      "ExtraInfo" : "Niet alleen mensen vinden honing lekker, ook beren vinden het heerlijk!"
+    },
+	{"Title" : "Bijen redden", "Completed" : false, "Hint" : "Mij vind je bij de bronstijd!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Description" : "Op welke manier kan jij bijen helpen?",
+        "Options" : ["Meer planten in je tuin plaatsen", "Minder honing eten", "Minder biologisch eten"],
+        "CorrectAnswer" : "Meer planten in je tuin plaatsen",
+        "InfoToAnswer" : "Bzz bzz! Mijn vriendjes en ik zijn in nood! We hebben ook jouw hulp nodig! Veel van mijn broertjes zijn ziek door bestrijdingsmiddelen en we kunnen geen huisjes meer vinden! Je kan helpen door wat meer plantjes in je tuin te doen. Zorg er in ieder geval voor dat je niet je plantjes weg haalt! Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Op welke manier kan jij bijen helpen?",
+        "Options" : ["Meer planten in je tuin plaatsen", "Minder honing eten", "Minder biologisch eten"],
+        "CorrectAnswer" : "Meer planten in je tuin plaatsen",
+        "InfoToAnswer" : "Bzz bzz! Mijn vriendjes en ik zijn in nood! We hebben ook jouw hulp nodig! Veel van mijn broertjes zijn ziek door bestrijdingsmiddelen en we kunnen geen huisjes meer vinden! Je kan helpen door wat meer plantjes in je tuin te doen. Zorg er in ieder geval voor dat je niet je plantjes weg haalt! Bzz bzz!"
+      },
+      "ExtraInfo" : "Je kan niet alleen de bij helpen door meer planten in je tuin te doen, maar ook door bijvoorbeeld biologisch te eten, een insectenhotel te bouwen en tegels weg te halen in je tuin!"
+    },
+	{"Title" : "Bijentaal", "Completed" : false, "Hint" : "Ik ben bij de ijzertijd!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Description" : "Hoe communiceren bijen met elkaar?",
+        "Options" : ["Door te zingen", "Door te vliegen in een formatie", "Door te dansen", "Door te fluiten"],
+        "CorrectAnswer" : "Door te dansen",
+        "InfoToAnswer" : "Hallo daar! Als bijen willen weten waar bloemen zijn, praten we met elkaar door middel van een speciale dans. We doen de dans om te vertellen waar de bloemen zijn en welke richting we moeten vliegen om er te komen. De dans heeft ook informatie over hoe ver de bloemen zijn. Zo kunnen al mijn vriendjes weten waar ze de beste nectar kunnen vinden en we kunnen allemaal samenwerken om het werk gedaan te krijgen!"
+      },
+      "WinterMode" : {
+        "Description" : "Hoe communiceren bijen met elkaar?",
+        "Options" : ["Door te zingen", "Door te vliegen in een formatie", "Door te dansen", "Door te fluiten"],
+        "CorrectAnswer" : "Door te dansen",
+        "InfoToAnswer" : "Hallo daar! Als bijen willen weten waar bloemen zijn, praten we met elkaar door middel van een speciale dans. We doen de dans om te vertellen waar de bloemen zijn en welke richting we moeten vliegen om er te komen. De dans heeft ook informatie over hoe ver de bloemen zijn. Zo kunnen al mijn vriendjes weten waar ze de beste nectar kunnen vinden en we kunnen allemaal samenwerken om het werk gedaan te krijgen!"
+      },
+      "ExtraInfo" : "Door te dansen laten bijen niet alleen de locatie van de bloem zien, maar ook hoe lekker hij is! Dit doen ze door agressiever en sneller te dansen als een bloem heel erg lekker is!"
+    },
+	{"Title" : "Lekker vliegen", "Completed" : false, "Hint" : "Ik ben bij het meer aan de kant van de prehistorie!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Description" : "Welke bestuiver kan het langst in de lucht hangen?",
+        "Options" : ["Bij", "Zweefvlieg", "Wesp", "Hommel"],
+        "CorrectAnswer" : "Zweefvlieg",
+        "InfoToAnswer" : "Bzz bzz ik en mijn vriendjes hebben hulp nodig we zitten midden op het water! Maar we hebben geen energie meer om te vliegen! De hommel is al gevallen, de wesp en de bij bijna. Kom op zweefvlieg, ga naar land en zoek voor hulp jij kan het nog redden wij niet meer!"
+      },
+      "WinterMode" : {
+        "Description" : "Welke bestuiver kan het langst in de lucht hangen?",
+        "Options" : ["Bij", "Zweefvlieg", "Wesp", "Hommel"],
+        "CorrectAnswer" : "Zweefvlieg",
+        "InfoToAnswer" : "Bzz bzz ik en mijn vriendjes hebben hulp nodig we zitten midden op het water! Maar we hebben geen energie meer om te vliegen! De hommel is al gevallen, de wesp en de bij bijna. Kom op zweefvlieg, ga naar land en zoek voor hulp jij kan het nog redden wij niet meer!"
+      },
+      "ExtraInfo" : "De naam zweefvliegen is gekomen, omdat een zweefvlieg stil kan hangen in de lucht daarentegen zijn hommels en wespen daarvoor te zwaar."
+    },
+	{"Title" : "Nest wormkruidbij", "Completed" : false, "Hint" : "Kijk maar eens bij de vroege middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
+      "ZomerMode" : {
+        "Description" : "Welke materialen gebruikt een wormkruidbij om zijn nest te bouwen?",
+        "Options" : ["Vooral gras", "Hars en klei", "Bladeren en takjes", "Nectar en pollen"],
+        "CorrectAnswer" : "Hars en klei",
+        "InfoToAnswer" : "Hey daar, kleine vriend! Weet je hoe wij wormkruidbijen ons nestje bouwen? Nou, we zoeken holletjes in hout, zoals gaten in bomen. Vervolgens verzamelen we hars en klei om de binnenkant van het holletje te bekleden. We vullen de cellen dan met stuifmeel en nectar, leggen er een eitje bovenop en sluiten het celletje met hars en klei. We doen dit steeds opnieuw totdat het hele nestje vol is met onze eitjes en voedsel. Zo kunnen onze kleintjes groeien en sterk worden!"
+      },
+      "WinterMode" : {
+        "Description" : "Welke materialen gebruikt een wormkruidbij om zijn nest te bouwen?",
+        "Options" : ["Vooral gras", "Hars en klei", "Bladeren en takjes", "Nectar en pollen"],
+        "CorrectAnswer" : "Hars en klei",
+        "InfoToAnswer" : "Hey daar, kleine vriend! Weet je hoe wij wormkruidbijen ons nestje bouwen? Nou, we zoeken holletjes in hout, zoals gaten in bomen. Vervolgens verzamelen we hars en klei om de binnenkant van het holletje te bekleden. We vullen de cellen dan met stuifmeel en nectar, leggen er een eitje bovenop en sluiten het celletje met hars en klei. We doen dit steeds opnieuw totdat het hele nestje vol is met onze eitjes en voedsel. Zo kunnen onze kleintjes groeien en sterk worden!"
+      },
+      "ExtraInfo" : "Wist je dat wormkruidbijen in tegenstelling tot andere bijen niet in een kolonie wonen? Elke vrouwtjesbij bouwt haar eigen nest en zorgt voor haar nakomelingen."
+    },
+	{"Title" : "Sinds wanneer worden bijen gehouden door imkers", "Completed" : false, "Hint" : "Ik ben bij de speeltuin!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Description" : "In welk tijdperk kwamen de imkers voor het eerst voor?",
+        "Options" : ["Middeleeuwen", "Veel eerder", "Romeinse tijd", "Prehistorie"],
+        "CorrectAnswer" : "Veel eerder",
+        "InfoToAnswer" : "Hallo daar, imkers bestaan al heel lang. Nu gebruiken we bijen om honing te krijgen, dit doen ze met bijenkasten. Maar de egyptenaren moesten de bijen doden voordat ze het honing konden afnemen"
+      },
+      "WinterMode" : {
+        "Description" : "In welk tijdperk kwamen de imkers voor het eerst voor?",
+        "Options" : ["Middeleeuwen", "Veel eerder", "Romeinse tijd", "Prehistorie"],
+        "CorrectAnswer" : "Veel eerder",
+        "InfoToAnswer" : "Hallo daar, imkers bestaan al heel lang. Nu gebruiken we bijen om honing te krijgen, dit doen ze met bijenkasten. Maar de egyptenaren moesten de bijen doden voordat ze het honing konden afnemen"
+      },
+      "ExtraInfo" : "Imkers willen niet graag dat bijen gaan zwermen dat betekent dat de hele bijenkolonie gaat verhuizen, ook vinden imkers de varroamijt vervelend, omdat die gevaarlijk zijn voor de bijen. Er zijn al meerdere imkers uit werk gezet door de varroamijt."
+    },
+	{"Title" : "Angel van bij", "Completed" : false, "Hint" : "Ik ben bij de boot in de romeinse tijd!", "Tijdperk" : "ROMEINSETIJD",
+      "ZomerMode" : {
+        "Description" : "Wat is bijzonder aan de angel van een bij in tegenstelling tot andere insecten?",
+        "Options" : ["De angel blijft haken in de huid", "Hij kan door vacht heen steken", "Hij kan meerdere keren steken", "Je voelt het niet als je gestoken wordt"],
+        "CorrectAnswer" : "De angel blijft haken in de huid",
+        "InfoToAnswer" : "Bzz bzz! Hallo vrienden! Ik ben een bij en ik heb een angel waarmee ik me kan verdedigen als ik me bedreigd voel. Mijn angel heeft een puntig uiteinde waarmee ik mijn vijand kan steken, en er zitten kleine weerhaakjes op die voorkomen dat de angel er gemakkelijk uit kan worden getrokken. Als ik eenmaal steek, blijft de angel in de huid van mijn vijand achter en dat betekent dat ik mijn angel verlies en sterf. Dus ik gebruik mijn angel alleen als ik echt geen andere keuze heb. Bzz bzz!"
+      },
+      "WinterMode" : {
+        "Description" : "Wat is bijzonder aan de angel van een bij in tegenstelling tot andere insecten?",
+        "Options" : ["De angel blijft haken in de huid", "Hij kan door vacht heen steken", "Hij kan meerdere keren steken", "Je voelt het niet als je gestoken wordt"],
+        "CorrectAnswer" : "De angel blijft haken in de huid",
+        "InfoToAnswer" : "Bzz bzz! Hallo vrienden! Ik ben een bij en ik heb een angel waarmee ik me kan verdedigen als ik me bedreigd voel. Mijn angel heeft een puntig uiteinde waarmee ik mijn vijand kan steken, en er zitten kleine weerhaakjes op die voorkomen dat de angel er gemakkelijk uit kan worden getrokken. Als ik eenmaal steek, blijft de angel in de huid van mijn vijand achter en dat betekent dat ik mijn angel verlies en sterf. Dus ik gebruik mijn angel alleen als ik echt geen andere keuze heb. Bzz bzz!"
+      },
+      "ExtraInfo" : "Wist je dat bijen het niet leuk vinden om te steken? Je hoeft dus niet bang voor ze te zijn!"
+    },
+	{"Title" : "Bloeiende bomen", "Completed" : false, "Hint" : "Je kan mij vinden bij de ingang!", "Tijdperk" : "PREHISTORIE",
+      "ZomerMode" : {
+        "Description" : "Waar ben ik ook dol op?",
+        "Options" : ["Ik ben dol op bomen met veel stuifmeel", "Ik ben dol op bomen met veel stuifmeel en nectar", "Ik ben dol op bomen met veel nectar", "Ik ben dol op bomen met weinig stuifmeel en veel nectar"],
+        "CorrectAnswer" : "Ik ben dol op bomen met veel stuifmeel en nectar",
+        "InfoToAnswer" : "Bzz bzz! Weet je waar ik ook dol op ben? Bloeiende bomen. Zo houd ik heel erg van fruitbomen, maar ook van andere bloeiende bomen waar veel stuifmeel en nectar zijn. Daar zul je vaak mij en veel van mijn vriendjes vinden. Zo zul je me vaak vinden bij wilgen en esdoorns!"
+      },
+      "WinterMode" : {
+        "Description" : "Waar ben ik ook dol op?",
+        "Options" : ["Ik ben dol op bomen met veel stuifmeel", "Ik ben dol op bomen met veel stuifmeel en nectar", "Ik ben dol op bomen met veel nectar", "Ik ben dol op bomen met weinig stuifmeel en veel nectar"],
+        "CorrectAnswer" : "Ik ben dol op bomen met veel stuifmeel en nectar",
+        "InfoToAnswer" : "Bzz bzz! Weet je waar ik ook dol op ben? Bloeiende bomen. Zo houd ik heel erg van fruitbomen, maar ook van andere bloeiende bomen waar veel stuifmeel en nectar zijn. Daar zul je vaak mij en veel van mijn vriendjes vinden. Zo zul je me vaak vinden bij wilgen en esdoorns!"
       },
       "ExtraInfo" : "Bijen zijn erg cool!"
-    }]
+    },
+	{"Title" : "Huis van honingbijen", "Completed" : false, "Hint" : "Kom maar eens naar de zonnewijzer!", "Tijdperk" : "ROMEINSETIJD",
+      "ZomerMode" : {
+        "Description" : "Waarom wonen de meeste honingbijen in door mens gemaakte kasten?",
+        "Options" : ["Mensen maken de natuurlijke huizen kapot", "Bijen zijn vergeten hoe ze het moeten bouwen", "De meeste honingbijen leven in gevangenschap", "Dat is niet bekend"],
+        "CorrectAnswer" : "De meeste honingbijen leven in gevangenschap",
+        "InfoToAnswer" : "Wij honingbijen houden van beschutte plekken om te wonen, zoals in holle bomen of onder de grond. Maar soms maken mensen speciale huizen voor ons, de bijenkasten en bijenkorven genoemd. Deze zijn gemaakt van hout en zorgen ervoor dat we veilig en warm blijven. Bovendien kunnen de imkers gemakkelijker voor ons zorgen en ons beschermen tegen ziektes."
+      },
+      "WinterMode" : {
+        "Description" : "Waarom wonen de meeste honingbijen in door mens gemaakte kasten?",
+        "Options" : ["Mensen maken de natuurlijke huizen kapot", "Bijen zijn vergeten hoe ze het moeten bouwen", "De meeste honingbijen leven in gevangenschap", "Dat is niet bekend"],
+        "CorrectAnswer" : "De meeste honingbijen leven in gevangenschap",
+        "InfoToAnswer" : "Wij honingbijen houden van beschutte plekken om te wonen, zoals in holle bomen of onder de grond. Maar soms maken mensen speciale huizen voor ons, de bijenkasten en bijenkorven genoemd. Deze zijn gemaakt van hout en zorgen ervoor dat we veilig en warm blijven. Bovendien kunnen de imkers gemakkelijker voor ons zorgen en ons beschermen tegen ziektes."
+      },
+      "ExtraInfo" : "Imkers zorgen door een zelfgemaakte kast dat bijen minder snel ziek worden!"
+    }
+	]
