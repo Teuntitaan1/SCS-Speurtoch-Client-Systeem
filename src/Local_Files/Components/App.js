@@ -27,12 +27,6 @@ import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 // add the questions
 // prettify the StartScreen
 
-try {
-	ScreenOrientation.lock("portrait").then(() => {console.log("Locked orientation to portrait")});
-} catch (error) {
-	console.log(error);
-}
-
 class App extends React.Component {
   
 	constructor(props) {
@@ -334,6 +328,7 @@ class App extends React.Component {
 						<h3>Debug bedieningspaneel</h3>
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
+						<button onClick={() => {this.StartPersistentVibrate(100, 200);}}>Trillen</button>
 
 					</div>
 					: null}
@@ -499,6 +494,23 @@ class App extends React.Component {
 		.then((response) => response.json())
 		.then((data) => {this.setState({Leaderboard : data}); console.log("Got data!")});
 	}
+
+	// vibrations for the mobile users
+	StartVibrate(HowLong) {
+		navigator.vibrate(HowLong);
+	}
+	StartPersistentVibrate(HowLong, Interval) {
+		this.Vibrate = setInterval(() => {
+			this.StartVibrate(HowLong);
+		}, Interval);
+	}
+	StopVibrate() {
+		if (this.Vibrate !== null) {
+			clearInterval(this.Vibrate);
+		}
+	}
+
+
 
 	// runs when the program is ready to run
 	componentDidMount() {
