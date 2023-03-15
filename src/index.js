@@ -5,7 +5,12 @@ import App from './Local_Files/Components/App';
 
 const host = "https://leaderboard-server.onrender.com";
 
-screen.orientation.lock("Pportrait");
+try {
+  screen.orientation.lock("portrait");
+} catch (error) {
+  console.log(error);
+}
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
