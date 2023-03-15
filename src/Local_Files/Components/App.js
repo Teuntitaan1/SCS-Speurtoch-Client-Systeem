@@ -90,6 +90,8 @@ class App extends React.Component {
 		this.HandleQrCodeScan = this.HandleQrCodeScan.bind(this);
 		this.HandleQrCodeError = this.HandleQrCodeError.bind(this);
 
+		this.scannedaudio = new Audio(require("../Audio/ScannedAudio.mp3"));
+		this.questioncorrect = new Audio(require("../Audio/QuestionCorrect.mp3"));
 	}
 
 	// all render code
@@ -328,7 +330,8 @@ class App extends React.Component {
 						<h3>Debug bedieningspaneel</h3>
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
-						<button onClick={() => {this.StartPersistentVibrate(100, 200);}}>Trillen</button>
+						<button onClick={() => {navigator.vibrate(1000);}}>Trillen</button>
+						<button onClick={() => {this.questioncorrect.play()}}>Geluid afspelen</button>
 
 					</div>
 					: null}
@@ -365,7 +368,8 @@ class App extends React.Component {
 				});
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
-
+			// plays the questioncorrect sound effect
+			this.questioncorrect.play();
 			// cool sequence for the users
 			setTimeout(() => {
 				// if all questions have been answered, finish the quiz
@@ -447,7 +451,7 @@ class App extends React.Component {
 			return null;
 		}
 		// checks if the question has been answered or not
-		this.state.QuestionList[data.text].Completed === false ?
+		if (this.state.QuestionList[data.text].Completed === false) {
 			this.setState({
 				ActiveQuestion: data.text,
 				ProgramState :"AnswerScreen",
@@ -456,9 +460,16 @@ class App extends React.Component {
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
 				Attemps : 0,
 				AnsweredCorrect : false,
-				ShouldShowConffetti : false}) 
-			:
+				ShouldShowConffetti : false});
+				// succes!
+				navigator.vibrate(100);
+				this.scannedaudio.play();
+		}
+		else {
+			// error
+			navigator.vibrate([100,50,100,50,100]);
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
+		}	
 
 		setTimeout(() => {
 			this.setState({ShowGoodJobScreen : false});
@@ -494,24 +505,6 @@ class App extends React.Component {
 		.then((response) => response.json())
 		.then((data) => {this.setState({Leaderboard : data}); console.log("Got data!")});
 	}
-
-	// vibrations for the mobile users
-	StartVibrate(HowLong) {
-		navigator.vibrate(HowLong);
-	}
-	StartPersistentVibrate(HowLong, Interval) {
-		this.Vibrate = setInterval(() => {
-			this.StartVibrate(HowLong);
-		}, Interval);
-	}
-	StopVibrate() {
-		if (this.Vibrate !== null) {
-			clearInterval(this.Vibrate);
-		}
-	}
-
-
-
 	// runs when the program is ready to run
 	componentDidMount() {
 		

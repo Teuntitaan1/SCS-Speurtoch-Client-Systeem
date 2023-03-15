@@ -48,7 +48,7 @@ class CompletedQuestionsManager extends React.Component {
                                 }
                                 
                             </div>
-                            <p>{this.props.QuestionList[this.state.ActiveQuestion][this.props.QuestionMode].CorrectAnswer} was het goede antwoord!</p>
+                            <p><span style={{fontStyle : 'italic'}}>{this.props.QuestionList[this.state.ActiveQuestion][this.props.QuestionMode].CorrectAnswer}</span> was het goede antwoord!</p>
                             <h2 style={{textAlign : 'center'}}>Wist je dat?</h2>
                             <p>{this.props.QuestionList[this.state.ActiveQuestion].ExtraInfo}</p>
                         </>
