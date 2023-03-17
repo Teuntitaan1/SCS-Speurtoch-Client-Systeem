@@ -8,12 +8,11 @@ import QrReader from 'react-qr-scanner';
 import Confetti from 'react-confetti'
 // image imports
 import QrCodeButton from '../Images/QrCodeButton.svg';
-import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
-import Logo from '../Images/Archeon logo.png';
-import BackArrow from '../Images/PijlNaarLinks.svg';
-import HintIcon from '../Images/HintIcon.svg';
 import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 import DownButton from '../Images/Pijltje.svg'
+import Hintlabel from './Hintlabel';
+import Footer from './Footer';
+import Header from './Header';
 
 // audio imports 
 var ScannedAudio = require('../Audio/ScannedAudio.mp3');
@@ -104,7 +103,7 @@ class App extends React.Component {
 	// all render code
 	render() {
 		// chooses what to display in the main part of the program
-		var programbody;
+		let programbody;
 		
 		switch (this.state.ProgramState) {
 		
@@ -159,17 +158,17 @@ class App extends React.Component {
 				programbody =
 					<>
 						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
-							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 5+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 4+"vh", marginTop : -1+"rem"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
+							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 4+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
+							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 3+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
 							<div style={{justifyContent : 'center'}}>
 							{
 							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
 							this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
 								<div style={{
 									backgroundColor : this.state.OptionColorList[index], 
-									width : 90+"vw", height : 10+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
+									width : 90+"vw", height : 12+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
 									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
-									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', bottom : 15+"%"}}>{Option}</p>
+									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', top : -2+"vh"}}>{Option}</p>
 								</div>
 								)
 							}
@@ -200,9 +199,12 @@ class App extends React.Component {
 			case "InfoToAnswerScreen":
 				programbody = 
 					<>
-						<h3>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</h3>
+						<hr></hr>
+						<h3 style={{fontSize : 4+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</h3>
+						<hr></hr>
 					</>;
 				break;
+
 			case "FinishScreen":
 			
 				programbody =
@@ -222,7 +224,10 @@ class App extends React.Component {
 						{
 							this.state.GotLeaderboard ? 
 								this.state.Leaderboard.length !== 0 ?
-									<Leaderboard Leaderboard={this.state.Leaderboard} Uuid={this.state.Uuid} SendResults={this.state.SendResults}/> : <p>Het leaderboard is leeg, wees de eerste!</p>
+									<Leaderboard 
+										Leaderboard={this.state.Leaderboard} 
+										Uuid={this.state.Uuid} 
+										SendResults={this.state.SendResults}/> : <p>Het leaderboard is leeg, wees de eerste!</p>
 							:
 							<p>Aan het laden...</p>
 						}
@@ -256,28 +261,16 @@ class App extends React.Component {
 		// renders based on what programbody is
 		return(
 			<>
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"vh", position : 'absolute', top : 0+"%", left : 0+"%"}}>
-					
-					{/*Moves the program back into its previous state*/}
-					{this.state.ProgramState === "AnswerScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "ErrorScreen" || this.state.ProgramState === "InfoToAnswerScreen" ? 
-					<img onClick={() => {this.SwitchProgramState(this.state.PreviousState);}} style={{height : 100+"%", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
-					{/*Archeon logo*/}
-					<div style={{display : 'flex', justifyContent : 'center', height : 100+"%"}}>
-						<img onClick={() => {window.open('https://www.archeon.nl/index.html', '_blank');}} style={{}} src={Logo} alt="Logo of the archeon website"/>
-					</div>
-					{/*Moves the program to the DoneQuestionsScreen state*/}
-					{this.state.ProgramState === "SelectionScreen"  ? 
-					<img onClick={() => {this.SwitchProgramState("DoneQuestionsScreen");}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 100+"%", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
-				</div>
+				<Header
+				 	ToDoneQuestionsScreen={() => {this.SwitchProgramState("DoneQuestionsScreen");}}
+					BackToPreviousScreen={() => {this.SwitchProgramState(this.state.PreviousState);}}
+				   	ProgramState={this.state.ProgramState}/>
 				
 				{/*Hint label on top of the screen and screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>
 					{/*Hint label*/}
 					{this.state.ProgramState === "SelectionScreen" ? 
-						<div style={{backgroundColor : "#457c1f", width : 100+"%", height : 3.5+"rem", borderRadius : 1+"rem", display : 'flex'}}>
-							<img src={HintIcon} alt='Hint icon' style={{width : 3+"rem", height : 3.5+"rem"}}></img>
-							<p style={{ textAlign : 'center', fontSize : 1.1+"rem"}}>{this.state.CurrentHint}</p>
-						</div> 
+						<Hintlabel CurrentHint={this.state.CurrentHint}/>
 						:
 						null}
 					
@@ -288,16 +281,9 @@ class App extends React.Component {
 				</div>
 
 				{/*Footer of the program*/}
-				<div style={{backgroundColor : "#56a222", width : 100+"%", height : 12+"vh", position : 'absolute', bottom : 0+"%", left : 0+"%"}}>
-					
-					{/*Progress bar*/}
-					<div style={{width : 100+"%", height : 75+"%", position : 'absolute', bottom : 4.5+"vh"}}>
-						<div style={{backgroundColor : 'green', height : 100+"%", width : (this.state.QuestionsCompleted * (100 / this.state.QuestionList.length)) + "%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}>
-							<p style={{fontWeight : 'bold', textAlign : 'end', position : 'relative', top : 30+"%"}}>{this.state.QuestionsCompleted}/{this.state.QuestionList.length}</p>
-						</div>
-					</div>
-
-				</div>
+				<Footer
+				 	QuestionsCompleted={this.state.QuestionsCompleted} 
+					QuestionListLength={this.state.QuestionList.length}/>
 
 				{/*Confetti to be shown all accross the screen*/}
 				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
@@ -371,6 +357,49 @@ class App extends React.Component {
 		}
   	}
 
+  	// handles all Qr-code code
+  	HandleQrCodeScan(data){
+		// validates data
+		if (data === null || this.state.QuestionList[data.text] === undefined) {
+			if (data == null) {
+				this.setState({Warning : ""});
+			} 
+			else {
+				this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
+			}
+			return null;
+		}
+		// checks if the question has been answered or not
+		if (this.state.QuestionList[data.text].Completed === false) {
+			this.setState({
+				ActiveQuestion: data.text,
+				ProgramState :"AnswerScreen",
+				Scanning : false, Warning : "",
+				StartedQuestion : Date.now(),
+				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
+				Attemps : 0,
+				AnsweredCorrect : false,
+				ShouldShowConffetti : false,
+				ShowGoodJobScreen : false, 
+				TimeAtQuestion : 0,
+				ShouldIncrement : true});
+				// succes!
+				navigator.vibrate(100);
+				new Audio(ScannedAudio).play();
+		}
+		else {
+			// error
+			navigator.vibrate([100,50,100,50,100]);
+			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
+		}	
+	}
+	// handles errors received from the qr code scanner
+	HandleQrCodeError(error) {
+		console.log(error);
+		this.setState({Scanning : false});
+		this.SwitchProgramState("ErrorScreen");
+	}	
+
 	// generates a hint used in the selectionscreen
 	GenerateHint() {
 
@@ -419,48 +448,7 @@ class App extends React.Component {
 		}
 		this.setState({OptionColorList : OptionColorList});
 	}
-  	// handles all Qr-code code
-  	HandleQrCodeScan(data){
-		// validates data
-		if (data === null || this.state.QuestionList[data.text] === undefined) {
-			if (data == null) {
-				this.setState({Warning : ""});
-			} 
-			else {
-				this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
-			}
-			return null;
-		}
-		// checks if the question has been answered or not
-		if (this.state.QuestionList[data.text].Completed === false) {
-			this.setState({
-				ActiveQuestion: data.text,
-				ProgramState :"AnswerScreen",
-				Scanning : false, Warning : "",
-				StartedQuestion : Date.now(),
-				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
-				Attemps : 0,
-				AnsweredCorrect : false,
-				ShouldShowConffetti : false,
-				ShowGoodJobScreen : false, 
-				TimeAtQuestion : 0,
-				ShouldIncrement : true});
-				// succes!
-				navigator.vibrate(100);
-				new Audio(ScannedAudio).play();
-		}
-		else {
-			// error
-			navigator.vibrate([100,50,100,50,100]);
-			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
-		}	
-	}
-	// handles errors received from the qr code scanner
-	HandleQrCodeError(error) {
-		console.log(error);
-		this.setState({Scanning : false});
-		this.SwitchProgramState("ErrorScreen");
-	}	
+	
 	PushLeaderBoard() {
 		// statistics to sent to the server
 		var Body = {
