@@ -15,8 +15,10 @@ import Footer from './Footer';
 import Header from './Header';
 
 // audio imports 
-var ScannedAudio = require('../Audio/ScannedAudio.mp3');
-var QuestionCorrect = require('../Audio/QuestionCorrect.mp3');
+var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
+var QuestionCorrect = new Audio(require('../Audio/QuestionCorrect.mp3'));
+var WrongScan = new Audio(require('../Audio/ScannedWrong.mp3'));
+var WrongAnswer = new Audio(require('../Audio/WrongAnswer.mp3'));
 // ALL POSSIBLE PROGRAM STATES
 
 // 1.StartScreen
@@ -28,7 +30,6 @@ var QuestionCorrect = require('../Audio/QuestionCorrect.mp3');
 
 // TODO
 // prettify the leaderboard
-// improve on making the ui more intuitive to use
 // add audio
 // grammar check
 // prettify the StartScreen
@@ -238,11 +239,12 @@ class App extends React.Component {
 			case "FinalScreen":
 				programbody = 
 				<>
-					<h1 style={{textAlign : 'center', fontSize : 5+"vh"}}>Goed gedaan! Loop naar de kassa, laat dit zien en krijg een cool prijsje!</h1>
+					<h1 style={{textAlign : 'center', fontSize : 4+"vh"}}>Goed gedaan! Loop naar de kassa, laat dit zien en krijg een cool prijsje!</h1>
+					<p>Heb je verbeterpunten voor deze speurtocht of wil je gewoon je mening kwijt? klik dan op <a href='https://forms.gle/8rNUsFQGhMDpVgX77' target='_blank' rel='noreferrer'>Deze link</a> en vul de enquete in!</p>
 					<div style={{display : 'flex', justifyContent : 'center'}}>
 						<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
 					</div>
-					<div style={{display : 'flex', justifyContent : 'center', marginTop : 1+"rem"}}>
+					<div style={{display : 'flex', justifyContent : 'center'}}>
 						<img src={PartyImage} alt='Goed gedaan!' style={{width : 80+"vw", height : 40+"vh"}}></img>
 					</div>
 				</>
@@ -297,7 +299,7 @@ class App extends React.Component {
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
 						<button onClick={() => {navigator.vibrate(1000);}}>Trillen</button>
-						<button onClick={() => {new Audio(QuestionCorrect).play().then(() => {console.log("Sound is playing");})}}>Geluid afspelen</button>
+						<button onClick={() => {QuestionCorrect.play().then(() => {console.log("Sound is playing");})}}>Geluid afspelen</button>
 
 					</div>
 					: null}
@@ -320,7 +322,10 @@ class App extends React.Component {
 		var NewQuestionList = this.state.QuestionList;
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
 		if (Option === this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].CorrectAnswer) {
-		
+			
+			// plays the questioncorrect sound effect
+			QuestionCorrect.play();
+
 			// sets the active question to completed
 			NewQuestionList[this.state.ActiveQuestion].Completed = true;
 			// updates relevant variables
@@ -335,8 +340,6 @@ class App extends React.Component {
 				});
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
-			// plays the questioncorrect sound effect
-			new Audio(QuestionCorrect).play();
 			// cool sequence for the users
 			setTimeout(() => {
 				// if all questions have been answered, finish the quiz
@@ -354,6 +357,7 @@ class App extends React.Component {
 		}
 		else {
 			this.setState({Attemps : this.state.Attemps + 1});
+			WrongAnswer.play();
 		}
   	}
 
@@ -384,13 +388,13 @@ class App extends React.Component {
 				TimeAtQuestion : 0,
 				ShouldIncrement : true});
 				// succes!
-				navigator.vibrate(100);
-				new Audio(ScannedAudio).play();
+				navigator.vibrate(200);
+				ScannedAudio.play();
 		}
 		else {
 			// error
-			navigator.vibrate([100,50,100,50,100]);
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
+			WrongScan.play();
 		}	
 	}
 	// handles errors received from the qr code scanner
