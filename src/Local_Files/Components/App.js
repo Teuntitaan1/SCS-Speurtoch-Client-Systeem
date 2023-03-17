@@ -1,6 +1,7 @@
 // my own components etc
 import '../StyleSheets/App.css';
-import CompletedQuestionsManager from './CompletedQuestionsManager'
+import CompletedQuestionsManager from './CompletedQuestionsManager';
+import Leaderboard from './Leaderboard';
 // library imports
 import React from 'react';
 import QrReader from 'react-qr-scanner';
@@ -75,6 +76,7 @@ class App extends React.Component {
 				UserName : "",
 				TotalPoints : 0,
 				Leaderboard : [],
+				GotLeaderboard : false,
 
 				// technical properties
 				LastVisited : Date.now(),
@@ -218,43 +220,9 @@ class App extends React.Component {
 
 						<div>
 						{
-							this.state.Leaderboard.length !== 0 ? 
-								<table border={1} cellPadding={5} style={{marginTop : 1+"rem", width  : 100+"%", borderCollapse : 'collapse', borderRadius : 1+"rem"}}>
-									<tbody>
-										<tr style={{textAlign : 'center'}}>
-											<th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>#</th>
-											<th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>Naam</th>
-											<th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>Punten</th>
-										</tr>
-										{/*This can be improved upon*/}
-										{this.state.Leaderboard.slice(0, 5).map((Entry, index) => {
-												if (this.state.Uuid === Entry.Uuid) {
-													return (
-														<tr style={{backgroundColor : "#457c1f"}} key={index}>
-															<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{index + 1}</td>
-															<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "..."}</td>
-															<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.TotalPoints}</td>
-														</tr>
-													);
-												}
-												return (
-													<tr key={index}>
-														<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{index + 1}</td>
-														<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "..."}</td>
-														<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Entry.TotalPoints}</td>
-													</tr>
-												);})}
-										{/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
-										{this.state.SendResults === true && this.state.Leaderboard.slice(0, 5).map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
-											<tr style={{backgroundColor : "#457c1f"}}>
-												<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.state.Leaderboard.map((Entry, index) => {if(this.state.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
-												<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>
-												<td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.state.Leaderboard.map((Entry) => {if(this.state.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
-											</tr>
-											: 
-											null}
-									</tbody>
-							</table>
+							this.state.GotLeaderboard ? 
+								this.state.Leaderboard.length !== 0 ?
+									<Leaderboard Leaderboard={this.state.Leaderboard} Uuid={this.state.Uuid} SendResults={this.state.SendResults}/> : <p>Het leaderboard is leeg, wees de eerste!</p>
 							:
 							<p>Aan het laden...</p>
 						}
@@ -331,7 +299,7 @@ class App extends React.Component {
 
 				</div>
 
-				{/*Confetti to be show all accross the screen*/}
+				{/*Confetti to be shown all accross the screen*/}
 				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
 					<Confetti/>
 				</div>
@@ -515,7 +483,7 @@ class App extends React.Component {
 		// gets the leaderboard from the server and displays it on the finishscreen
 		fetch(this.props.leaderboardip)
 		.then((response) => response.json())
-		.then((data) => {this.setState({Leaderboard : data}); console.log("Got data!")});
+		.then((data) => {this.setState({Leaderboard : data, GotLeaderboard : true}); console.log("Got data!"); });
 	}
 	// runs when the program is ready to run
 	componentDidMount() {
