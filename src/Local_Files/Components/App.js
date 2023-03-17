@@ -343,7 +343,7 @@ class App extends React.Component {
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
 						<button onClick={() => {navigator.vibrate(1000);}}>Trillen</button>
-						<button onClick={() => {QuestionCorrect.play()}}>Geluid afspelen</button>
+						<button onClick={() => {new Audio(QuestionCorrect).play().then(() => {console.log("Sound is playing");})}}>Geluid afspelen</button>
 
 					</div>
 					: null}
@@ -382,7 +382,7 @@ class App extends React.Component {
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
 			// plays the questioncorrect sound effect
-			QuestionCorrect.play();
+			new Audio(QuestionCorrect).play();
 			// cool sequence for the users
 			setTimeout(() => {
 				// if all questions have been answered, finish the quiz
@@ -479,7 +479,7 @@ class App extends React.Component {
 				ShouldIncrement : true});
 				// succes!
 				navigator.vibrate(100);
-				ScannedAudio.play();
+				new Audio(ScannedAudio).play();
 		}
 		else {
 			// error
