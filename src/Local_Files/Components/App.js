@@ -13,7 +13,12 @@ import BackArrow from '../Images/PijlNaarLinks.svg';
 import HintIcon from '../Images/HintIcon.svg';
 import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 import DownButton from '../Images/Pijltje.svg'
+
+// audio imports 
+var ScannedAudio = '../Audio/ScannedAudio.mp3';
+var QuestionCorrect = '../Audio/QuestionCorrect.mp3';
 // ALL POSSIBLE PROGRAM STATES
+
 // 1.StartScreen
 // 2.SelectionScreen
 // 3.DoneQuestionsScreen
@@ -55,7 +60,7 @@ class App extends React.Component {
 				QuestionsCompleted : 0, 
 				Attemps : 0,
 				QuestionsCompletedFirstTime : 0,
-				StartedQuestion : Date.now(),
+				TimeAtQuestion : 0,
 
 				// qr code variables
 				Scanning : false,
@@ -75,6 +80,7 @@ class App extends React.Component {
 				LastVisited : Date.now(),
 				ShowGoodJobScreen : true,
 				ShouldShowConffetti : false,
+				ShouldIncrement : false,
 			}
 		}
 		else {
@@ -91,8 +97,6 @@ class App extends React.Component {
 		this.HandleQrCodeScan = this.HandleQrCodeScan.bind(this);
 		this.HandleQrCodeError = this.HandleQrCodeError.bind(this);
 
-		this.scannedaudio = new Audio(require("../Audio/ScannedAudio.mp3"));
-		this.questioncorrect = new Audio(require("../Audio/QuestionCorrect.mp3"));
 	}
 
 	// all render code
@@ -171,12 +175,12 @@ class App extends React.Component {
 							<div style={{display : 'flex', justifyContent : 'center', marginTop : 0+"vh"}}>
 								<img src={DownButton} onClick={() => {this.SwitchProgramState("InfoToAnswerScreen");}} style={{width : 10+"vw", height : 10+"vh"}} alt='DownButton'></img>
 							</div>
-							<p style={{position : 'absolute', left : 0+"%", bottom : 0+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0 } punten</p>
+							<p style={{position : 'absolute', left : 0+"%", bottom : 0+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</p>
 
 						</div>
 
 						<div style={{position : 'relative', bottom : 50+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
-							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0}</h1>
+							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0}</h1>
 							{this.state.AnsweredCorrect === true ?
 							<>
 								<p style={{textAlign : 'center', fontWeight : 'bold'}}>{Math.floor(this.state.TimeSpent) > 0 ? Math.floor(this.state.TimeSpent/60) + `${this.state.TimeSpent/60 > 1 || this.state.TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{this.state.TimeSpent % 60} {this.state.TimeSpent % 60 > 1 || this.state.TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
@@ -339,7 +343,7 @@ class App extends React.Component {
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
 						<button onClick={() => {navigator.vibrate(1000);}}>Trillen</button>
-						<button onClick={() => {this.questioncorrect.play()}}>Geluid afspelen</button>
+						<button onClick={() => {new Audio(QuestionCorrect).play()}}>Geluid afspelen</button>
 
 					</div>
 					: null}
@@ -373,11 +377,12 @@ class App extends React.Component {
 				ShowGoodJobScreen : true,
 				QuestionsCompletedFirstTime : this.state.Attemps === 0 ? this.state.QuestionsCompletedFirstTime + 1 : this.state.QuestionsCompletedFirstTime,
 				ShouldShowConffetti : true,
+				ShouldIncrement : false,
 				});
 			// generates a new hint since the old one doesnt apply anymore
 			this.GenerateHint();
 			// plays the questioncorrect sound effect
-			this.questioncorrect.play();
+			new Audio(QuestionCorrect).play();
 			// cool sequence for the users
 			setTimeout(() => {
 				// if all questions have been answered, finish the quiz
@@ -389,7 +394,7 @@ class App extends React.Component {
 					this.SwitchProgramState("SelectionScreen", true);
 				}
 				// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
-				var Points = (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * Math.floor((Date.now() - this.state.StartedQuestion)/1000)) - (100 * this.state.Attemps)) : 0
+				var Points = (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0
 				this.setState({TotalPoints : this.state.TotalPoints + Points, ShouldShowConffetti : false});
 			}, 4000);			
 		}
@@ -468,20 +473,19 @@ class App extends React.Component {
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
 				Attemps : 0,
 				AnsweredCorrect : false,
-				ShouldShowConffetti : false});
+				ShouldShowConffetti : false,
+				ShowGoodJobScreen : false, 
+				TimeAtQuestion : 0,
+				ShouldIncrement : true});
 				// succes!
 				navigator.vibrate(100);
-				this.scannedaudio.play();
+				new Audio(ScannedAudio).play();
 		}
 		else {
 			// error
 			navigator.vibrate([100,50,100,50,100]);
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
 		}	
-
-		setTimeout(() => {
-			this.setState({ShowGoodJobScreen : false});
-		}, 1500);
 	}
 	// handles errors received from the qr code scanner
 	HandleQrCodeError(error) {
@@ -525,6 +529,8 @@ class App extends React.Component {
 		// updates the leaderboard
 		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 3*1000);
 		this.LeaderboardTimerID = LeaderboardTimer;
+		const QuestionTimer = setInterval(() => {if (this.state.ProgramState === "AnswerScreen" && this.state.ShouldIncrement === true) {this.setState({TimeAtQuestion : this.state.TimeAtQuestion + 1})};}, 1*1000);
+		this.QuestionTimerID = QuestionTimer;
 	}
 	// runs when the program is ready to stop
 	componentWillUnmount() {
@@ -532,6 +538,7 @@ class App extends React.Component {
 		clearInterval(this.TimerID);
 		clearInterval(this.SaveTimerID);
 		clearInterval(this.LeaderboardTimerID);
+		clearInterval(this.QuestionTimerID);
 	}
 	// resets the program	
 	ResetQuiz() {
