@@ -2,6 +2,9 @@
 import '../StyleSheets/App.css';
 import CompletedQuestionsManager from './CompletedQuestionsManager';
 import Leaderboard from './Leaderboard';
+import Hintlabel from './Hintlabel';
+import Footer from './Footer';
+import Header from './Header';
 // library imports
 import React from 'react';
 import QrReader from 'react-qr-scanner';
@@ -10,9 +13,7 @@ import Confetti from 'react-confetti'
 import QrCodeButton from '../Images/QrCodeButton.svg';
 import PartyImage from '../Images/party-popper-svgrepo-com.svg';
 import DownButton from '../Images/Pijltje.svg'
-import Hintlabel from './Hintlabel';
-import Footer from './Footer';
-import Header from './Header';
+
 
 // audio imports 
 var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
@@ -29,10 +30,8 @@ var WrongAnswer = new Audio(require('../Audio/WrongAnswer.mp3'));
 // 6.Anything else defaults to the error page
 
 // TODO
-// prettify the leaderboard
-// add audio
 // grammar check
-// prettify the StartScreen
+// prettify the StartScreen / add instruction for the program
 
 class App extends React.Component {
   
@@ -115,7 +114,7 @@ class App extends React.Component {
 						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
 						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
 						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
-							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem", color : "#000000"}}>Begin!</button>
+							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint(); navigator.vibrate(10);}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem", color : "#000000"}}>Begin!</button>
 						</div>
 						
 					</>;
@@ -135,7 +134,7 @@ class App extends React.Component {
 									onError={this.HandleQrCodeError}
 								/>
 
-								<button onClick={() => this.setState({Scanning : false})} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} >Stop met scannen</button>
+								<button onClick={() => {this.setState({Scanning : false}); navigator.vibrate(10);}} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} >Stop met scannen</button>
 								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
 
 							</div>
@@ -217,7 +216,7 @@ class App extends React.Component {
 								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
 									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/> : null}
 								<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
-									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});} navigator.vibrate(10);} }>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
 							</div>
 						</div>
 
@@ -242,7 +241,7 @@ class App extends React.Component {
 					<h1 style={{textAlign : 'center', fontSize : 4+"vh"}}>Goed gedaan! Loop naar de kassa, laat dit zien en krijg een cool prijsje!</h1>
 					<p>Heb je verbeterpunten voor deze speurtocht of wil je gewoon je mening kwijt? klik dan op <a href='https://forms.gle/8rNUsFQGhMDpVgX77' target='_blank' rel='noreferrer'>Deze link</a> en vul de enquete in!</p>
 					<div style={{display : 'flex', justifyContent : 'center'}}>
-						<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
+						<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz(); navigator.vibrate(10);}}>Ik heb mijn prijs gekregen!</button>
 					</div>
 					<div style={{display : 'flex', justifyContent : 'center'}}>
 						<img src={PartyImage} alt='Goed gedaan!' style={{width : 80+"vw", height : 40+"vh"}}></img>
@@ -370,8 +369,9 @@ class App extends React.Component {
 			} 
 			else {
 				this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
+				WrongScan.play();
 			}
-			return null;
+			return;
 		}
 		// checks if the question has been answered or not
 		if (this.state.QuestionList[data.text].Completed === false) {
