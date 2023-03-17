@@ -215,7 +215,7 @@ class App extends React.Component {
 								{this.state.SendResults !== true ?
 								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
 									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/> : null}
-								<button style={{backgroundColor : "#56a222", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
+								<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
 									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});}}}>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
 							</div>
 						</div>
@@ -240,7 +240,7 @@ class App extends React.Component {
 				<>
 					<h1 style={{textAlign : 'center', fontSize : 5+"vh"}}>Goed gedaan! Loop naar de kassa, laat dit zien en krijg een cool prijsje!</h1>
 					<div style={{display : 'flex', justifyContent : 'center'}}>
-						<button style={{backgroundColor : "#56a222", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
+						<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz()}}>Ik heb mijn prijs gekregen!</button>
 					</div>
 					<div style={{display : 'flex', justifyContent : 'center', marginTop : 1+"rem"}}>
 						<img src={PartyImage} alt='Goed gedaan!' style={{width : 80+"vw", height : 40+"vh"}}></img>
