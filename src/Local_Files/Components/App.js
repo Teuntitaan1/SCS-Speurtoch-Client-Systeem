@@ -12,8 +12,6 @@ import Confetti from 'react-confetti';
 // image imports
 import QrCodeButton from '../Images/QrCodeButton.svg';
 import PartyImage from '../Images/party-popper-svgrepo-com.svg';
-import DownButton from '../Images/Pijltje.svg'
-
 
 // audio imports 
 var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
@@ -178,10 +176,7 @@ class App extends React.Component {
 								)
 							}
 							</div>
-							<div style={{display : 'flex', justifyContent : 'center', position : 'relative', bottom : 2+"vh"}}>
-								<img src={DownButton} onClick={() => {this.SwitchProgramState("InfoToAnswerScreen"); navigator.vibrate(10);}} style={{width : 10+"vw", height : 10+"vh"}} alt='DownButton'></img>
-							</div>
-							<p style={{position : 'absolute', left : 0+"%", bottom : 4+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</p>
+							<p style={{position : 'absolute', left : 0+"%", bottom : -6+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</p>
 
 						</div>
 
@@ -270,6 +265,7 @@ class App extends React.Component {
 				<Header
 				 	ToDoneQuestionsScreen={() => {this.SwitchProgramState("DoneQuestionsScreen");}}
 					BackToPreviousScreen={() => {this.SwitchProgramState(this.state.PreviousState);}}
+					ToDoneInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}
 				   	ProgramState={this.state.ProgramState}/>
 				
 				{/*Hint label on top of the screen and screen state body*/}

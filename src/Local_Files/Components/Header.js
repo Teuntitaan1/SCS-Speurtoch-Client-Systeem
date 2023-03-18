@@ -5,6 +5,7 @@ import '../StyleSheets/App.css';
 import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
 import Logo from '../Images/Archeon logo.png';
 import BackArrow from '../Images/PijlNaarLinks.svg';
+import InfoToAnswerButton from '../Images/info-circle-svgrepo-com.svg';
 
 class Header extends React.Component {
     render() {
@@ -22,6 +23,10 @@ class Header extends React.Component {
 					{/*Moves the program to the DoneQuestionsScreen state*/}
 					{this.props.ProgramState === "SelectionScreen"  ? 
 					<img onClick={() => {this.props.ToDoneQuestionsScreen(); navigator.vibrate(10);}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 100+"%", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
+					
+					{/*Moves the program to the DoneQuestionsScreen state*/}
+					{this.props.ProgramState === "AnswerScreen"  ? 
+					<img onClick={() => {this.props.ToDoneInfoToAnswerScreen(); navigator.vibrate(10);}} src={InfoToAnswerButton} alt="InfoToAnswerButton" style={{height: 100+"%", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 				</div>
             </>
         );
