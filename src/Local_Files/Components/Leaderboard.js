@@ -31,7 +31,7 @@ class Leaderboard extends React.Component {
                                 </tr>
                             );})}
                     {/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
-                    {this.props.SendResults === true && this.props.Leaderboard.slice(0, 5).map((Entry) => {if(this.props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
+                    {this.props.Leaderboard.map((Entry) => {if(this.props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) === true && this.props.Leaderboard.slice(0, 5).map((Entry) => {if(this.props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
                         <tr style={{backgroundColor : "#457c1f"}}>
                             <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.props.Leaderboard.map((Entry, index) => {if(this.props.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
                             <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{this.props.Leaderboard.map((Entry) => {if(this.props.Uuid === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>

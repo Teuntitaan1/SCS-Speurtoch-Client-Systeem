@@ -161,8 +161,8 @@ class App extends React.Component {
 				programbody =
 					<>
 						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
-							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 4+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 3+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
+							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 3.5+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
+							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 2.5+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
 							<div style={{justifyContent : 'center'}}>
 							{
 							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
@@ -476,10 +476,11 @@ class App extends React.Component {
 				CorrectFirstTime : this.state.QuestionsCompletedFirstTime,
 				TotalPoints : this.state.TotalPoints,
 				Uuid : this.state.Uuid})};
-
+		
+		this.setState({SendResults : true}); 
 		// sends the Body array to the server
 		fetch(this.props.leaderboardip, Body)
-			.then(() => {this.setState({SendResults : true}); this.PullLeaderBoard();})
+			.then(() => {this.PullLeaderBoard();})
 				.catch((error) => {console.error('Error:', error);});
 
 	}
