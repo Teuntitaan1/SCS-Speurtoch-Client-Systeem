@@ -31,8 +31,9 @@ class CompletedQuestionsManager extends React.Component {
                     )}
                 </div>
 
-                <div style={{marginTop : -5+"%"}}>
-                    {this.state.ActiveQuestion !== null ? 
+                <div style={{marginTop : -5+"%", opacity : this.state.ActiveQuestion !== null ? 1 : 0, transition : 'opacity 500ms ease-in-out'}}>
+                   
+                    {this.state.ActiveQuestion !== null ?
                         <>
                             <h2 style={{textAlign : 'center'}}>{this.props.QuestionList[this.state.ActiveQuestion].Description}</h2>
                             <div style={{display : 'flex', flexWrap : 'wrap', justifyContent : 'center'}}>
@@ -48,14 +49,17 @@ class CompletedQuestionsManager extends React.Component {
                                 }
                                 
                             </div>
+                            
                             <hr></hr>
+
                             <p><span style={{fontStyle : 'italic'}}>{this.props.QuestionList[this.state.ActiveQuestion][this.props.QuestionMode].CorrectAnswer}</span> was het goede antwoord!</p>
-                            <hr></hr>
-                            <h2 style={{textAlign : 'center'}}>Wist je dat?</h2>
-                            <p>{this.props.QuestionList[this.state.ActiveQuestion].ExtraInfo}</p>
+                            
+                            <div style={{marginTop : -5+"vh"}}>
+                                <h2 style={{textAlign : 'center'}}>Wist je dat?</h2>
+                                <p>{this.props.QuestionList[this.state.ActiveQuestion].ExtraInfo}</p>
+                            </div>
                         </>
-                        :
-                        null
+                        : null
                     }
                 </div>
             </>

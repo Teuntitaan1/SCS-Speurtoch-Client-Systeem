@@ -8,7 +8,7 @@ import Header from './Header';
 // library imports
 import React from 'react';
 import QrReader from 'react-qr-scanner';
-import Confetti from 'react-confetti'
+import Confetti from 'react-confetti';
 // image imports
 import QrCodeButton from '../Images/QrCodeButton.svg';
 import PartyImage from '../Images/party-popper-svgrepo-com.svg';
@@ -82,6 +82,7 @@ class App extends React.Component {
 				ShowGoodJobScreen : true,
 				ShouldShowConffetti : false,
 				ShouldIncrement : false,
+				ShouldShowProgramBody : true
 			}
 		}
 		else {
@@ -141,7 +142,7 @@ class App extends React.Component {
 							:
 							/*if not scanning display the image*/
 							<div style={{display : 'flex', justifyContent : 'center'}}>
-								<img onClick={() => this.setState({Scanning : true})} src={QrCodeButton} alt="Qr code button"
+								<img onClick={() => {this.setState({Scanning : true}); navigator.vibrate(10);}} src={QrCodeButton} alt="Qr code button"
 									style={{height: 20+"rem", width: 90+"%"}} />
 							</div>
 
@@ -166,17 +167,17 @@ class App extends React.Component {
 							this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
 								<div style={{
 									backgroundColor : this.state.OptionColorList[index], marginBottom : 0.1+"rem",
-									width : 90+"vw", height : 12+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
+									width : 90+"vw", height : 12+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);} navigator.vibrate(10);}}>
 									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
 									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', top : -2+"vh"}}>{Option}</p>
 								</div>
 								)
 							}
 							</div>
-							<div style={{display : 'flex', justifyContent : 'center', marginTop : 0+"vh"}}>
-								<img src={DownButton} onClick={() => {this.SwitchProgramState("InfoToAnswerScreen");}} style={{width : 10+"vw", height : 10+"vh"}} alt='DownButton'></img>
+							<div style={{display : 'flex', justifyContent : 'center', position : 'relative', bottom : 2+"vh"}}>
+								<img src={DownButton} onClick={() => {this.SwitchProgramState("InfoToAnswerScreen"); navigator.vibrate(10);}} style={{width : 10+"vw", height : 10+"vh"}} alt='DownButton'></img>
 							</div>
-							<p style={{position : 'absolute', left : 0+"%", bottom : 0+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</p>
+							<p style={{position : 'absolute', left : 0+"%", bottom : 4+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</p>
 
 						</div>
 
@@ -276,7 +277,7 @@ class App extends React.Component {
 						null}
 					
 					{/*Main program body*/}	
-					<div style={{marginTop : 1+"vh"}}>
+					<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : 'opacity 300ms ease-in-out'}}>
 						{programbody}
 					</div>
 				</div>
@@ -307,13 +308,25 @@ class App extends React.Component {
 	}
 	// handy function used all throughout the program to switch the ProgramState and PreviousState variable so that the program adapts based on input
 	SwitchProgramState(NewState, StatesShouldMatch = false) {
-		if (StatesShouldMatch !== true) {
-			var OldState = this.state.ProgramState;
-			this.setState({ProgramState : NewState, PreviousState : OldState}); 
-		}
-		else {
-			this.setState({ProgramState : NewState, PreviousState : NewState}); 
-		}
+		var TransitionTime = 300;
+		this.TransitionPage(TransitionTime);
+		setTimeout(() => {
+			if (StatesShouldMatch !== true) {
+				var OldState = this.state.ProgramState;
+				this.setState({ProgramState : NewState, PreviousState : OldState}); 
+			}
+			else {
+				this.setState({ProgramState : NewState, PreviousState : NewState}); 
+			}
+		}, TransitionTime);
+		
+	}
+
+	TransitionPage(TransitionTime) {
+		this.setState({ShouldShowProgramBody : false});
+		setTimeout(() => {
+			this.setState({ShouldShowProgramBody : true});
+		}, TransitionTime);
 	}
 
   	ValidateAnswer(Option) {
