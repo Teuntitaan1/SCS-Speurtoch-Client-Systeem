@@ -20,6 +20,10 @@ var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
 var QuestionCorrect = new Audio(require('../Audio/QuestionCorrect.mp3'));
 var WrongScan = new Audio(require('../Audio/ScannedWrong.mp3'));
 var WrongAnswer = new Audio(require('../Audio/WrongAnswer.mp3'));
+
+// program variables
+var TransitionTime = 200;
+
 // ALL POSSIBLE PROGRAM STATES
 
 // 1.StartScreen
@@ -277,7 +281,7 @@ class App extends React.Component {
 						null}
 					
 					{/*Main program body*/}	
-					<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : 'opacity 300ms ease-in-out'}}>
+					<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : `opacity ${TransitionTime}ms ease-in-out`}}>
 						{programbody}
 					</div>
 				</div>
@@ -308,7 +312,6 @@ class App extends React.Component {
 	}
 	// handy function used all throughout the program to switch the ProgramState and PreviousState variable so that the program adapts based on input
 	SwitchProgramState(NewState, StatesShouldMatch = false) {
-		var TransitionTime = 300;
 		this.TransitionPage(TransitionTime);
 		setTimeout(() => {
 			if (StatesShouldMatch !== true) {
