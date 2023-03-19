@@ -33,17 +33,17 @@
 	{"Title" : "De lekkerste bloem", "Completed" : false, "Hint" : "Ik ben bij de bloemetjes van de Romeinse tijd!", "Tijdperk" : "ROMEINSETIJD",
       "ZomerMode" : {
         "Description" : "Welk van deze bloemen trekt het snelst bijen aan?",
-        "Options" : ["De meidoorn", "De lavendel", "de paardenbloem", "het madeliefje"],
+        "Options" : ["De meidoorn", "De lavendel", "De paardenbloem", "Het madeliefje"],
         "CorrectAnswer" : "De lavendel",
         "InfoToAnswer" : "Bzz Bzz, mijn zusjes en ik gaan weer eten! Maar waar hebben we het meeste zin in? We willen natuurlijk zoveel mogelijk honing kunnen maken! Om de bloem met het meeste stuifmeel te verzamelen zoeken we naar een bloem die veel uv-straling uitstraalt. Uv-straling wordt vooral uitgestraald door rode/paarse kleuren!"
       },
       "WinterMode" : {
         "Description" : "Welk van deze bloemen trekt het snelst bijen aan?",
-        "Options" : ["De meidoorn", "De lavendel", "de paardenbloem", "het madeliefje"],
+        "Options" : ["De meidoorn", "De lavendel", "De paardenbloem", "Het madeliefje"],
         "CorrectAnswer" : "De lavendel",
         "InfoToAnswer" : "Bzz Bzz, mijn zusjes en ik gaan weer eten! Maar waar hebben we het meeste zin in? We willen natuurlijk zoveel mogelijk honing kunnen maken! Om de bloem met het meeste stuifmeel te verzamelen zoeken we naar een bloem die veel uv-straling uitstraalt. Uv-straling wordt vooral uitgestraald door rode/paarse kleuren!"
       },
-      "ExtraInfo" : "---"
+      "ExtraInfo" : "Bijen houden niet alleen van bloemen, ook sommige bomen vinden ze heerlijk!"
     },
 	{"Title" : "Uiterlijk van de gewone wespbij", "Completed" : false, "Hint" : "Ik ben bij het water in de middeleeuwen!", "Tijdperk" : "MIDDELEEUWEN",
       "ZomerMode" : {

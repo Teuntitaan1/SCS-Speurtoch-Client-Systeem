@@ -154,7 +154,9 @@ class App extends React.Component {
 								)
 							}
 							</div>
-							<p style={{position : 'absolute', left : 0+"%", bottom : -6+"vh", fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</p>
+							<div style={{display : 'flex', justifyContent : 'center', position : 'relative', top : -72+"vh"}}>
+								<h2 style={{fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</h2>
+							</div>
 
 						</div>
 
