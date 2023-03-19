@@ -1,17 +1,21 @@
 // my own components etc
 import '../StyleSheets/App.css';
-import CompletedQuestionsManager from './CompletedQuestionsManager';
 import Leaderboard from './Leaderboard';
 import Hintlabel from './Hintlabel';
 import Footer from './Footer';
 import Header from './Header';
+
+// mos program states
+import SelectionScreen from './ProgramStates/SelectionScreen';
+import DoneQuestionsScreen from './ProgramStates/DoneQuestionsScreen';
+import StartScreen from './ProgramStates/StartScreen';
+import InfoToAnswerScreen from './ProgramStates/InfoToAnswerScreen';
+import FinalScreen from './ProgramStates/FinalScreen';
+
 // library imports
 import React from 'react';
-import QrReader from 'react-qr-scanner';
 import Confetti from 'react-confetti';
-// image imports
-import QrCodeButton from '../Images/QrCodeButton.svg';
-import PartyImage from '../Images/party-popper-svgrepo-com.svg';
+
 
 // audio imports 
 var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
@@ -113,48 +117,24 @@ class App extends React.Component {
 			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
 			case "StartScreen":
 				programbody =
-					<>
-						<h1 style={{textAlign : 'center'}}>{"Welkom bij de bijenspeurtocht!"}</h1>
-						<p style={{textAlign : 'center'}}>Loop door het park en beantwoord spannende vragen over leuke bijen te vinden in het Archeon!</p>
-						<div style={{display : 'flex', justifyContent : 'center', marginTop : 25+"vh"}}>
-							<button onClick={() => {this.SwitchProgramState("SelectionScreen", true);this.GenerateHint(); navigator.vibrate(10);}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 15+"vh", borderRadius : 1+"rem", fontSize : 3+"rem", color : "#000000"}}>Begin!</button>
-						</div>
-						
-					</>;
+					<StartScreen OnQuizStart={() => {this.SwitchProgramState("SelectionScreen", true); this.GenerateHint(); navigator.vibrate(10);}}/>
 					break;
 
 			case "SelectionScreen":
 				programbody =
-					<>	
-						{this.state.Scanning === true ? 
-							/*Qr code generator for the non legacy mode users*/
-							<div style={{display : 'flex', justifyContent : 'center', flexWrap : 'wrap',  width : 100+"%", height : 20+"rem"}}>
-							
-								<QrReader 
-									delay={0} 
-									style={{height: 16+"rem", width: 100+"%", borderRadius : 5+"px"}} 
-									onScan={this.HandleQrCodeScan} 
-									onError={this.HandleQrCodeError}
-								/>
-
-								<button onClick={() => {this.setState({Scanning : false}); navigator.vibrate(10);}} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} >Stop met scannen</button>
-								<p style={{color : "red", height : 2+"rem"}}>{this.state.Warning}</p>
-
-							</div>
-							:
-							/*if not scanning display the image*/
-							<div style={{display : 'flex', justifyContent : 'center'}}>
-								<img onClick={() => {this.setState({Scanning : true}); navigator.vibrate(10);}} src={QrCodeButton} alt="Qr code button"
-									style={{height: 20+"rem", width: 90+"%"}} />
-							</div>
-
-						}
-					</>;
+						<SelectionScreen
+							ScanningOff={() => {this.setState({Scanning : false}); navigator.vibrate(10);}}
+							ScanningOn={() => {this.setState({Scanning : true}); navigator.vibrate(10);}}
+							Warning={this.state.Warning}
+							HandleQrCodeScan={this.HandleQrCodeScan}
+							HandleQrCodeError={this.HandleQrCodeError}
+							Scanning={this.state.Scanning}
+						/>
 				break;
 			
 			case "DoneQuestionsScreen": 
 				programbody =
-					<CompletedQuestionsManager QuestionList={this.state.QuestionList} QuestionMode={this.state.QuestionMode}/>
+					<DoneQuestionsScreen QuestionList={this.state.QuestionList} QuestionMode={this.state.QuestionMode}/>
 				break;
 			
 			case "AnswerScreen":
@@ -197,12 +177,7 @@ class App extends React.Component {
 			
 
 			case "InfoToAnswerScreen":
-				programbody = 
-					<>
-						<hr></hr>
-						<h3 style={{fontSize : 4+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}</h3>
-						<hr></hr>
-					</>;
+				programbody = <InfoToAnswerScreen InfoToAnswer={this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}/>
 				break;
 
 			case "FinishScreen":
@@ -237,16 +212,7 @@ class App extends React.Component {
 			
 			case "FinalScreen":
 				programbody = 
-				<>
-					<h1 style={{textAlign : 'center', fontSize : 4+"vh"}}>Goed gedaan! Loop naar de kassa, laat dit zien en krijg een cool prijsje!</h1>
-					<p>Heb je verbeterpunten voor deze speurtocht of wil je gewoon je mening kwijt? klik dan op <a href='https://forms.gle/8rNUsFQGhMDpVgX77' target='_blank' rel='noreferrer'>Deze link</a> en vul de enquete in!</p>
-					<div style={{display : 'flex', justifyContent : 'center'}}>
-						<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.5+"rem", width : 12+"rem", height : 3+"rem"}} onClick={() => {this.ResetQuiz(); navigator.vibrate(10);}}>Ik heb mijn prijs gekregen!</button>
-					</div>
-					<div style={{display : 'flex', justifyContent : 'center'}}>
-						<img src={PartyImage} alt='Goed gedaan!' style={{width : 80+"vw", height : 40+"vh"}}></img>
-					</div>
-				</>
+				<FinalScreen ResetQuiz={() => {this.ResetQuiz();}}/>
 				break;
 
 			default:
@@ -270,24 +236,18 @@ class App extends React.Component {
 				
 				{/*Hint label on top of the screen and screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>
-					{/*Hint label*/}
 					{this.state.ProgramState === "SelectionScreen" ? 
 						<Hintlabel CurrentHint={this.state.CurrentHint}/>
 						:
 						null}
-					
-					{/*Main program body*/}	
 					<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : `opacity ${TransitionTime}ms ease-in-out`}}>
 						{programbody}
 					</div>
 				</div>
-
-				{/*Footer of the program*/}
 				<Footer
 				 	QuestionsCompleted={this.state.QuestionsCompleted} 
 					QuestionListLength={this.state.QuestionList.length}/>
 
-				{/*Confetti to be shown all accross the screen*/}
 				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
 					<Confetti/>
 				</div>

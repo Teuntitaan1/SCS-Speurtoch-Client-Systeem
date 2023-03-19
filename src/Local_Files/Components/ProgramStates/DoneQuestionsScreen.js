@@ -1,7 +1,9 @@
 import React from 'react';
-import '../StyleSheets/App.css';
+import '../../StyleSheets/App.css';
 
-class CompletedQuestionsManager extends React.Component {
+
+
+class DoneQuestionsScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -67,4 +69,4 @@ class CompletedQuestionsManager extends React.Component {
     }
 }
 
-export default CompletedQuestionsManager;
+export default DoneQuestionsScreen;
