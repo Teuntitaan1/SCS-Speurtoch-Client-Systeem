@@ -9,7 +9,7 @@ const host = "https://leaderboard-server.onrender.com";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App debugmode={true} leaderboardip={host}/>
+    <App debugmode={false} leaderboardip={host}/>
   </React.StrictMode>
 );
 
