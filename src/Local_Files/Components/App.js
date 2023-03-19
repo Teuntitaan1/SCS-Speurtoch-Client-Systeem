@@ -5,7 +5,7 @@ import Hintlabel from './Hintlabel';
 import Footer from './Footer';
 import Header from './Header';
 
-// mos program states
+// most program states
 import SelectionScreen from './ProgramStates/SelectionScreen';
 import DoneQuestionsScreen from './ProgramStates/DoneQuestionsScreen';
 import StartScreen from './ProgramStates/StartScreen';
@@ -15,7 +15,6 @@ import FinalScreen from './ProgramStates/FinalScreen';
 // library imports
 import React from 'react';
 import Confetti from 'react-confetti';
-
 
 // audio imports 
 var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
@@ -36,7 +35,6 @@ var TransitionTime = 200;
 // 6.Anything else defaults to the error page
 
 // TODO
-// grammar check
 // prettify the StartScreen / add instruction for the program
 
 class App extends React.Component {
@@ -191,7 +189,7 @@ class App extends React.Component {
 								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
 									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/> : null}
 								<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
-									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});} navigator.vibrate(10);} }>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verstuur resulaten"}</button>
+									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});} navigator.vibrate(10);} }>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verzenden"}</button>
 							</div>
 						</div>
 
@@ -202,7 +200,7 @@ class App extends React.Component {
 									<Leaderboard 
 										Leaderboard={this.state.Leaderboard} 
 										Uuid={this.state.Uuid} 
-										SendResults={this.state.SendResults}/> : <p>Het leaderboard is leeg, wees de eerste!</p>
+										SendResults={this.state.SendResults}/> : <p>Het leaderboard is leeg. Wees de eerste om je score te delen!</p>
 							:
 							<p>Aan het laden...</p>
 						}
