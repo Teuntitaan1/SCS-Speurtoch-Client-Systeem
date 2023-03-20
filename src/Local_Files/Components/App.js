@@ -130,6 +130,7 @@ class App extends React.Component {
 							HandleQrCodeScan={this.HandleQrCodeScan}
 							HandleQrCodeError={this.HandleQrCodeError}
 							Scanning={this.state.Scanning}
+							ResetQuiz={() => {this.ResetQuiz();}}
 						/>
 				break;
 			

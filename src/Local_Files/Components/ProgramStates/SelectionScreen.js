@@ -18,7 +18,7 @@ class SelectionScreen extends React.Component {
                             onError={this.props.HandleQrCodeError}
                         />
 
-                        <button onClick={() => {this.props.ScanningOff();}} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} >Stop met scannen</button>
+                        <button onClick={() => {this.props.ScanningOff();}} style={{height: 2+"rem", width: 50+"%", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000", marginTop : -1+"vh"}} >Stop met scannen</button>
                         <p style={{color : "red", height : 2+"rem"}}>{this.props.Warning}</p>
 
                     </div>
@@ -28,8 +28,10 @@ class SelectionScreen extends React.Component {
                         <img onClick={() => {this.props.ScanningOn();}} src={QrCodeButton} alt="Qr code button"
                             style={{height: 20+"rem", width: 90+"%"}} />
                     </div>
-
                 }
+                    <div style={{position : 'absolute', top : 83+"vh", right : 0+"vw"}}>
+                        <button style={{height: 7+"vh", width: 30+"vw", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} onClick={() => {this.props.ResetQuiz();}}>Opnieuw beginnen?</button>
+                    </div>
 			</>
         );
     }   
