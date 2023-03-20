@@ -237,7 +237,7 @@ class App extends React.Component {
 				<Header
 				 	ToDoneQuestionsScreen={() => {this.SwitchProgramState("DoneQuestionsScreen");}}
 					BackToPreviousScreen={() => {this.SwitchProgramState(this.state.PreviousState);}}
-					ToDoneInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}
+					ToInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}
 				   	ProgramState={this.state.ProgramState}
 					AnsweredCorrect={this.state.AnsweredCorrect}/>
 				

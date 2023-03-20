@@ -4,8 +4,9 @@ class InfoToAnswerScreen extends React.Component {
     render() {
         return(
         <>
+            <h2 style={{textAlign : 'center', fontSize : 5+"vh"}}>Wist je dat?</h2>
             <hr></hr>
-            <h3 style={{fontSize : 4+"vh"}}>{this.props.InfoToAnswer}</h3>
+            <p style={{fontSize : 3.5+"vh"}}>{this.props.InfoToAnswer}</p>
             <hr></hr>
         </>
         );
