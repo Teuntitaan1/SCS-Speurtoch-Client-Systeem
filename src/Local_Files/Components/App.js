@@ -145,7 +145,12 @@ class App extends React.Component {
 			case "AnswerScreen":
 				programbody =
 					<>
-						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%",   transition : 'left 1s ease-in-out'}}>
+						<div style={{display : 'flex', justifyContent : 'center', position : 'relative', top : -11+"vh", opacity : this.state.ShowGoodJobScreen !== true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
+								<h2 style={{fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</h2>
+						</div>
+
+						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%", transition : 'left 1s ease-in-out', top : -7+"vh"}}>
+
 							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 3.5+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
 							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 2.5+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
 							<div style={{justifyContent : 'center'}}>
@@ -161,10 +166,6 @@ class App extends React.Component {
 								)
 							}
 							</div>
-							<div style={{display : 'flex', justifyContent : 'center', position : 'relative', top : -72+"vh"}}>
-								<h2 style={{fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</h2>
-							</div>
-
 						</div>
 
 						<div style={{position : 'relative', bottom : 70+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
