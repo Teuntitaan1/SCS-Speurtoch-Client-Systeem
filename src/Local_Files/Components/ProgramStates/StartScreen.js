@@ -21,8 +21,8 @@ class StartScreen extends React.Component {
             <div style={{position : 'relative', left : this.state.Loaded ? 0+"%" : -200+"%", transition : 'left 1s ease-in-out', textAlign : "center"}}>
                 
                 <div style={{textAlign : "center"}}>
-                    <h1 style={{fontSize : 4+"vh"}}>Hé bezzzzig bijtje!</h1>
-                    <p style={{fontSize : 2.5+"vh"}}>Welkom bij deze supercoole speurtocht! beantwoord mijn vragen en kom veel te weten over mijn soorten!</p>
+                    <h1 style={{fontSize : 3.5+"vh"}}>Hé bezzzzig bijtje!</h1>
+                    <p style={{fontSize : 2+"vh"}}>Welkom bij deze supercoole speurtocht! beantwoord mijn vragen en kom veel te weten over mijn soorten!</p>
                 </div>
 
                 <div style={{display : "flex", flexWrap : "wrap", flexDirection : "row", textAlign : "left", fontStyle : "italic", fontWeight : "bold", fontSize : 2+"vh"}}>
