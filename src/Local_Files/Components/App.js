@@ -237,7 +237,8 @@ class App extends React.Component {
 				 	ToDoneQuestionsScreen={() => {this.SwitchProgramState("DoneQuestionsScreen");}}
 					BackToPreviousScreen={() => {this.SwitchProgramState(this.state.PreviousState);}}
 					ToDoneInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}
-				   	ProgramState={this.state.ProgramState}/>
+				   	ProgramState={this.state.ProgramState}
+					AnsweredCorrect={this.state.AnsweredCorrect}/>
 				
 				{/*Hint label on top of the screen and screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>

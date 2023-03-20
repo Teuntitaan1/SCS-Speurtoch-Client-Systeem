@@ -24,7 +24,7 @@
       },
       "WinterMode" : {
         "Description" : "Wat is een opvallend verschil tussen de steenhommel en andere hommels?",
-        "Options" : ["Hij heeft langere antennes", "“Hij heeft maar 4 poten", "Hij heeft andere kleuren dan andere hommels", "Hij is een stuk kleiner dan andere hommels"],
+        "Options" : ["Hij heeft langere antennes", "Hij heeft maar 4 poten", "Hij heeft andere kleuren dan andere hommels", "Hij is een stuk kleiner dan andere hommels"],
         "CorrectAnswer" : "Hij heeft andere kleuren dan andere hommels",
         "InfoToAnswer" : "Bzz bzz! Ik ben een steenhommel! Ik vlieg samen met mijn vriendjes door het park. Ik heb zwarte haren en een rode kont. Mijn andere vriendjes de tuinhommel en de aardhommel hebben een vacht die lijken op een honingbij! Bzz bzz!"
       },

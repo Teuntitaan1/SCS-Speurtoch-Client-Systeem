@@ -27,8 +27,8 @@ class Header extends React.Component {
 					{this.props.ProgramState === "SelectionScreen"  ? 
 					<img onClick={() => {this.props.ToDoneQuestionsScreen(); navigator.vibrate(10);}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 					
-					{/*Moves the program to the DoneQuestionsScreen state*/}
-					{this.props.ProgramState === "AnswerScreen"  ? 
+					{/*Moves the program to the InfoToAnswerScreen state*/}
+					{this.props.ProgramState === "AnswerScreen" && this.props.AnsweredCorrect !== true ? 
 					<img onClick={() => {this.props.ToDoneInfoToAnswerScreen(); navigator.vibrate(10);}} src={InfoToAnswerButton} alt="InfoToAnswerButton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 				</div>
             </>
