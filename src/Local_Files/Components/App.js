@@ -61,6 +61,9 @@ class App extends React.Component {
 				ActiveQuestion : null,
 				AnsweredCorrect : false,
 
+
+				// hint system 
+				CurrentHint : null,
 				// a list of all the colors all the options should have
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
 
@@ -456,6 +459,55 @@ class App extends React.Component {
 		.then((response) => response.json())
 		.then((data) => {this.setState({Leaderboard : data, GotLeaderboard : true}); console.log("Got data!"); });
 	}
+
+	// Saves the program minus the leaderboard
+	Save() {
+		var StateToSave = {
+			// the state the program currently sits in, look at the top of the file for all allowed states
+			ProgramState : this.state.ProgramState,
+			PreviousState : this.state.PreviousState,
+			// all variables used for the quiz itself
+			QuestionList : this.state.QuestionList,
+			QuestionMode : new Date().getMonth() > 11 || new Date().getMonth() < 4 ? "WinterMode" : "ZomerMode",
+			ActiveQuestion : this.state.ActiveQuestion,
+			AnsweredCorrect : this.state.AnsweredCorrect,
+
+
+			// hint system
+			CurrentHint : this.state.CurrentHint,
+
+			// a list of all the colors all the options should have
+			OptionColorList : this.state.OptionColorList,
+
+			QuestionsCompleted : this.state.QuestionsCompleted, 
+			Attemps : this.state.Attemps,
+			QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime,
+			TimeAtQuestion : this.state.TimeAtQuestion,
+
+			// qr code variables
+			Scanning : false,
+			// if the warning is a blank string, nothing will render. else it will
+			// render the warning/error associated with the qr-code
+			Warning : "",
+
+			// all variables user by the leaderboard functionality
+			SendResults : this.state.SendResults,
+			Uuid : this.state.Uuid,
+			TimeSpent : this.state.TimeSpent,
+			UserName : this.state.UserName,
+			TotalPoints : this.state.TotalPoints,
+			Leaderboard : [],
+			GotLeaderboard : false,
+
+			// technical properties
+			LastVisited : Date.now(),
+			ShowGoodJobScreen : this.state.ShowGoodJobScreen,
+			ShouldShowConffetti : this.state.ShouldShowConffetti,
+			ShouldIncrement : this.state.ShouldIncrement,
+			ShouldShowProgramBody : this.state.ShouldShowProgramBody
+		}
+		window.localStorage.setItem("QuizState" , JSON.stringify(StateToSave));
+	}
 	// runs when the program is ready to run
 	componentDidMount() {
 		
@@ -463,7 +515,7 @@ class App extends React.Component {
 		const QuizTimer = setInterval(() => {if(this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "AnswerScreen") {this.setState({TimeSpent : this.state.TimeSpent + 1});}}, 1*1000);
 		this.TimerID = QuizTimer;
 		// saves the program
-		const SaveTimer = setInterval(() => {this.setState({LastVisited : Date.now()}); window.localStorage.setItem("QuizState" , JSON.stringify(this.state));}, 1*1000);
+		const SaveTimer = setInterval(() => {this.Save();}, 1*1000);
 		this.SaveTimerID = SaveTimer;
 		// updates the leaderboard
 		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 3*1000);
