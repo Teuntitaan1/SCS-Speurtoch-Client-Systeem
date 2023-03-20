@@ -6,9 +6,19 @@ import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
 import Logo from '../Images/Archeon logo.png';
 import BackArrow from '../Images/PijlNaarLinks.svg';
 import InfoToAnswerButton from '../Images/info-circle-svgrepo-com.svg';
+import ResetButton from '../Images/reset-svgrepo-com.svg';
+import ResetButtonRed from '../Images/reset-svgrepo-com-red.svg';
 
 class Header extends React.Component {
-    render() {
+    
+	constructor(props) {
+		super(props);
+		this.state = {
+			TimesResetClicked : 0,
+		}
+	}
+	
+	render() {
         return (
             <>
                <div style={{backgroundColor : "#56a222", width : 100+"%", height : 10+"vh", position : 'absolute', top : 0+"%", left : 0+"%"}}>
@@ -16,6 +26,9 @@ class Header extends React.Component {
 					{/*Moves the program back into its previous state*/}
 					{(this.props.ProgramState === "AnswerScreen" || this.props.ProgramState === "DoneQuestionsScreen" || this.props.ProgramState === "ErrorScreen" || this.props.ProgramState === "InfoToAnswerScreen") && this.props.AnsweredCorrect !== true ? 
 					<img onClick={() => {this.props.BackToPreviousScreen(); navigator.vibrate(10);}} style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
+
+					{this.props.ProgramState === "SelectionScreen" || this.props.ProgramState === "StartScreen" || this.props.ProgramState === "FinishScreen" || this.props.ProgramState === "FinalScreen" ? 
+						<img style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={this.state.TimesResetClicked > 0 ? ResetButtonRed : ResetButton} alt="resetButton" onClick={() => {if (this.state.TimesResetClicked > 0) {this.props.ResetQuiz();} else {this.setState({TimesResetClicked : this.state.TimesResetClicked + 1}); setTimeout(() => {this.setState({TimesResetClicked : 0})}, 1000)}}}></img> : null}
 					{/*Archeon logo*/}
 					{this.props.ProgramState !== "AnswerScreen" ?
 						<div style={{display : 'flex', justifyContent : 'center', height : 10+"vh", position : 'absolute', width : 50+"%", left : 25+"%"}}>

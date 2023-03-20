@@ -29,9 +29,6 @@ class SelectionScreen extends React.Component {
                             style={{height: 20+"rem", width: 90+"%"}} />
                     </div>
                 }
-                    <div style={{position : 'absolute', top : 83+"vh", right : 0+"vw"}}>
-                        <button style={{height: 7+"vh", width: 30+"vw", borderRadius : 5+"px", backgroundColor : "#457c1f", color : "#000000"}} onClick={() => {this.props.ResetQuiz();}}>Opnieuw beginnen?</button>
-                    </div>
 			</>
         );
     }   
