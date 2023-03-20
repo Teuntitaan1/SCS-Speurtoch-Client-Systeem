@@ -16,6 +16,9 @@ import FinalScreen from './ProgramStates/FinalScreen';
 import React from 'react';
 import Confetti from 'react-confetti';
 
+// image import
+import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
+
 // audio imports 
 var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
 var QuestionCorrect = new Audio(require('../Audio/QuestionCorrect.mp3'));
@@ -160,13 +163,15 @@ class App extends React.Component {
 
 						</div>
 
-						<div style={{position : 'relative', bottom : 50+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
+						<div style={{position : 'relative', bottom : 70+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
 							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0}</h1>
 							{this.state.AnsweredCorrect === true ?
 							<>
-								<p style={{textAlign : 'center', fontWeight : 'bold'}}>{Math.floor(this.state.TimeSpent) > 0 ? Math.floor(this.state.TimeSpent/60) + `${this.state.TimeSpent/60 > 1 || this.state.TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{this.state.TimeSpent % 60} {this.state.TimeSpent % 60 > 1 || this.state.TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
+								<p style={{textAlign : 'center'}}>{Math.floor(this.state.TimeSpent) > 0 ? Math.floor(this.state.TimeSpent/60) + `${this.state.TimeSpent/60 > 1 || this.state.TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{this.state.TimeSpent % 60} {this.state.TimeSpent % 60 > 1 || this.state.TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
 								<hr></hr>
-								<p style={{textAlign : 'center', fontWeight : 'bold'}}>{this.state.QuestionsCompletedFirstTime} {this.state.QuestionsCompletedFirstTime > 1 || this.state.QuestionsCompletedFirstTime === 0 ? "vragen" : "vraag"} in 1x goed</p>
+								<p style={{textAlign : 'center'}}>{this.state.QuestionsCompletedFirstTime} {this.state.QuestionsCompletedFirstTime > 1 || this.state.QuestionsCompletedFirstTime === 0 ? "vragen" : "vraag"} in 1x goed</p>
+								<hr></hr>
+								<p style={{textAlign : 'center'}}>Kijk bij <span><img style={{width : 1.5+"rem", height : 1.5+"rem", position : 'relative', top : 1+"vh"}} src={CompletedQuestionsButton} alt='CompletedQuestionsButton'></img></span> om je voortgang te volgen! Hier vind je ook leuke weetjes!</p>
 								<hr></hr>
 								<h2 style={{textAlign : 'center', fontWeight : 'bold', fontStyle : 'italic'}}>Goed gedaan!</h2>
 							</> 
@@ -247,7 +252,6 @@ class App extends React.Component {
 				<Footer
 				 	QuestionsCompleted={this.state.QuestionsCompleted} 
 					QuestionListLength={this.state.QuestionList.length}/>
-
 				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
 					<Confetti/>
 				</div>
