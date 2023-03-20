@@ -333,7 +333,7 @@ class App extends React.Component {
 				}
 				// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
 				var Points = (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0
-				this.setState({TotalPoints : this.state.TotalPoints + Points, ShouldShowConffetti : false});
+				this.setState({TotalPoints : this.state.TotalPoints + Points, ShouldShowConffetti : false, AnsweredCorrect : false});
 			}, 4000);			
 		}
 		else {
@@ -364,8 +364,6 @@ class App extends React.Component {
 				StartedQuestion : Date.now(),
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
 				Attemps : 0,
-				AnsweredCorrect : false,
-				ShouldShowConffetti : false,
 				ShowGoodJobScreen : false, 
 				TimeAtQuestion : 0,
 				ShouldIncrement : true});
