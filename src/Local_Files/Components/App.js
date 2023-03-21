@@ -27,6 +27,7 @@ var WrongAnswer = new Audio(require('../Audio/WrongAnswer.mp3'));
 
 // program variables
 var TransitionTime = 200;
+var Version = 0.76;
 
 // ALL POSSIBLE PROGRAM STATES
 
@@ -92,11 +93,13 @@ class App extends React.Component {
 				ShowGoodJobScreen : true,
 				ShouldShowConffetti : false,
 				ShouldIncrement : false,
-				ShouldShowProgramBody : true
+				ShouldShowProgramBody : true,
+				Transitioning : false,
+				Version : Version
 			}
 		}
 		else {
-			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*6) > Date.now()) {
+			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*6) > Date.now() && Version === JSON.parse(window.localStorage.getItem("QuizState")).Version) {
 				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
 			}
 			else {
@@ -244,7 +247,8 @@ class App extends React.Component {
 					ToInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}
 				   	ProgramState={this.state.ProgramState}
 					AnsweredCorrect={this.state.AnsweredCorrect}
-					ResetQuiz={() => {this.ResetQuiz();}}/>
+					ResetQuiz={() => {this.ResetQuiz();}}
+					Transitioning={this.state.Transitioning}/>
 				
 				{/*Hint label on top of the screen and screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>
@@ -280,6 +284,7 @@ class App extends React.Component {
 	}
 	// handy function used all throughout the program to switch the ProgramState and PreviousState variable so that the program adapts based on input
 	SwitchProgramState(NewState, StatesShouldMatch = false) {
+		this.setState({Transitioning : true});
 		this.TransitionPage(TransitionTime);
 		setTimeout(() => {
 			if (StatesShouldMatch !== true) {
@@ -289,6 +294,7 @@ class App extends React.Component {
 			else {
 				this.setState({ProgramState : NewState, PreviousState : NewState}); 
 			}
+			this.setState({Transitioning : false});
 		}, TransitionTime);
 		
 	}
@@ -505,7 +511,9 @@ class App extends React.Component {
 			ShowGoodJobScreen : this.state.ShowGoodJobScreen,
 			ShouldShowConffetti : this.state.ShouldShowConffetti,
 			ShouldIncrement : this.state.ShouldIncrement,
-			ShouldShowProgramBody : this.state.ShouldShowProgramBody
+			ShouldShowProgramBody : this.state.ShouldShowProgramBody,
+			Transitioning : false,
+			Version : this.state.Version
 		}
 		window.localStorage.setItem("QuizState" , JSON.stringify(StateToSave));
 	}

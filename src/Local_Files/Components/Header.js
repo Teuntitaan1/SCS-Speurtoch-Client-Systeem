@@ -25,7 +25,7 @@ class Header extends React.Component {
 					
 					{/*Moves the program back into its previous state*/}
 					{(this.props.ProgramState === "AnswerScreen" || this.props.ProgramState === "DoneQuestionsScreen" || this.props.ProgramState === "ErrorScreen" || this.props.ProgramState === "InfoToAnswerScreen") && this.props.AnsweredCorrect !== true ? 
-					<img onClick={() => {this.props.BackToPreviousScreen(); navigator.vibrate(10);}} style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
+					<img onClick={() => {if(this.props.Transitioning !== true){this.props.BackToPreviousScreen();} navigator.vibrate(10);}} style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
 
 					{this.props.ProgramState === "SelectionScreen" || this.props.ProgramState === "StartScreen" || this.props.ProgramState === "FinishScreen" || this.props.ProgramState === "FinalScreen" || (this.props.ProgramState === "AnswerScren" && this.props.AnsweredCorrect === true) ? 
 						<img style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={this.state.TimesResetClicked > 0 ? ResetButtonRed : ResetButton} alt="resetButton" onClick={() => {if (this.state.TimesResetClicked > 0) {this.props.ResetQuiz();} else {this.setState({TimesResetClicked : this.state.TimesResetClicked + 1}); setTimeout(() => {this.setState({TimesResetClicked : 0})}, 1000)}}}></img> : null}
@@ -38,11 +38,11 @@ class Header extends React.Component {
 						null}
 					{/*Moves the program to the DoneQuestionsScreen state*/}
 					{this.props.ProgramState === "SelectionScreen"  ? 
-					<img onClick={() => {this.props.ToDoneQuestionsScreen(); navigator.vibrate(10);}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
+					<img onClick={() => {if(this.props.Transitioning !== true){this.props.ToDoneQuestionsScreen();} navigator.vibrate(10);}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 					
 					{/*Moves the program to the InfoToAnswerScreen state*/}
 					{this.props.ProgramState === "AnswerScreen" && this.props.AnsweredCorrect !== true ? 
-					<img onClick={() => {this.props.ToInfoToAnswerScreen(); navigator.vibrate(10);}} src={HintIcon} alt="InfoToAnswerButton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%", zIndex : 1000}}/> : null}
+					<img onClick={() => {if(this.props.Transitioning !== true){this.props.ToInfoToAnswerScreen();} navigator.vibrate(10);}} src={HintIcon} alt="InfoToAnswerButton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%", zIndex : 1000}}/> : null}
 				</div>
             </>
         );
