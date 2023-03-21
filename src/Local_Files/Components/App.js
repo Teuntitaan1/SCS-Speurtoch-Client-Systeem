@@ -258,7 +258,8 @@ class App extends React.Component {
 				</div>
 				<Footer
 				 	QuestionsCompleted={this.state.QuestionsCompleted} 
-					QuestionListLength={this.state.QuestionList.length}/>
+					QuestionListLength={this.state.QuestionList.length}
+					ProgramState={this.state.ProgramState}/>
 				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
 					<Confetti/>
 				</div>
