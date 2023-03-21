@@ -27,7 +27,7 @@ class Header extends React.Component {
 					{(this.props.ProgramState === "AnswerScreen" || this.props.ProgramState === "DoneQuestionsScreen" || this.props.ProgramState === "ErrorScreen" || this.props.ProgramState === "InfoToAnswerScreen") && this.props.AnsweredCorrect !== true ? 
 					<img onClick={() => {this.props.BackToPreviousScreen(); navigator.vibrate(10);}} style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
 
-					{this.props.ProgramState === "SelectionScreen" || this.props.ProgramState === "StartScreen" || this.props.ProgramState === "FinishScreen" || this.props.ProgramState === "FinalScreen" ? 
+					{this.props.ProgramState === "SelectionScreen" || this.props.ProgramState === "StartScreen" || this.props.ProgramState === "FinishScreen" || this.props.ProgramState === "FinalScreen" || (this.props.ProgramState === "AnswerScren" && this.props.AnsweredCorrect === true) ? 
 						<img style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={this.state.TimesResetClicked > 0 ? ResetButtonRed : ResetButton} alt="resetButton" onClick={() => {if (this.state.TimesResetClicked > 0) {this.props.ResetQuiz();} else {this.setState({TimesResetClicked : this.state.TimesResetClicked + 1}); setTimeout(() => {this.setState({TimesResetClicked : 0})}, 1000)}}}></img> : null}
 					{/*Archeon logo*/}
 					{this.props.ProgramState !== "AnswerScreen" ?
