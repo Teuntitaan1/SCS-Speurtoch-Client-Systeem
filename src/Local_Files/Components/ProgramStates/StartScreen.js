@@ -45,7 +45,7 @@ class StartScreen extends React.Component {
                 </div>
 
                 <div style={{display : 'flex', justifyContent : 'center'}}>
-                    <button onClick={() => {this.props.OnQuizStart();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 9+"vh", borderRadius : 1+"rem", fontSize : 5+"vh", color : "#000000"}}>Begin!</button>
+                    <button onClick={() => {this.props.OnQuizStart();}} style={{backgroundColor : "#457c1f", width : 90+"vw", height : 7+"vh", borderRadius : 1+"rem", fontSize : 4+"vh", color : "#000000"}}>Begin!</button>
                 </div>
 
             </div>);

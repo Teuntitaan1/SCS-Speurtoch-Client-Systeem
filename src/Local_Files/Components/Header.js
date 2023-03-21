@@ -5,9 +5,9 @@ import '../StyleSheets/App.css';
 import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
 import Logo from '../Images/Archeon logo.png';
 import BackArrow from '../Images/PijlNaarLinks.svg';
-import InfoToAnswerButton from '../Images/info-circle-svgrepo-com.svg';
 import ResetButton from '../Images/reset-svgrepo-com.svg';
 import ResetButtonRed from '../Images/reset-svgrepo-com-red.svg';
+import HintIcon from '../Images/HintIcon.svg';
 
 class Header extends React.Component {
     
@@ -42,7 +42,7 @@ class Header extends React.Component {
 					
 					{/*Moves the program to the InfoToAnswerScreen state*/}
 					{this.props.ProgramState === "AnswerScreen" && this.props.AnsweredCorrect !== true ? 
-					<img onClick={() => {this.props.ToInfoToAnswerScreen(); navigator.vibrate(10);}} src={InfoToAnswerButton} alt="InfoToAnswerButton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%", zIndex : 1000}}/> : null}
+					<img onClick={() => {this.props.ToInfoToAnswerScreen(); navigator.vibrate(10);}} src={HintIcon} alt="InfoToAnswerButton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%", zIndex : 1000}}/> : null}
 				</div>
             </>
         );
