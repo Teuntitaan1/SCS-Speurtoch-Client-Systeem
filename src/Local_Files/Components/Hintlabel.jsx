@@ -1,4 +1,3 @@
-import React from 'react';
 import '../StyleSheets/App.css';
 
 // image imports
