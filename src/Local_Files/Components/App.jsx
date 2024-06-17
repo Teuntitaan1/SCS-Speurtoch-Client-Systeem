@@ -353,15 +353,20 @@ class App extends React.Component {
   	// handles all Qr-code code
   	HandleQrCodeScan(data){
 		// validates data
-		if (this.state.QuestionList[data.data] === undefined) {
-			this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
-			WrongScan.play();
+		if (data === null || this.state.QuestionList[data.text] === undefined) {
+			if (data == null) {
+				this.setState({Warning : ""});
+			} 
+			else {
+				this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
+				WrongScan.play();
+			}
 			return;
 		}
 		// checks if the question has been answered or not
-		if (this.state.QuestionList[data.value].Completed === false) {
+		if (this.state.QuestionList[data.text].Completed === false) {
 			this.setState({
-				ActiveQuestion: data.value,
+				ActiveQuestion: data.text,
 				ProgramState :"AnswerScreen",
 				Scanning : false, Warning : "",
 				StartedQuestion : Date.now(),
