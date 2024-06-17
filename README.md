@@ -1,1 +1,1 @@
-Client made with react for the history park "Het Archeon" using ajax, component rendering and other fun techniques.
+A react client made for themeparks to use in combination with SSS to provide a fun experience for visitors.

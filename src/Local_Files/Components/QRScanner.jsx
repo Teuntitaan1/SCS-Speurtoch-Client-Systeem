@@ -12,9 +12,9 @@ export default function QrReader(props) {
     useEffect(() => {
         if (VideoElement.current && !QRScanner.current) {
         // Initiates qr code scanner
-        QRScanner.current = new QrScanner(VideoElement.current, props.onScanSuccess, {
-        onDecodeError: props.onScanFail,
-        preferredCamera: "environment",});
+        QRScanner.current = new QrScanner(VideoElement.current, props.OnScanSuccess, {
+        preferredCamera: "environment",
+        highlightCodeOutline: true,});
 
         // Starts the scanner with error handling
         QRScanner.current.start().catch(() => {SetError(true);});
@@ -31,14 +31,14 @@ export default function QrReader(props) {
     // Handle no camera permission
     useEffect(() => {
         if (Error) {
-            alert("Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload.");
+            props.OnScanFail()
         }
     }, [Error]);
 
     // What to render
     return (
-        <>
+        <div style={props.style}>
             <video ref={VideoElement}></video>
-        </>
+        </div>
     );
 };
