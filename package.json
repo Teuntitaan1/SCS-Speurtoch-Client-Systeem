@@ -1,6 +1,12 @@
 {
   "name": "scs",
   "version": "0.1.0",
+  "type": "module",
+  "author": {
+    "email": "Teun.weijdener@gmail.com",
+    "name": "Teun Weijdener",
+    "url": "https://github.com/Teuntitaan1"
+  },
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -20,5 +26,10 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.1.0",
+    "@eslint/js": "^9.5.0",
+    "globals": "^15.6.0"
   }
 }
