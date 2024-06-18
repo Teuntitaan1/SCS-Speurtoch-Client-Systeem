@@ -4,16 +4,19 @@ export default function Leaderboard(props) {
     
     const [Data, SetData] = useState([]);
 
+    // timer functionality
+    const [Count, SetCount] = useState(0);
     useEffect(() => {
         // gets the leaderboard from the server and displays it on the finishscreen
         const Pull = setInterval(() => {
+            SetCount(Count + 1);
             fetch(import.meta.env.VITE_LeaderboardIP)
             .then((response) => {response.json();})
             .then((data) => {SetData(data); console.log("Got data!"); });
           }, 1000);
           return () => {clearInterval(Pull);}
 
-    }, []);
+    }, [Count]);
     
     return(
         <>

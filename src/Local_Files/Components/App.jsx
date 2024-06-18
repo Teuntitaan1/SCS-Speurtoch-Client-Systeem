@@ -8,7 +8,6 @@ import Header from './Header';
 import SelectionScreen from './ProgramStates/SelectionScreen';
 import DoneQuestionsScreen from './ProgramStates/DoneQuestionsScreen';
 import StartScreen from './ProgramStates/StartScreen';
-import InfoToAnswerScreen from './ProgramStates/InfoToAnswerScreen';
 import FinalScreen from './ProgramStates/FinalScreen';
 
 
@@ -20,7 +19,7 @@ import React from 'react';
 import Confetti from 'react-confetti';
 
 // image import
-import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
+import AnswerScreen from './ProgramStates/AnswerScreen';
 
 
 // program variables
@@ -51,21 +50,14 @@ class App extends React.Component {
 		if (window.localStorage.getItem("QuizState") === null || window.localStorage.getItem("QuizState") === "") {
 			window.localStorage.setItem("QuizState" , "");
 			this.state = {
+				StartedQuiz : false,
 				// the state the program currently sits in, look at the top of the file for all allowed states
 				ProgramState : "StartScreen",
 				PreviousState : "StartScreen",
 				// all variables used for the quiz itself
 				QuestionList : QuestionList,
 				ActiveQuestion : null,
-				AnsweredCorrect : false,
-
-				// a list of all the colors all the options should have
-				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
-
 				QuestionsCompleted : 0, 
-				Attemps : 0,
-				QuestionsCompletedFirstTime : 0,
-				TimeAtQuestion : 0,
 
 				// qr code variables
 				Scanning : false,
@@ -82,9 +74,7 @@ class App extends React.Component {
 
 				// technical properties
 				LastVisited : Date.now(),
-				ShowGoodJobScreen : true,
 				ShouldShowConffetti : false,
-				ShouldIncrement : false,
 				ShouldShowProgramBody : true,
 				Transitioning : false,
 				Version : Version
@@ -93,6 +83,10 @@ class App extends React.Component {
 		else {
 			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*6) > Date.now() && Version === JSON.parse(window.localStorage.getItem("QuizState")).Version) {
 				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
+				// reverts back to the homescreen
+				this.state.ProgramState = "SelectionScreen";
+				this.state.PreviousState = "SelectionScreen";
+				this.state.ActiveQuestion = null;
 			}
 			else {
 				this.ResetQuiz();
@@ -116,7 +110,7 @@ class App extends React.Component {
 			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
 			case "StartScreen":
 				programbody =
-					<StartScreen OnQuizStart={() => {this.SwitchProgramState("SelectionScreen", true);}}/>
+					<StartScreen OnQuizStart={() => {this.SwitchProgramState("SelectionScreen", true); this.setState({StartedQuiz : true});}}/>
 					break;
 
 			case "SelectionScreen":
@@ -134,55 +128,21 @@ class App extends React.Component {
 			
 			case "DoneQuestionsScreen": 
 				programbody =
-					<DoneQuestionsScreen QuestionList={this.state.QuestionList} QuestionMode={this.state.QuestionMode}/>
+					<DoneQuestionsScreen QuestionList={this.state.QuestionList}/>
 				break;
 			
 			case "AnswerScreen":
-				programbody =
-					<>
-						<div style={{display : 'flex', justifyContent : 'center', position : 'relative', top : -11+"vh", opacity : this.state.ShowGoodJobScreen !== true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
-								<h2 style={{fontWeight : 'bold'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0 } punten</h2>
-						</div>
-
-						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%", transition : 'left 1s ease-in-out', top : -7+"vh"}}>
-
-							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 3.5+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 2.5+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
-							<div style={{justifyContent : 'center'}}>
-							{
-							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
-							this.state.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) =>
-								<div style={{
-									backgroundColor : this.state.OptionColorList[index], marginBottom : 0.1+"rem",
-									width : 90+"vw", height : 12+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
-									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
-									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', top : -2+"vh"}}>{Option}</p>
-								</div>
-								)
-							}
-							</div>
-						</div>
-
-						<div style={{position : 'relative', bottom : 70+"vh", left : this.state.ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : this.state.ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
-							<h1 style={{textAlign : 'center'}}>{this.state.TotalPoints} + {(1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0}</h1>
-							{this.state.AnsweredCorrect === true ?
-							<>
-								<p style={{textAlign : 'center'}}>{Math.floor(this.state.TimeSpent) > 0 ? Math.floor(this.state.TimeSpent/60) + `${this.state.TimeSpent/60 > 1 || this.state.TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{this.state.TimeSpent % 60} {this.state.TimeSpent % 60 > 1 || this.state.TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
-								<hr></hr>
-								<p style={{textAlign : 'center'}}>{this.state.QuestionsCompletedFirstTime} {this.state.QuestionsCompletedFirstTime > 1 || this.state.QuestionsCompletedFirstTime === 0 ? "vragen" : "vraag"} in 1x goed</p>
-								<hr></hr>
-								<p style={{textAlign : 'center'}}>Kijk bij <span><img style={{width : 1.5+"rem", height : 1.5+"rem", position : 'relative', top : 1+"vh"}} src={CompletedQuestionsButton} alt='CompletedQuestionsButton'></img></span> om je voortgang te volgen! Hier vind je ook leuke weetjes!</p>
-								<hr></hr>
-								<h2 style={{textAlign : 'center', fontWeight : 'bold', fontStyle : 'italic'}}>Goed gedaan!</h2>
-							</> 
-							 : null}
-						</div> 
-					</>;
+				programbody = <AnswerScreen
+				 				Question={this.state.QuestionList[this.state.ActiveQuestion]} 
+								TotalPoints={this.state.TotalPoints} 
+								HandleQuestionComplete={(Score) => {this.HandleQuestionComplete(Score)}}
+								TimeSpent={this.state.TimeSpent}
+								ToInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}/>
 				break;
 			
 
 			case "InfoToAnswerScreen":
-				programbody = <InfoToAnswerScreen InfoToAnswer={this.state.QuestionList[this.state.ActiveQuestion].InfoToAnswer}/>
+				programbody = <InfoToAnswerScreen InfoToAnswer={this.state.QuestionList.InfoToAnswer}/>
 				break;
 
 			case "FinishScreen":
@@ -224,9 +184,8 @@ class App extends React.Component {
 				<Header
 				 	ToDoneQuestionsScreen={() => {this.SwitchProgramState("DoneQuestionsScreen");}}
 					BackToPreviousScreen={() => {this.SwitchProgramState(this.state.PreviousState);}}
-					ToInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}
 				   	ProgramState={this.state.ProgramState}
-					AnsweredCorrect={this.state.AnsweredCorrect}
+					ActiveQuestion={this.state.ActiveQuestion}
 					ResetQuiz={() => {this.ResetQuiz();}}
 					Transitioning={this.state.Transitioning}/>
 				
@@ -280,43 +239,22 @@ class App extends React.Component {
 		}, TransitionTime);
 	}
 
-  	ValidateAnswer(Option) {
-
-		var NewQuestionList = this.state.QuestionList;
-		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
-		if (Option === this.state.QuestionList[this.state.ActiveQuestion].CorrectAnswer) {
-
-			// sets the active question to completed
-			NewQuestionList[this.state.ActiveQuestion].Completed = true;
-			// updates relevant variables
-			this.setState({
-				QuestionList : NewQuestionList,
-				QuestionsCompleted : this.state.QuestionsCompleted + 1,
-				AnsweredCorrect : true,
-				ShowGoodJobScreen : true,
-				QuestionsCompletedFirstTime : this.state.Attemps === 0 ? this.state.QuestionsCompletedFirstTime + 1 : this.state.QuestionsCompletedFirstTime,
-				ShouldShowConffetti : true,
-				ShouldIncrement : false,
-				});
-			// cool sequence for the users
-			setTimeout(() => {
-				// if all questions have been answered, finish the quiz
-				if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ? true : false) {
-					this.PullLeaderBoard();
-					this.SwitchProgramState("FinishScreen", true);
-				}
-				else {
-					this.SwitchProgramState("SelectionScreen", true);
-				}
-				// ensures so that the points dont go into the negatives, the formula is: 1000-(100*Wrong attemps)-(10*time since question has started in seconds)
-				var Points = (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) > 0 ? (1000 - (10 * this.state.TimeAtQuestion) - (100 * this.state.Attemps)) : 0
-				this.setState({TotalPoints : this.state.TotalPoints + Points, ShouldShowConffetti : false, AnsweredCorrect : false});
-			}, 4000);			
-		}
-		else {
-			this.setState({Attemps : this.state.Attemps + 1});
-		}
-  	}
+	// handles the correct completion of a question
+	HandleQuestionComplete(Score) {
+		
+		this.setState({ShouldShowConffetti : true});
+		setTimeout(() => {
+			// if all questions have been answered, finish the quiz
+			if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ? true : false) {
+				this.SwitchProgramState("FinishScreen", true);
+			}
+			else {
+				this.SwitchProgramState("SelectionScreen", true);
+			}
+			this.setState({TotalPoints : this.state.TotalPoints + Score, ShouldShowConffetti : false});
+			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
+		}, 4000);
+	}
 
   	// handles all Qr-code code
   	HandleQrCodeScan(data){
@@ -334,14 +272,8 @@ class App extends React.Component {
 		if (this.state.QuestionList[data.text].Completed === false) {
 			this.setState({
 				ActiveQuestion: data.text,
-				ProgramState :"AnswerScreen",
-				Scanning : false, Warning : "",
-				StartedQuestion : Date.now(),
-				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
-				Attemps : 0,
-				ShowGoodJobScreen : false, 
-				TimeAtQuestion : 0,
-				ShouldIncrement : true});
+				ProgramState : "AnswerScreen",
+				Scanning : false, Warning : "",});
 		}
 		else {
 			// error
@@ -377,7 +309,6 @@ class App extends React.Component {
 			body: JSON.stringify({
 				UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 				TimeSpent : this.state.TimeSpent,
-				CorrectFirstTime : this.state.QuestionsCompletedFirstTime,
 				TotalPoints : this.state.TotalPoints,
 				Uuid : this.state.Uuid})};
 		
@@ -389,24 +320,13 @@ class App extends React.Component {
 	// Saves the program minus the leaderboard
 	Save() {
 		var StateToSave = {
-			// the state the program currently sits in, look at the top of the file for all allowed states
-			ProgramState : this.state.ProgramState,
-			PreviousState : this.state.PreviousState,
+			StartedQuiz : this.state.StartedQuiz,
 			// all variables used for the quiz itself
 			QuestionList : this.state.QuestionList,
-			ActiveQuestion : this.state.ActiveQuestion,
-			AnsweredCorrect : this.state.AnsweredCorrect,
-
-			// a list of all the colors all the options should have
-			OptionColorList : this.state.OptionColorList,
-
 			QuestionsCompleted : this.state.QuestionsCompleted, 
-			Attemps : this.state.Attemps,
-			QuestionsCompletedFirstTime : this.state.QuestionsCompletedFirstTime,
-			TimeAtQuestion : this.state.TimeAtQuestion,
 
 			// qr code variables
-			Scanning : false,
+			Scanning : true,
 			// if the warning is a blank string, nothing will render. else it will
 			// render the warning/error associated with the qr-code
 			Warning : "",
@@ -420,9 +340,7 @@ class App extends React.Component {
 
 			// technical properties
 			LastVisited : Date.now(),
-			ShowGoodJobScreen : this.state.ShowGoodJobScreen,
-			ShouldShowConffetti : this.state.ShouldShowConffetti,
-			ShouldIncrement : this.state.ShouldIncrement,
+			ShouldShowConffetti : false,
 			ShouldShowProgramBody : this.state.ShouldShowProgramBody,
 			Transitioning : false,
 			Version : this.state.Version
@@ -434,19 +352,16 @@ class App extends React.Component {
 		
 		// increments the TimeSpent variable in the program
 		const QuizTimer = setInterval(() => {if(this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "AnswerScreen") {this.setState({TimeSpent : this.state.TimeSpent + 1});}}, 1*1000);
-		this.TimerID = QuizTimer;
+		this.QuizTimerID = QuizTimer;
 		// saves the program
 		const SaveTimer = setInterval(() => {this.Save();}, 1*1000);
 		this.SaveTimerID = SaveTimer;
-		const QuestionTimer = setInterval(() => {if (this.state.ProgramState === "AnswerScreen" && this.state.ShouldIncrement === true) {this.setState({TimeAtQuestion : this.state.TimeAtQuestion + 1})};}, 1*1000);
-		this.QuestionTimerID = QuestionTimer;
 	}
 	// runs when the program is ready to stop
 	componentWillUnmount() {
 		// lets the timers go
-		clearInterval(this.TimerID);
+		clearInterval(this.QuizTimerID);
 		clearInterval(this.SaveTimerID);
-		clearInterval(this.QuestionTimerID);
 	}
 	// resets the program	
 	ResetQuiz() {
