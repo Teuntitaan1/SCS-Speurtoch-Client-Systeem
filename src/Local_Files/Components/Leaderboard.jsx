@@ -1,5 +1,3 @@
-import '../StyleSheets/App.css';
-
 export default function Leaderboard(props) {
     return(
         <>

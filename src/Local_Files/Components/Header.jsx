@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import '../StyleSheets/App.css';
 
 // image import
 import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';

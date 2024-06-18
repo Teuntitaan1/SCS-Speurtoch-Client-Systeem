@@ -1,5 +1,3 @@
-import '../StyleSheets/App.css';
-
 // image imports
 import HintIcon from '../Images/HintIcon.svg';
 

@@ -1,12 +1,5 @@
-/*Loads the 2 fonts the site from the Archeon uses contained in the Fonts directory*/
-@font-face {
-    font-family: "Triplex-Light";
-    src: url("../Fonts/Triplex\ Light.ttf");
-}
-
 * {
     font-family: "Triplex-Light";
-
     /*Makes everything non-draggable*/
     -webkit-user-drag: none;
     user-select: none;

@@ -1,5 +1,5 @@
 // my own components etc
-import '../StyleSheets/App.css';
+import '../StyleSheets/Main.css';
 import Leaderboard from './Leaderboard';
 import Hintlabel from './Hintlabel';
 import Footer from './Footer';
@@ -31,7 +31,7 @@ var WrongAnswer = new Audio('../Audio/WrongAnswer.mp3');
 
 // program variables
 var TransitionTime = 200;
-var Version = 0.76;
+var Version = 0.77;
 
 // ALL POSSIBLE PROGRAM STATES
 
@@ -44,6 +44,10 @@ var Version = 0.76;
 
 // TODO
 // prettify the StartScreen / add instruction for the program
+// rewrite css styling
+// rewrite everything into nice functional components
+// rewrite json functionality(server side?)
+// rewrite server functionality
 
 class App extends React.Component {
   
@@ -271,6 +275,7 @@ class App extends React.Component {
 				{this.props.debugmode === true ?
 					<div>
 						<hr/>
+						<p style={{color :"--test"}}>test</p>
 						<h3>Debug bedieningspaneel</h3>
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
