@@ -12,6 +12,10 @@ import StartScreen from './ProgramStates/StartScreen';
 import InfoToAnswerScreen from './ProgramStates/InfoToAnswerScreen';
 import FinalScreen from './ProgramStates/FinalScreen';
 
+
+// attempts to load Quizstate from storage
+import QuestionList from '../Questions.json';
+
 // library imports
 import React from 'react';
 import Confetti from 'react-confetti';
@@ -20,10 +24,10 @@ import Confetti from 'react-confetti';
 import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
 
 // audio imports 
-var ScannedAudio = new Audio(require('../Audio/ScannedAudio.mp3'));
-var QuestionCorrect = new Audio(require('../Audio/QuestionCorrect.mp3'));
-var WrongScan = new Audio(require('../Audio/ScannedWrong.mp3'));
-var WrongAnswer = new Audio(require('../Audio/WrongAnswer.mp3'));
+var ScannedAudio = new Audio('../Audio/QuestionCorrect.mp3');
+var QuestionCorrect = new Audio('../Audio/QuestionCorrect.mp3');
+var WrongScan = new Audio('../Audio/ScannedWrong.mp3');
+var WrongAnswer = new Audio('../Audio/WrongAnswer.mp3');
 
 // program variables
 var TransitionTime = 200;
@@ -45,10 +49,6 @@ class App extends React.Component {
   
 	constructor(props) {
 		super(props);
-
-		const QuestionList = require("../Questions.json");
-		// attempts to load Quizstate from storage
-
 		// if the key doesnt exist it generates a new one
 		if (window.localStorage.getItem("QuizState") === null || window.localStorage.getItem("QuizState") === "") {
 			window.localStorage.setItem("QuizState" , "");
