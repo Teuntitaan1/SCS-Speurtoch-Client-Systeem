@@ -1,4 +1,20 @@
+import { useEffect, useState } from "react";
+
 export default function Leaderboard(props) {
+    
+    const [Data, SetData] = useState([]);
+
+    useEffect(() => {
+        // gets the leaderboard from the server and displays it on the finishscreen
+        const Pull = setInterval(() => {
+            fetch(import.meta.env.VITE_LeaderboardIP)
+            .then((response) => {response.json();})
+            .then((data) => {SetData(data); console.log("Got data!"); });
+          }, 1000);
+          return () => {clearInterval(Pull);}
+
+    }, []);
+    
     return(
         <>
         <table border={1} cellPadding={5} style={{marginTop : 1+"rem", width  : 100+"%", borderCollapse : 'collapse', borderRadius : 1+"rem"}}>
@@ -9,7 +25,7 @@ export default function Leaderboard(props) {
                     <th style={{backgroundColor : "#56a222", borderBottom : '1px solid #dddddd'}}>Punten</th>
                 </tr>
                 {/*This can be improved upon*/}
-                {props.Leaderboard.slice(0, 5).map((Entry, index) => {
+                {Data.slice(0, 5).map((Entry, index) => {
                         if (props.Uuid === Entry.Uuid) {
                             return (
                                 <tr style={{backgroundColor : "#457c1f"}} key={index}>
@@ -27,11 +43,11 @@ export default function Leaderboard(props) {
                             </tr>
                         );})}
                 {/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
-                {props.Leaderboard.map((Entry) => {if(props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) === true && props.Leaderboard.slice(0, 5).map((Entry) => {if(props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
+                {Data.map((Entry) => {if(props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) === true && Data.slice(0, 5).map((Entry) => {if(props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
                     <tr style={{backgroundColor : "#457c1f"}}>
-                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{props.Leaderboard.map((Entry, index) => {if(props.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
-                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{props.Leaderboard.map((Entry) => {if(props.Uuid === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>
-                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{props.Leaderboard.map((Entry) => {if(props.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
+                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry, index) => {if(props.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
+                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry) => {if(props.Uuid === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>
+                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry) => {if(props.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
                     </tr>
                     : 
                     null}

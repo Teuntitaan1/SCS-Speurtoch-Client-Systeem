@@ -1,7 +1,6 @@
 // my own components etc
 import '../StyleSheets/Main.css';
 import Leaderboard from './Leaderboard';
-import Hintlabel from './Hintlabel';
 import Footer from './Footer';
 import Header from './Header';
 
@@ -23,11 +22,6 @@ import Confetti from 'react-confetti';
 // image import
 import CompletedQuestionsButton from '../Images/checklist-alt-svgrepo-com.svg';
 
-// audio imports 
-var ScannedAudio = new Audio('../Audio/QuestionCorrect.mp3');
-var QuestionCorrect = new Audio('../Audio/QuestionCorrect.mp3');
-var WrongScan = new Audio('../Audio/ScannedWrong.mp3');
-var WrongAnswer = new Audio('../Audio/WrongAnswer.mp3');
 
 // program variables
 var TransitionTime = 200;
@@ -62,13 +56,9 @@ class App extends React.Component {
 				PreviousState : "StartScreen",
 				// all variables used for the quiz itself
 				QuestionList : QuestionList,
-				QuestionMode : new Date().getMonth() > 11 || new Date().getMonth() < 4 ? "WinterMode" : "ZomerMode",
 				ActiveQuestion : null,
 				AnsweredCorrect : false,
 
-
-				// hint system 
-				CurrentHint : null,
 				// a list of all the colors all the options should have
 				OptionColorList : ["#56a222", "#56a222", "#56a222", "#56a222", "#56a222", "#56a222"],
 
@@ -89,8 +79,6 @@ class App extends React.Component {
 				TimeSpent : 0,
 				UserName : "",
 				TotalPoints : 0,
-				Leaderboard : [],
-				GotLeaderboard : false,
 
 				// technical properties
 				LastVisited : Date.now(),
@@ -128,14 +116,14 @@ class App extends React.Component {
 			// loops through all possible program states and determines what to render, no hassle with css styles and its much more efficient
 			case "StartScreen":
 				programbody =
-					<StartScreen OnQuizStart={() => {this.SwitchProgramState("SelectionScreen", true); this.GenerateHint(); navigator.vibrate(10);}}/>
+					<StartScreen OnQuizStart={() => {this.SwitchProgramState("SelectionScreen", true);}}/>
 					break;
 
 			case "SelectionScreen":
 				programbody =
 						<SelectionScreen
-							ScanningOff={() => {this.setState({Scanning : false}); navigator.vibrate(10);}}
-							ScanningOn={() => {this.setState({Scanning : true}); navigator.vibrate(10);}}
+							ScanningOff={() => {this.setState({Scanning : false});}}
+							ScanningOn={() => {this.setState({Scanning : true});}}
 							Warning={this.state.Warning}
 							HandleQrCodeScan={this.HandleQrCodeScan}
 							HandleQrCodeError={this.HandleQrCodeError}
@@ -159,14 +147,14 @@ class App extends React.Component {
 						<div style={{position : 'relative', left : this.state.ShowGoodJobScreen !== true ? 0+"%" : -200+"%", transition : 'left 1s ease-in-out', top : -7+"vh"}}>
 
 							<h1 style={{fontWeight : 'bold', textAlign : 'center', fontSize : 3.5+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Title}</h1>
-							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 2.5+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Description}</h2>
+							<h2 style={{fontWeight : 100, fontStyle : 'italic', textAlign : 'center', fontSize : 2.5+"vh", marginTop : -1+"vh"}}>{this.state.QuestionList[this.state.ActiveQuestion].Description}</h2>
 							<div style={{justifyContent : 'center'}}>
 							{
 							/*Dynamicly loads in the options provided by the question, different questions can have a different amount of answers*/
-							this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].Options.map((Option, index) =>
+							this.state.QuestionList[this.state.ActiveQuestion].Options.map((Option, index) =>
 								<div style={{
 									backgroundColor : this.state.OptionColorList[index], marginBottom : 0.1+"rem",
-									width : 90+"vw", height : 12+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);} navigator.vibrate(10);}}>
+									width : 90+"vw", height : 12+"vh", borderRadius: 1+"rem", transition: 'background-color 0.3s ease-in-out', position : 'relative', left : 3+"vw"}}  key={index} onClick={() => {if (this.state.AnsweredCorrect !== true) {this.ValidateAnswer(Option); this.UpdateOptionColor(Option, index);}}}>
 									<div style={{borderRadius : 360+"rem", color : "#ffffff", fontSize : 1.5+"rem" , width : 1.5+"rem", height : 1.5+"rem", textAlign : 'center'}}>{index+1}</div>
 									<p style={{textAlign : 'center', fontSize : 1+"rem", position : 'relative', top : -2+"vh"}}>{Option}</p>
 								</div>
@@ -194,7 +182,7 @@ class App extends React.Component {
 			
 
 			case "InfoToAnswerScreen":
-				programbody = <InfoToAnswerScreen InfoToAnswer={this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].InfoToAnswer}/>
+				programbody = <InfoToAnswerScreen InfoToAnswer={this.state.QuestionList[this.state.ActiveQuestion].InfoToAnswer}/>
 				break;
 
 			case "FinishScreen":
@@ -208,28 +196,16 @@ class App extends React.Component {
 								<input style={{width : 15+"rem", height : 2+"rem", fontSize : 1.2+"rem", borderTopStyle : 'hidden', borderRightStyle : 'hidden', borderLeftStyle : 'hidden'}}
 									type={'text'} onChange={(event) => {this.setState({UserName : event.target.value})}} value={this.state.UserName}/> : null}
 								<button style={{backgroundColor : "#56a222", color : "#000000", borderRadius : 0.1+"rem", width : 7+"rem", height : 2+"rem"}}
-									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});} navigator.vibrate(10);} }>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verzenden"}</button>
+									onClick={() => {if (this.state.SendResults !== true) {this.PushLeaderBoard();} else {this.SwitchProgramState("FinalScreen", true); this.setState({ShouldShowConffetti : true});}} }>{this.state.SendResults ? "Doorgaan" : this.state.UserName === "" ? "Sla over" : "Verzenden"}</button>
 							</div>
 						</div>
 
-						<div>
-						{
-							this.state.GotLeaderboard ? 
-								this.state.Leaderboard.length !== 0 ?
-									<Leaderboard 
-										Leaderboard={this.state.Leaderboard} 
-										Uuid={this.state.Uuid} 
-										SendResults={this.state.SendResults}/> : <p>Het leaderboard is leeg. Wees de eerste om je score te delen!</p>
-							:
-							<p>Aan het laden...</p>
-						}
-						</div>
+						<Leaderboard Uuid={this.state.Uuid} />
 					</>; 
 				break;
 			
 			case "FinalScreen":
-				programbody = 
-				<FinalScreen ResetQuiz={() => {this.ResetQuiz();}}/>
+				programbody = <FinalScreen ResetQuiz={() => {this.ResetQuiz();}}/>
 				break;
 
 			default:
@@ -254,12 +230,8 @@ class App extends React.Component {
 					ResetQuiz={() => {this.ResetQuiz();}}
 					Transitioning={this.state.Transitioning}/>
 				
-				{/*Hint label on top of the screen and screen state body*/}
+				{/*screen state body*/}
 				<div style={{marginTop: 11+"vh"}}>
-					{this.state.ProgramState === "SelectionScreen" ? 
-						<Hintlabel CurrentHint={this.state.CurrentHint}/>
-						:
-						null}
 					<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : `opacity ${TransitionTime}ms ease-in-out`}}>
 						{programbody}
 					</div>
@@ -279,9 +251,6 @@ class App extends React.Component {
 						<h3>Debug bedieningspaneel</h3>
 						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
 						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
-						<button onClick={() => {navigator.vibrate(1000);}}>Trillen</button>
-						<button onClick={() => {QuestionCorrect.play().then(() => {console.log("Sound is playing");})}}>Geluid afspelen</button>
-
 					</div>
 					: null}
 			</>
@@ -315,10 +284,7 @@ class App extends React.Component {
 
 		var NewQuestionList = this.state.QuestionList;
 		// validates the option given by the user and if correct, marks the question as done, also returns to the selection screen
-		if (Option === this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].CorrectAnswer) {
-			
-			// plays the questioncorrect sound effect
-			QuestionCorrect.play();
+		if (Option === this.state.QuestionList[this.state.ActiveQuestion].CorrectAnswer) {
 
 			// sets the active question to completed
 			NewQuestionList[this.state.ActiveQuestion].Completed = true;
@@ -332,8 +298,6 @@ class App extends React.Component {
 				ShouldShowConffetti : true,
 				ShouldIncrement : false,
 				});
-			// generates a new hint since the old one doesnt apply anymore
-			this.GenerateHint();
 			// cool sequence for the users
 			setTimeout(() => {
 				// if all questions have been answered, finish the quiz
@@ -351,7 +315,6 @@ class App extends React.Component {
 		}
 		else {
 			this.setState({Attemps : this.state.Attemps + 1});
-			WrongAnswer.play();
 		}
   	}
 
@@ -364,7 +327,6 @@ class App extends React.Component {
 			} 
 			else {
 				this.setState({Warning : "Deze QR-code is niet geldig, probeer een andere!"});
-				WrongScan.play();
 			}
 			return;
 		}
@@ -380,14 +342,10 @@ class App extends React.Component {
 				ShowGoodJobScreen : false, 
 				TimeAtQuestion : 0,
 				ShouldIncrement : true});
-				// succes!
-				navigator.vibrate(200);
-				ScannedAudio.play();
 		}
 		else {
 			// error
 			this.setState({Warning :"Je hebt deze QR-code al beantwoord!"});
-			WrongScan.play();
 		}	
 	}
 	// handles errors received from the qr code scanner
@@ -397,45 +355,10 @@ class App extends React.Component {
 		this.SwitchProgramState("ErrorScreen");
 	}	
 
-	// generates a hint used in the selectionscreen
-	GenerateHint() {
-
-		var GotHint = false;
-		var CurrentTijdperk = 0;
-		var TijdperkList = ["PREHISTORIE", "MIDDELEEUWEN", "ROMEINSETIJD"];
-
-		while (GotHint === false) {
-			// loops through the questionlist array
-			// eslint-disable-next-line
-			this.state.QuestionList.every(Question => {
-				// skips the question if it has already been completed
-				if (Question.Completed === false) {
-					// checks if its tijdperk is equal to the desired tijdperk
-					if (Question.Tijdperk === TijdperkList[CurrentTijdperk]) {
-						// sets the hint to the found hint
-						this.setState({CurrentHint : Question.Hint});
-						GotHint = true;
-						console.log(`Got hint from ${Question.Title}, Tijdperk = ${Question.Tijdperk}`);
-						// stops the .every()
-						return false;
-					}
-				}
-				// continues the .every() when the question isnt usefull
-				return true;
-			});
-			// if no questions could be found matching the desired tijdperk, move the tijdperk + 1
-			CurrentTijdperk++;
-			// if all possible tijdperken have been searched through and nothing was found, all questions have been answered and the quiz is done
-			if (CurrentTijdperk - 1 === TijdperkList.length) {
-				this.setState({CurrentHint : "Je hebt alle vragen beantwoord, goed gedaan!"});
-				GotHint = true;
-			}
-		}
-	}
 	// handles the changing of color of the options when answering a question
 	UpdateOptionColor(Option, index) {
 		var OptionColorList = this.state.OptionColorList;
-		if (Option === this.state.QuestionList[this.state.ActiveQuestion][this.state.QuestionMode].CorrectAnswer) {
+		if (Option === this.state.QuestionList[this.state.ActiveQuestion].CorrectAnswer) {
 			// question answered correctly
 			OptionColorList[index] = "#6BCD28";	
 		}
@@ -460,16 +383,7 @@ class App extends React.Component {
 		
 		this.setState({SendResults : true}); 
 		// sends the Body array to the server
-		fetch(this.props.leaderboardip, Body)
-			.then(() => {this.PullLeaderBoard();})
-				.catch((error) => {console.error('Error:', error);});
-
-	}
-	PullLeaderBoard() {
-		// gets the leaderboard from the server and displays it on the finishscreen
-		fetch(this.props.leaderboardip)
-		.then((response) => response.json())
-		.then((data) => {this.setState({Leaderboard : data, GotLeaderboard : true}); console.log("Got data!"); });
+		fetch(import.meta.env.VITE_LeaderboardIP, Body).catch((error) => {console.error('Error:', error);});
 	}
 
 	// Saves the program minus the leaderboard
@@ -480,13 +394,8 @@ class App extends React.Component {
 			PreviousState : this.state.PreviousState,
 			// all variables used for the quiz itself
 			QuestionList : this.state.QuestionList,
-			QuestionMode : new Date().getMonth() > 11 || new Date().getMonth() < 4 ? "WinterMode" : "ZomerMode",
 			ActiveQuestion : this.state.ActiveQuestion,
 			AnsweredCorrect : this.state.AnsweredCorrect,
-
-
-			// hint system
-			CurrentHint : this.state.CurrentHint,
 
 			// a list of all the colors all the options should have
 			OptionColorList : this.state.OptionColorList,
@@ -508,8 +417,6 @@ class App extends React.Component {
 			TimeSpent : this.state.TimeSpent,
 			UserName : this.state.UserName,
 			TotalPoints : this.state.TotalPoints,
-			Leaderboard : [],
-			GotLeaderboard : false,
 
 			// technical properties
 			LastVisited : Date.now(),
@@ -531,9 +438,6 @@ class App extends React.Component {
 		// saves the program
 		const SaveTimer = setInterval(() => {this.Save();}, 1*1000);
 		this.SaveTimerID = SaveTimer;
-		// updates the leaderboard
-		const LeaderboardTimer = setInterval(() => {if (this.state.ProgramState === "FinishScreen") {this.PullLeaderBoard();}}, 3*1000);
-		this.LeaderboardTimerID = LeaderboardTimer;
 		const QuestionTimer = setInterval(() => {if (this.state.ProgramState === "AnswerScreen" && this.state.ShouldIncrement === true) {this.setState({TimeAtQuestion : this.state.TimeAtQuestion + 1})};}, 1*1000);
 		this.QuestionTimerID = QuestionTimer;
 	}
@@ -542,7 +446,6 @@ class App extends React.Component {
 		// lets the timers go
 		clearInterval(this.TimerID);
 		clearInterval(this.SaveTimerID);
-		clearInterval(this.LeaderboardTimerID);
 		clearInterval(this.QuestionTimerID);
 	}
 	// resets the program	
