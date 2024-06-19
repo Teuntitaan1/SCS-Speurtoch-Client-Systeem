@@ -5,8 +5,8 @@ export default function Footer(props) {
                 
                 {/*Progress bar*/}
                 <div style={{width : 100+"%", height : 75+"%", position : 'absolute', bottom : 3.5+"vh"}}>
-                    <div style={{backgroundColor : 'green', height : 100+"%", width : (props.QuestionsCompleted * (100 / props.QuestionListLength))+"%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}>
-                        <p style={{fontWeight : 'bold', textAlign : 'end', position : 'relative', top : 30+"%"}}>{props.QuestionsCompleted}/{props.QuestionListLength}</p>
+                    <div style={{backgroundColor : 'green', height : 100+"%", width : (parseInt(window.localStorage.getItem("Questionscompleted")) * (100 / props.QuestionListLength))+"%", transition: 'width 1s ease-in-out', borderRadius : 5+"px"}}>
+                        <p style={{fontWeight : 'bold', textAlign : 'end', position : 'relative', top : 30+"%"}}>{parseInt(window.localStorage.getItem("QuestionsCompleted"))}/{props.QuestionListLength}</p>
                     </div>
                 </div>
 

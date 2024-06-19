@@ -1,34 +1,23 @@
 import { useState, useEffect } from "react";
 
-var UUID = crypto.randomUUID();
+
+// if uuid is null the entire quiz reset.
+if (window.localStorage.getItem("UUID") === null) {
+    window.localStorage.setItem("UUID", crypto.randomUUID());
+    window.localStorage.setItem("TimeSpent", 0);
+    window.localStorage.setItem("QuestionsCompleted", 0);
+    window.localStorage.setItem("TotalPoints", 0);
+}
+
 
 export default function StatManager(props) {
 
-    const [TimeSpent, SetTimeSpent] = useState(0);
-
-    useEffect(() => {
-        // Saving functionality
-        if (window.localStorage.getItem("UUID") !== null ) {
-            SetTimeSpent(window.localStorage.getItem("TimeSpent"));
-            UUID = window.localStorage.getItem("UUID");
-        }
-        else {
-            window.localStorage.setItem("TotalPoints", 0);
-        }
-    }, []);
-
-    function Save() {
-        window.localStorage.setItem("TimeSpent", TimeSpent);
-        window.localStorage.setItem("UUID", UUID);
-    }
-
-     // timer functionality
+     // updates stats.
      const [Count, SetCount] = useState(0);
      useEffect(() => {
          const Timer = setInterval(() => {
+            window.localStorage.setItem("TimeSpent", parseInt(window.localStorage.getItem("TimeSpent")) + 1);
             SetCount(Count + 1);
-            SetTimeSpent(TimeSpent + 1);
-            Save();
          }, 1000);
  
          return () => {clearInterval(Timer);}

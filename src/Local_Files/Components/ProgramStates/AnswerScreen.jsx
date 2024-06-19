@@ -8,7 +8,7 @@ import BackArrow from '../../Images/PijlNaarLinks.svg';
 export default function AnswerScreen(props) {
     
     // Question variable
-    const Question = props.Question;
+    const Question = JSON.parse(window.localStorage.getItem("QuizState"))[props.ActiveQuestion];
 
 
     // Functional variables
