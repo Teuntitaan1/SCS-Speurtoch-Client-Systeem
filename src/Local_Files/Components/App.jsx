@@ -83,6 +83,18 @@ export default function App(props) {
 
 	}, []);
 
+	// timer functionality
+	const [Count, SetCount] = useState(0);
+	// Saves the QuizState
+	useEffect(() => {
+		const Timer = setInterval(() => {
+			SetCount(Count + 1);
+			window.localStorage.setItem("QuizState" , JSON.stringify(QuizState));
+		}, 1000);
+
+		return () => {clearInterval(Timer);}
+	}, [Count]);
+
 	// Programbody determination code
 	useEffect(() => {
 		switch (ProgramState) {
@@ -137,18 +149,6 @@ export default function App(props) {
 		}
 	
 	}, [ProgramState]);
-
-	// timer functionality
-	const [Count, SetCount] = useState(0);
-	// Saves the QuizState
-	useEffect(() => {
-		const Timer = setInterval(() => {
-		   SetCount(Count + 1);
-		   window.localStorage.setItem("QuizState" , JSON.stringify(QuizState));
-		}, 1000);
-
-		return () => {clearInterval(Timer);}
-	}, [Count]);
 
 	// handy function used all throughout the program to switch the ProgramState and PreviousState variable so that the program adapts based on input
 	function SwitchProgramState(NewState, StatesShouldMatch = false) {
