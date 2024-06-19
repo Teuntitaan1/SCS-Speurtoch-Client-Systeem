@@ -20,11 +20,12 @@ import Confetti from 'react-confetti';
 
 // image import
 import AnswerScreen from './ProgramStates/AnswerScreen';
+import StatManager from './Managers/StatManager';
+import TechnicalManager from './Managers/TechnicalManager';
 
 
 // program variables
 var TransitionTime = 200;
-var Version = 0.77;
 
 // ALL POSSIBLE PROGRAM STATES
 
@@ -47,10 +48,10 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		// if the key doesnt exist it generates a new one
-		if (window.localStorage.getItem("QuizState") === null || window.localStorage.getItem("QuizState") === "") {
-			window.localStorage.setItem("QuizState" , "");
+		if (window.localStorage.getItem("QuizState") === null) {
 			this.state = {
 				StartedQuiz : false,
+				CompletedQuiz : false,
 				// the state the program currently sits in, look at the top of the file for all allowed states
 				ProgramState : "StartScreen",
 				PreviousState : "StartScreen",
@@ -67,26 +68,26 @@ class App extends React.Component {
 
 				// all variables user by the leaderboard functionality
 				SendResults : false,
-				Uuid : crypto.randomUUID(),
-				TimeSpent : 0,
 				UserName : "",
-				TotalPoints : 0,
 
 				// technical properties
-				LastVisited : Date.now(),
 				ShouldShowConffetti : false,
 				ShouldShowProgramBody : true,
 				Transitioning : false,
-				Version : Version
 			}
 		}
 		else {
-			if (JSON.parse(window.localStorage.getItem("QuizState")).LastVisited + (1000*60*60*6) > Date.now() && Version === JSON.parse(window.localStorage.getItem("QuizState")).Version) {
+			if (window.localStorage.getItem("LastVisited") + (1000*60*60*6) > Date.now() && import.meta.env.VITE_Version === window.localStorage.getItem("Version")) {
 				this.state = JSON.parse(window.localStorage.getItem("QuizState"));
 				// reverts back to the homescreen
 				this.state.ProgramState = "SelectionScreen";
 				this.state.PreviousState = "SelectionScreen";
 				this.state.ActiveQuestion = null;
+				this.state.Warning = "";
+				this.state.Transitioning = false;
+				this.state.ShouldShowProgramBody = true;
+				this.state.Scanning = false;
+				this.state.ShouldShowConffetti = false;
 			}
 			else {
 				this.ResetQuiz();
@@ -134,15 +135,7 @@ class App extends React.Component {
 			case "AnswerScreen":
 				programbody = <AnswerScreen
 				 				Question={this.state.QuestionList[this.state.ActiveQuestion]} 
-								TotalPoints={this.state.TotalPoints} 
-								HandleQuestionComplete={(Score) => {this.HandleQuestionComplete(Score)}}
-								TimeSpent={this.state.TimeSpent}
-								ToInfoToAnswerScreen={() => {this.SwitchProgramState("InfoToAnswerScreen");}}/>
-				break;
-			
-
-			case "InfoToAnswerScreen":
-				programbody = <InfoToAnswerScreen InfoToAnswer={this.state.QuestionList.InfoToAnswer}/>
+								HandleQuestionComplete={(Score) => {this.HandleQuestionComplete(Score)}}/>
 				break;
 
 			case "FinishScreen":
@@ -160,7 +153,7 @@ class App extends React.Component {
 							</div>
 						</div>
 
-						<Leaderboard Uuid={this.state.Uuid} />
+						<Leaderboard/>
 					</>; 
 				break;
 			
@@ -180,39 +173,40 @@ class App extends React.Component {
 		
 		// renders based on what programbody is
 		return(
-			<>
-				<Header
-				 	ToDoneQuestionsScreen={() => {this.SwitchProgramState("DoneQuestionsScreen");}}
-					BackToPreviousScreen={() => {this.SwitchProgramState(this.state.PreviousState);}}
-				   	ProgramState={this.state.ProgramState}
-					ActiveQuestion={this.state.ActiveQuestion}
-					ResetQuiz={() => {this.ResetQuiz();}}
-					Transitioning={this.state.Transitioning}/>
-				
-				{/*screen state body*/}
-				<div style={{marginTop: 11+"vh"}}>
-					<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : `opacity ${TransitionTime}ms ease-in-out`}}>
-						{programbody}
+			<StatManager>
+				<TechnicalManager>
+					<Header
+						PreviousState={this.state.PreviousState}
+						ProgramState={this.state.ProgramState}
+						SwitchProgramState={(State, ShouldMatch) => {this.SwitchProgramState(State, ShouldMatch);}}
+						ActiveQuestion={this.state.ActiveQuestion}
+						ResetQuiz={() => {this.ResetQuiz();}}/>
+					
+					{/*screen state body*/}
+					<div style={{marginTop: 11+"vh"}}>
+						<div style={{marginTop : 1+"vh", opacity : this.state.ShouldShowProgramBody ? 1 : 0, transition : `opacity ${TransitionTime}ms ease-in-out`}}>
+							{programbody}
+						</div>
 					</div>
-				</div>
-				<Footer
-				 	QuestionsCompleted={this.state.QuestionsCompleted} 
-					QuestionListLength={this.state.QuestionList.length}
-					ProgramState={this.state.ProgramState}/>
-				<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
-					<Confetti/>
-				</div>
+					<Footer
+						QuestionsCompleted={this.state.QuestionsCompleted} 
+						QuestionListLength={this.state.QuestionList.length}
+						ProgramState={this.state.ProgramState}/>
+					<div style={{position : 'absolute', left : 0+"%", top : 0+"%", opacity : this.state.ShouldShowConffetti === true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
+						<Confetti/>
+					</div>
 
-				{this.props.debugmode === true ?
-					<div>
-						<hr/>
-						<p style={{color :"--test"}}>test</p>
-						<h3>Debug bedieningspaneel</h3>
-						<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
-						<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
-					</div>
-					: null}
-			</>
+					{this.props.debugmode === true ?
+						<div>
+							<hr/>
+							<p style={{color :"--test"}}>test</p>
+							<h3>Debug bedieningspaneel</h3>
+							<button onClick={() => {this.ResetQuiz()}}>Reset</button> 
+							<button onClick={() => {this.SwitchProgramState("FinishScreen")}}>Naar FinishScreen</button>
+						</div>
+						: null}
+				</TechnicalManager>
+			</StatManager>
 		); 
 	}
 	// handy function used all throughout the program to switch the ProgramState and PreviousState variable so that the program adapts based on input
@@ -243,16 +237,20 @@ class App extends React.Component {
 	HandleQuestionComplete(Score) {
 		
 		this.setState({ShouldShowConffetti : true});
+		var QuestionsCompleted = this.state.QuestionsCompleted + 1;
+
 		setTimeout(() => {
+			window.localStorage.setItem("TotalPoints", parseInt(window.localStorage.getItem("TotalPoints")) + Score);
+			this.setState({ShouldShowConffetti : false});
+			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
 			// if all questions have been answered, finish the quiz
-			if (this.state.QuestionsCompleted === this.state.QuestionList.length && this.state.QuestionsCompleted !== 0 ? true : false) {
+			if (QuestionsCompleted === this.state.QuestionList.length && QuestionsCompleted !== 0 ? true : false) {
 				this.SwitchProgramState("FinishScreen", true);
+				this.setState({CompletedQuiz : true});
 			}
 			else {
 				this.SwitchProgramState("SelectionScreen", true);
 			}
-			this.setState({TotalPoints : this.state.TotalPoints + Score, ShouldShowConffetti : false});
-			this.setState({QuestionsCompleted : this.state.QuestionsCompleted + 1});
 		}, 4000);
 	}
 
@@ -309,8 +307,8 @@ class App extends React.Component {
 			body: JSON.stringify({
 				UserName : this.state.UserName !== "" ? this.state.UserName : "Anoniem",
 				TimeSpent : this.state.TimeSpent,
-				TotalPoints : this.state.TotalPoints,
-				Uuid : this.state.Uuid})};
+				TotalPoints : parseInt(window.localStorage.getItem("TotalPoints")),
+				Uuid : window.localStorage.getItem("UUID")})};
 		
 		this.setState({SendResults : true}); 
 		// sends the Body array to the server
@@ -321,38 +319,20 @@ class App extends React.Component {
 	Save() {
 		var StateToSave = {
 			StartedQuiz : this.state.StartedQuiz,
+			CompletedQuiz : this.state.CompletedQuiz,
 			// all variables used for the quiz itself
 			QuestionList : this.state.QuestionList,
 			QuestionsCompleted : this.state.QuestionsCompleted, 
 
-			// qr code variables
-			Scanning : true,
-			// if the warning is a blank string, nothing will render. else it will
-			// render the warning/error associated with the qr-code
-			Warning : "",
-
 			// all variables user by the leaderboard functionality
 			SendResults : this.state.SendResults,
-			Uuid : this.state.Uuid,
-			TimeSpent : this.state.TimeSpent,
 			UserName : this.state.UserName,
-			TotalPoints : this.state.TotalPoints,
-
-			// technical properties
-			LastVisited : Date.now(),
-			ShouldShowConffetti : false,
-			ShouldShowProgramBody : this.state.ShouldShowProgramBody,
-			Transitioning : false,
-			Version : this.state.Version
 		}
 		window.localStorage.setItem("QuizState" , JSON.stringify(StateToSave));
 	}
 	// runs when the program is ready to run
 	componentDidMount() {
-		
-		// increments the TimeSpent variable in the program
-		const QuizTimer = setInterval(() => {if(this.state.ProgramState === "SelectionScreen" || this.state.ProgramState === "DoneQuestionsScreen" || this.state.ProgramState === "AnswerScreen") {this.setState({TimeSpent : this.state.TimeSpent + 1});}}, 1*1000);
-		this.QuizTimerID = QuizTimer;
+	
 		// saves the program
 		const SaveTimer = setInterval(() => {this.Save();}, 1*1000);
 		this.SaveTimerID = SaveTimer;
@@ -360,13 +340,12 @@ class App extends React.Component {
 	// runs when the program is ready to stop
 	componentWillUnmount() {
 		// lets the timers go
-		clearInterval(this.QuizTimerID);
 		clearInterval(this.SaveTimerID);
 	}
 	// resets the program	
 	ResetQuiz() {
 		// deletes the saved quiz from storage and quickly reloads the page to reset the client side quiz so it begins with a clean slate
-		window.localStorage.setItem("QuizState", "");
+		window.localStorage.clear();
 		window.location.reload();
 	}
 }

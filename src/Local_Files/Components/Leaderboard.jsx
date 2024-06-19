@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 export default function Leaderboard(props) {
     
     const [Data, SetData] = useState([]);
+    const [UUID, SETUUID] = useState("");
+    useEffect(() => {
+        SETUUID(window.localStorage.getItem("UUID"));
+    }, []); 
 
     // timer functionality
     const [Count, SetCount] = useState(0);
@@ -29,7 +33,7 @@ export default function Leaderboard(props) {
                 </tr>
                 {/*This can be improved upon*/}
                 {Data.slice(0, 5).map((Entry, index) => {
-                        if (props.Uuid === Entry.Uuid) {
+                        if (UUID === Entry.Uuid) {
                             return (
                                 <tr style={{backgroundColor : "#457c1f"}} key={index}>
                                     <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{index + 1}</td>
@@ -46,11 +50,11 @@ export default function Leaderboard(props) {
                             </tr>
                         );})}
                 {/*The most confusing statement i have ever written thus far, checks if the user's entry is in the first 5 entries of the leaderboard*/}
-                {Data.map((Entry) => {if(props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) === true && Data.slice(0, 5).map((Entry) => {if(props.Uuid === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
+                {Data.map((Entry) => {if(UUID === Entry.Uuid) {return true;} return false;}).includes(true) === true && Data.slice(0, 5).map((Entry) => {if(UUID === Entry.Uuid) {return true;} return false;}).includes(true) !== true ?
                     <tr style={{backgroundColor : "#457c1f"}}>
-                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry, index) => {if(props.Uuid === Entry.Uuid) {return index+1;}; return null;})}</td>
-                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry) => {if(props.Uuid === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>
-                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry) => {if(props.Uuid === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
+                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry, index) => {if(UUID === Entry.Uuid) {return index+1;}; return null;})}</td>
+                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry) => {if(UUID === Entry.Uuid) {return Entry.UserName.length < 10 ? Entry.UserName : Entry.UserName.slice(0, 7) + "...";}; return null;})}</td>
+                        <td style={{textAlign : 'center', borderBottom : '1px solid #dddddd'}}>{Data.map((Entry) => {if(UUID === Entry.Uuid) {return Entry.TotalPoints;}; return null;})}</td>
                     </tr>
                     : 
                     null}

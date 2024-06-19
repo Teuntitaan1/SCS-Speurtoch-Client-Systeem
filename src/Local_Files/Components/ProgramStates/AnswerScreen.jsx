@@ -22,6 +22,9 @@ export default function AnswerScreen(props) {
     const [Score, SetScore] = useState(1000);
     const [Attemps, SetAttempts] = useState(0);
 
+    const [TimeSpent, SetTimeSpent] = useState(0);
+    const [TotalPoints, SetTotalPoints] = useState(0); 
+
     const [AtHintScreen, SetAtHintScreen] = useState(false);
 
     // timer functionality
@@ -33,6 +36,8 @@ export default function AnswerScreen(props) {
                 SetTimeAtQuestion(TimeAtQuestion + 1);
                 SetScore((1000 - (10 * TimeAtQuestion) - (100 * Attemps)) > 0 ? (1000 - (10 * TimeAtQuestion) - (100 * Attemps)) : 0)
             }
+            SetTimeSpent(parseInt(window.localStorage.getItem("TimeSpent")));
+            SetTotalPoints(parseInt(window.localStorage.getItem("TotalPoints")));
         }, 1000);
 
         return () => {clearInterval(Timer);}
@@ -62,7 +67,7 @@ export default function AnswerScreen(props) {
             {!AtHintScreen ? 
             <>
                 <div style={{display : 'flex', justifyContent : 'center', position : 'relative', top : -11+"vh", opacity : ShowGoodJobScreen !== true ? 1 : 0, transition : 'opacity 1s ease-in-out'}}>
-                    <h2 style={{fontWeight : 'bold'}}>{props.TotalPoints} + {(1000 - (10 * TimeAtQuestion) - (100 * Attemps)) > 0 ? (1000 - (10 * TimeAtQuestion) - (100 * Attemps)) : 0 } punten</h2>
+                    <h2 style={{fontWeight : 'bold'}}>{TotalPoints} + {(1000 - (10 * TimeAtQuestion) - (100 * Attemps)) > 0 ? (1000 - (10 * TimeAtQuestion) - (100 * Attemps)) : 0 } punten</h2>
                 </div>
 
                 <div style={{position : 'relative', left : ShowGoodJobScreen !== true ? 0+"%" : -200+"%", transition : 'left 1s ease-in-out', top : -7+"vh"}}>
@@ -87,10 +92,10 @@ export default function AnswerScreen(props) {
                 </div>
 
                 <div style={{position : 'relative', bottom : 70+"vh", left : ShowGoodJobScreen === true ? 0+"%" : 200+"%",opacity : ShowGoodJobScreen === true ? 1 : 0 ,transition : 'left 1s ease-in-out, opacity 1700ms ease-in-out',}}>
-                    <h1 style={{textAlign : 'center'}}>{props.TotalPoints} + {Score}</h1>
+                    <h1 style={{textAlign : 'center'}}>{TotalPoints} + {Score}</h1>
                     {AnsweredCorrect === true ?
                     <>
-                        <p style={{textAlign : 'center'}}>{Math.floor(props.TimeSpent) > 0 ? Math.floor(props.TimeSpent/60) + `${props.TimeSpent/60 > 1 || props.TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{props.TimeSpent % 60} {props.TimeSpent % 60 > 1 || props.TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
+                        <p style={{textAlign : 'center'}}>{Math.floor(TimeSpent) > 0 ? Math.floor(TimeSpent/60) + `${TimeSpent/60 > 1 || TimeSpent/60 === 0 ? " minuut en " : " minuten en "}` : ""}{TimeSpent % 60} {TimeSpent % 60 > 1 || TimeSpent % 60 === 0 ? "seconden" : "seconde" } bezig</p>
                         <hr></hr>
                         <p style={{textAlign : 'center'}}>Kijk bij <span><img style={{width : 1.5+"rem", height : 1.5+"rem", position : 'relative', top : 1+"vh"}} src={CompletedQuestionsButton} alt='CompletedQuestionsButton'></img></span> om je voortgang te volgen! Hier vind je ook leuke weetjes!</p>
                         <hr></hr>

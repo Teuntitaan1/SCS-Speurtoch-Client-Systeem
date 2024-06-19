@@ -17,7 +17,7 @@ export default function Header(props) {
 						
 			{/*Moves the program back into its previous state*/}
 			{(props.ProgramState === "AnswerScreen" || props.ProgramState === "DoneQuestionsScreen" || props.ProgramState === "ErrorScreen" || props.ProgramState === "InfoToAnswerScreen") && props.ActiveQuestion === null ? 
-			<img onClick={() => {if(props.Transitioning !== true){props.BackToPreviousScreen();}}} style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
+			<img onClick={() => {props.SwitchProgramState(props.PreviousState, false);}} style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={BackArrow} alt="A backarrow"/> : null}
 
 			{props.ProgramState === "SelectionScreen" || props.ProgramState === "StartScreen" || props.ProgramState === "FinishScreen" || props.ProgramState === "FinalScreen" || (props.ProgramState === "AnswerScreen") && props.ActiveQuestion === null ? 
 				<img style={{height : 10+"vh", position : 'absolute', left : 0+"%"}} src={TimesResetClicked > 0 ? ResetButtonRed : ResetButton} alt="resetButton" onClick={() => {if (TimesResetClicked > 0) {props.ResetQuiz();} else {SetTimesResetClicked(TimesResetClicked + 1); setTimeout(() => {SetTimesResetClicked(0)}, 1000)}}}></img> : null}
@@ -30,7 +30,7 @@ export default function Header(props) {
 				null}
 			{/*Moves the program to the DoneQuestionsScreen state*/}
 			{props.ProgramState === "SelectionScreen"  ? 
-			<img onClick={() => {if(props.Transitioning !== true){props.ToDoneQuestionsScreen();}}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
+			<img onClick={() => {props.SwitchProgramState("DoneQuestionsScreen" ,false);}} src={CompletedQuestionsButton} alt="CompletedQuestionsbutton" style={{height: 10+"vh", position : 'absolute', right : 0+"%", bottom : 0+"%"}}/> : null}
 			
 		</div>
 	</>
